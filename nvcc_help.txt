@@ -163,3 +163,56 @@ Options for steering cuda compilation
         In case of compilation of ptx or gpu files to cubin: specify the global entry
         functions for which code must be generated. By default, code will be generated
         for all entry functions.
+
+PTAXS Options
+=====================================
+
+--allow-expensive-optimizations	-allow-expensive-optimizations	
+
+Enable (disable) to allow compiler to perform expensive optimizations using maximum available resources (memory and compile-time).
+
+If unspecified, default behavior is to enable this feature for optimization level >= O2.
+
+--compile-only	-c	Generate relocatable object.
+--def-load-cache	-dlcm	Default cache modifier on global/generic load. Default value: ca.
+--def-store-cache	-dscm	Default cache modifier on global/generic store.
+--gpu-name gpuname	-arch	
+Specify name of NVIDIA GPU to generate code for. This option also takes virtual compute architectures, in which case code generation is suppressed. This can be used for parsing only.
+
+Allowed values for this option: compute_20, compute_30, compute_35, compute_50, compute_52; and sm_20, sm_21, sm_30, sm_32, sm_35, sm_50 and sm_52.
+
+Default value: sm_20.
+
+--opt-level N	-O	Specify optimization level. Default value: 3.
+
+--output-file file	-o	Specify name of output file. Default value: elf.o.
+
+--preserve-relocs	-preserve-relocs	
+
+This option will make ptxas to generate relocatable references for variables and preserve relocations generated for them in linked executable.
+
+--sp-bound-check	-sp-bound-check	
+
+Generate stack-pointer bounds-checking code sequence. This option is turned on automatically when --device-debug or --opt-level=0 is specified.
+
+--disable-optimizer-constants	-disable-optimizer-consts	Disable use of optimizer constant bank.
+
+--verbose	-v	Enable verbose mode which prints code generation statistics.
+
+--warning-as-error	-Werror	Make all warnings into errors.
+
+--device-debug	-g	Semantics same as nvcc option --device-debug.
+
+--entry entry,...	-e	Semantics same as nvcc option --entries.
+
+--fmad	-fmad	Semantics same as nvcc option --fmad.
+
+--force-load-cache	-flcm	Force specified cache modifier on global/generic load.
+
+--force-store-cache	-fscm	Force specified cache modifier on global/generic store.
+
+--generate-line-info	-lineinfo	Semantics same as nvcc option --generate-line-info.
+
+--machine	-m	Semantics same as nvcc option --machine.
+
+--maxrregcount amount	-maxrregcount	Semantics same as nvcc option --maxrregcount.
