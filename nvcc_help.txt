@@ -1,0 +1,165 @@
+--optimize <level>                                 (-O)                         
+        Specify optimization level for host code.
+
+--machine <bits>                                   (-m)                         
+        Specify 32 vs 64 bit architecture.
+        Allowed values for this option:  32,64.
+        Default value:  64.
+
+
+Options for passing specific phase options
+==========================================
+These allow for passing options directly to the intended compilation phase. Using
+these, users have the ability to pass options to the lower level compilation tools,
+without the need for nvcc to know about each and every such option.
+
+--compiler-options <options>,...                   (-Xcompiler)                 
+        Specify options directly to the compiler/preprocessor.
+
+--linker-options <options>,...                     (-Xlinker)                   
+        Specify options directly to the host linker.
+
+--archive-options <options>,...                    (-Xarchive)                  
+        Specify options directly to library manager.
+
+--ptxas-options <options>,...                      (-Xptxas)                    
+        Specify options directly to the ptx optimizing assembler.
+
+--nvlink-options <options>,...                     (-Xnvlink)                   
+        Specify options directly to nvlink.
+
+
+Miscellaneous options for guiding the compiler driver
+=====================================================
+
+--run-args <arguments>,...                         (-run-args)                  
+        Used in combination with option -R, to specify command line arguments for
+        the executable.
+
+--no-align-double                                  --no-align-double            
+        Specifies that -malign-double should not be passed as a compiler argument
+        on 32-bit platforms. WARNING: this makes the ABI incompatible with the cuda's
+        kernel ABI for certain 64-bit types.
+
+
+Options for steering GPU code generation
+========================================
+
+--gpu-architecture <gpu architecture name>         (-arch)                      
+        Specify the name of the class of nVidia GPU architectures for which the cuda
+        input files must be compiled.
+        With the exception as described for the shorthand below, the architecture
+        specified with this option must be a virtual architecture (such as compute_10),
+        and it will be the assumed architecture during the cicc compilation stage.
+        This option will cause no code to be generated (that is the role of nvcc
+        option '--gpu-code', see below); rather, its purpose is to steer the cicc
+        stage, influencing the architecture of the generated ptx intermediate.
+        For convenience in case of simple nvcc compilations the following shorthand
+        is supported: if no value for option '--gpu-code' is specified, then the
+        value of this option defaults to the value of '--gpu-architecture'. In this
+        situation, as only exception to the description above, the value specified
+        for '--gpu-architecture' may be a 'real' architecture (such as a sm_13),
+        in which case nvcc uses the specified real architecture and its closest virtual
+        architecture as effective architecture values. For example, 'nvcc -arch=sm_13'
+        is equivalent to 'nvcc -arch=compute_13 -code=sm_13,compute_13'.
+        Allowed values for this option:  'compute_11','compute_12','compute_13',
+        'compute_20','compute_30','compute_32','compute_35','compute_37','compute_50',
+        'sm_11','sm_12','sm_13','sm_20','sm_21','sm_30','sm_32','sm_35','sm_37',
+        'sm_50'.
+
+--gpu-code <gpu architecture name>,...             (-code)                      
+        Specify the names of nVidia gpus to generate code for.
+        nvcc will embed a compiled code image in the resulting executable for each
+        specified 'code' architecture. This code image will be a true binary load
+        image for each 'real' architecture (such as a sm_13), and ptx intermediate
+        code for each virtual architecture (such as compute_10). During runtime,
+        in case no better binary load image is found, and provided that the ptx architecture
+        is compatible with the 'current' GPU, such embedded ptx code will be dynamically
+        translated for this current GPU by the cuda runtime system.
+        Architectures specified for this option can be virtual as well as real, but
+        each of these 'code' architectures must be compatible with the architecture
+        specified with option '--gpu-architecture'.
+        For instance, 'arch'=compute_13 is not compatible with 'code'=sm_10, because
+        the generated ptx code will assume the availability of compute_13 features
+        that are not present on sm_10.
+        Allowed values for this option:  'compute_11','compute_12','compute_13',
+        'compute_20','compute_30','compute_32','compute_35','compute_37','compute_50',
+        'sm_11','sm_12','sm_13','sm_20','sm_21','sm_30','sm_32','sm_35','sm_37',
+        'sm_50'.
+
+--generate-code                                    (-gencode)                   
+        This option provides a generalization of the '--gpu-architecture=<arch> --gpu-code=code,
+        ...' option combination for specifying nvcc behavior with respect to code
+        generation. Where use of the previous options generates different code for
+        a fixed virtual architecture, option '--generate-code' allows multiple cicc
+        invocations, iterating over different virtual architectures. In fact, 
+                '--gpu-architecture=<arch> --gpu-code=<code>,...'
+        is equivalent to
+                '--generate-code arch=<arch>,code=<code>,...'.
+        '--generate-code' options may be repeated for different virtual architectures.
+        Allowed keywords for this option:  'arch','code'.
+
+--maxrregcount <N>                                 (-maxrregcount)              
+        Specify the maximum amount of registers that GPU functions can use. Until
+        a function- specific limit, a higher value will generally increase the performance
+        of individual GPU threads that execute this function. However, because thread
+        registers are allocated from a global register pool on each GPU, a higher
+        value of this option will also reduce the maximum thread block size, thereby
+        reducing the amount of thread parallelism. Hence, a good maxrregcount value
+        is the result of a trade-off.
+        If this option is not specified, then no maximum is assumed.
+        Value less than the minimum registers required by ABI will be bumped up by
+        the compiler to ABI minimum limit.
+
+--ftz [true,false]                                 (-ftz)                       
+        When performing single-precision floating-point operations, flush denormal
+        values to zero or preserve denormal values. -use_fast_math implies --ftz=true.
+        Default value:  0.
+
+--prec-div [true,false]                            (-prec-div)                  
+        For single-precision floating-point division and reciprocals, use IEEE round-to-nearest
+        mode or use a faster approximation. -use_fast_math implies --prec-div=false.
+        Default value:  1.
+
+--prec-sqrt [true,false]                           (-prec-sqrt)                 
+        For single-precision floating-point square root, use IEEE round-to-nearest
+        mode or use a faster approximation. -use_fast_math implies --prec-sqrt=false.
+        Default value:  1.
+
+--fmad [true,false]                                (-fmad)                      
+        Enables (disables) the contraction of floating-point multiplies and adds/subtracts
+        into floating-point multiply-add operations (FMAD, FFMA, or DFMA). This option
+        is supported only when '--gpu-architecture' is set with compute_20, sm_20,
+        or higher. For other architecture classes, the contraction is always enabled.
+        -use_fast_math implies --fmad=true.
+        Default value:  1.
+
+--relocatable-device-code [true,false]             (-rdc)                       
+        Enable (disable) the generation of relocatable device code. If disabled,
+        executable device code is generated.
+        Default value:  0.
+
+
+Options for steering cuda compilation
+=====================================
+
+--target-cpu-architecture <cpu architecture name>  (-target-cpu-arch)           
+        Specify the name of the class of CPU architecture for which the input files
+        must be compiled.
+        Allowed values for this option:  'ARM','x86'.
+        Default value:  'x86'.
+
+--target-os-variant <target OS name>               (-target-os-variant)         
+        Specify the name of the operating system for which the input files must be
+        compiled.
+        Allowed values for this option:  'Android','Linux'.
+        Default value:  'Linux'.
+
+--use_fast_math                                    (-use_fast_math)             
+        Make use of fast math library. --use_fast_math implies --ftz=true --prec-div=false
+        --prec-sqrt=false --fmad=true.
+
+--entries entry,...                                (-e)                         
+        In case of compilation of ptx or gpu files to cubin: specify the global entry
+        functions for which code must be generated. By default, code will be generated
+        for all entry functions.
