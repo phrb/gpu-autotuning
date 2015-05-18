@@ -19,7 +19,6 @@ cudaError_t checkCuda(cudaError_t result)
   return result;
 }
 
-
 __global__ void matMul(float* Pd, float* Md, float* Nd, int Width) {
   __shared__ float Mds[Tile_Width][Tile_Width];
   __shared__ float Nds[Tile_Width][Tile_Width];
@@ -57,13 +56,15 @@ void randomInit(float* data, int size) {
 int main(int argc, char* argv[])
 {
 
-  if (argc != 3) {
-    fprintf(stderr, "Syntax: %s <matrix size Width> <device id>\n", argv[0]);
+  if (argc != 5) {
+    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size> <device id>  <CacheConfL1> \n", argv[0]);
     return EXIT_FAILURE;
   }
 
   int Width = atoi(argv[1]);
-  int devId = atoi(argv[2]);
+  int BlockSize = atoi(argv[2]);
+  int devId = atoi(argv[3]);
+  int CacheConfL1 = atoi(argv[4]);
 
   checkCuda( cudaSetDevice(devId) );
   cudaDeviceReset();
@@ -95,8 +96,22 @@ int main(int argc, char* argv[])
   checkCuda( cudaMemcpy(Md, M, Width*Width*sizeof(float), cudaMemcpyHostToDevice) );
   checkCuda( cudaMemcpy(Nd, N, Width*Width*sizeof(float), cudaMemcpyHostToDevice) );
 
+  if (CacheConfL1 == 1){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferShared);
+  }
+  else if (CacheConfL1 == 2){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferEqual);
+  }
+  else if (CacheConfL1 == 3){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferL1);
+  }
+  else {
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferNone);
+  }  
+  
   // execute the kernel
-  printf("Execute the kernel...\n");
+  printf("Execute the kernel...\n"); 
+
 
   int GridSize = (Width + Tile_Width-1) / Tile_Width;
   dim3 gridDim(GridSize, GridSize);

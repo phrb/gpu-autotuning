@@ -21,8 +21,8 @@ cudaError_t checkCuda(cudaError_t result)
 
 
 __global__ void matMul(float* Pd, float* Md, float* Nd, int Width) {
-  __shared__ float Mds[Tile_Width][Tile_Width];
-  __shared__ float Nds[Tile_Width][Tile_Width];
+  extern __shared__ float Mds[Tile_Width][Tile_Width];
+  extern __shared__ float Nds[Tile_Width][Tile_Width];
 
   int tx = threadIdx.x;
   int ty = threadIdx.y;
@@ -57,16 +57,18 @@ void randomInit(float* data, int size) {
 int main(int argc, char* argv[])
 {
 
-  if (argc != 3) {
-    fprintf(stderr, "Syntax: %s <matrix size Width> <device id>\n", argv[0]);
+  if (argc != 5) {
+    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size> <device id>  <CacheConfL1> \n", argv[0]);
     return EXIT_FAILURE;
   }
 
   int Width = atoi(argv[1]);
-  int devId = atoi(argv[2]);
+  int BlockSize = atoi(argv[2]);
+  int devId = atoi(argv[3]);
+  int CacheConfL1 = atoi(argv[4]);
 
   checkCuda( cudaSetDevice(devId) );
-    cudaDeviceReset();
+  cudaDeviceReset();
 
   // allocate host memory for matrices M and N
   printf("Allocate host memory for matrices M and N...\n");
@@ -98,8 +100,22 @@ int main(int argc, char* argv[])
   // execute the kernel
   printf("Execute the kernel...\n");
 
+  if (CacheConfL1 == 1){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferShared);
+  }
+  else if (CacheConfL1 == 2){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferEqual);
+  }
+  else if (CacheConfL1 == 3){
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferL1);
+  }
+  else {
+    cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferNone);
+  }
+
+
   int GridSize = (Width + Tile_Width-1) / Tile_Width;
-  dim3 gridDim(GridSize, GridSize);
+  dim3 gridDim(GridSize, Tile_Width);
   dim3 blockDim(Tile_Width, Tile_Width);
 
   cudaProfilerStart();

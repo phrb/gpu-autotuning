@@ -42,14 +42,15 @@ void randomInit(float* data, int N) {
 int main(int argc, char* argv[])
 {
 
-  if (argc != 4) {
-    fprintf(stderr, "Syntax: %s <matrix size N> <block size> <device id>\n", argv[0]);
+  if (argc != 5) {
+    fprintf(stderr, "Syntax: %s <matrix size N> <block size> <device id> <CacheConfL1>  \n", argv[0]);
     return EXIT_FAILURE;
   }
 
   int N = atoi(argv[1]);
   int BlockSize = atoi(argv[2]);
   int devId = atoi(argv[3]);
+  int CacheConfL1 = atoi(argv[4]);
 
   checkCuda( cudaSetDevice(devId) );
   cudaDeviceReset();
@@ -81,6 +82,19 @@ int main(int argc, char* argv[])
   checkCuda( cudaMemcpy(dev_A, A, N*N*sizeof(float), cudaMemcpyHostToDevice) );
   checkCuda( cudaMemcpy(dev_B, B, N*N*sizeof(float), cudaMemcpyHostToDevice) );
 
+  if (CacheConfL1 == 1){
+    cudaFuncSetCacheConfig(matSum, cudaFuncCachePreferShared);
+  }
+  else if (CacheConfL1 == 2){
+    cudaFuncSetCacheConfig(matSum, cudaFuncCachePreferEqual);
+  }
+  else if (CacheConfL1 == 3){
+    cudaFuncSetCacheConfig(matSum, cudaFuncCachePreferL1);
+  }
+  else {
+    cudaFuncSetCacheConfig(matSum, cudaFuncCachePreferNone);
+  }
+  
   // execute the kernel
   printf("Execute the kernel...\n");
 
