@@ -77,6 +77,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         cmd = NVCC_CMD + NVCC_NAME
         nvcc_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvcc") ]
+        print nvcc_flags
 
 #        return Result(time=0)
         return None
