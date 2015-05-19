@@ -82,17 +82,17 @@ class NvccFlagsTuner(MeasurementInterface):
         cmd = NVCC_CMD + NVCC_NAME
         for full_flag, value in nvcc_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + value + " "
+            cmd += " " + flag + str(value) + " "
 
         cmd += PTXAS_NAME
         for full_flag, value in ptxas_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + value + " "
+            cmd += " " + flag + str(value) + " "
 
         cmd += NVLINK_NAME
         for full_flag, value in nvlink_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + value + " "
+            cmd += " " + flag + str(value) + " "
 
         print cmd
 
