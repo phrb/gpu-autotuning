@@ -99,6 +99,7 @@ class NvccFlagsTuner(MeasurementInterface):
         cmd += NVLINK_NAME
         cmd += self.parse_flags(nvlink_flags)
 
+        print cmd
         compile_result = self.call_program(cmd)
         assert compile_result['returncode'] == 0
 
@@ -111,5 +112,5 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     filename = args.filename
-    NVCC_CMD += filename + " -o ./tmp.bin "
+    NVCC_CMD += "$\{CARGS\}" + filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
