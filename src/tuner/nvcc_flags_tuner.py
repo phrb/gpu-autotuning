@@ -111,5 +111,5 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     filename = args.filename
-    NVCC_CMD += "-I /usr/local/cuda/include -L /usr/local/cuda/lib64" + filename + " -o ./tmp.bin "
+    NVCC_CMD += "-I /usr/local/cuda/include -L /usr/local/cuda/lib64 " + filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
