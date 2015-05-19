@@ -75,13 +75,26 @@ class NvccFlagsTuner(MeasurementInterface):
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
-        cmd = NVCC_CMD + NVCC_NAME
         nvcc_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvcc") ]
         ptxas_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("ptxas") ]
         nvlink_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvlink") ]
-        print nvcc_flags
-        print ptxas_flags
-        print nvlink_flags
+
+        cmd = NVCC_CMD + NVCC_NAME
+        for full_flag, value in nvcc_flags:
+            flag = full_flag.split(":")[1]
+            cmd += " " + flag + value + " "
+
+        cmd += PTXAS_NAME
+        for full_flag, value in ptxas_flags:
+            flag = full_flag.split(":")[1]
+            cmd += " " + flag + value + " "
+
+        cmd += NVLINK_NAME
+        for full_flag, value in nvlink_flags:
+            flag = full_flag.split(":")[1]
+            cmd += " " + flag + value + " "
+
+        print cmd
 
 #        return Result(time=0)
         return None
