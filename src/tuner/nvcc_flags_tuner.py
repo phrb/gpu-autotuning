@@ -26,9 +26,9 @@ NVCC_PARAMS = { "nvcc:--default-stream="          : [ "legacy", "null", "per-thr
                 "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
                                                       "sm_30", "sm_32", "sm_35" ],
                 "nvcc:--fmad="                    : [ "true", "false" ],
-                "nvcc:--relocatable-device-code=" : [ "true", "false" ] }
-                "nvcc:--ftz="                     : [ "true", "false" ] }
-                "nvcc:--prec-div="                : [ "true", "false" ] }
+                "nvcc:--relocatable-device-code=" : [ "true", "false" ],
+                "nvcc:--ftz="                     : [ "true", "false" ],
+                "nvcc:--prec-div="                : [ "true", "false" ],
                 "nvcc:--prec-sqrt="               : [ "true", "false" ] }
 # (name, min, max)
 NVCC_NUM_PARAMS = [ ]
@@ -37,8 +37,7 @@ PTXAS_NAME = "-Xptxas "
 # name
 PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
                  "ptxas:--def-store-cache",
-                 "ptxas:--disable-optimizer-consts",
-                 "ptxas:--force-load-cache" ]
+                 "ptxas:--disable-optimizer-consts"]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--gpu-name="                      : [ "compute_20", "compute_30",
@@ -46,10 +45,10 @@ PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", 
                                                               "compute_52", "sm_20",
                                                               "sm_21", "sm_30", "sm_32",
                                                               "sm_35" ],
-                 "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ] }
-                 "ptxas:--fmad="                          : [ "true", "false" ] }
-                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ] }
-                 "ptxas:--fmad="                          : [ "true", "false" ] }
+                 "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
+                 "ptxas:--fmad="                          : [ "true", "false" ],
+                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ],
+                 "ptxas:--fmad="                          : [ "true", "false" ],
                  "ptxas:--fmad="                          : [ "true", "false" ] }
 # ( name, min, max )
 PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
