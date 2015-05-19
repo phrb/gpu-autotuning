@@ -91,6 +91,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         print cmd
         compile_result = self.call_program(cmd)
+        print compile_result['returncode']
         assert compile_result['returncode'] == 0
 
         run_result = self.call_program('./tmp.bin')
