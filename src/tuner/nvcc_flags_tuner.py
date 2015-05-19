@@ -20,16 +20,16 @@ GCC_PARAMS = []
 GCC_NUM_PARAMS = []
 # name
 NVCC_FLAGS = [ "nvcc:--no-align-double",
-               "nvcc:--relocatable-device-code",
                "nvcc:--use_fast_math",
-               "nvcc:--ftz",
-               "nvcc:--prec-div",
-               "nvcc:--prec-sqrt",
-               "nvcc:--fmad" ]
 # { name : [ args ] }
-NVCC_PARAMS = { "nvcc:--default-stream="   : [ "legacy", "null", "per-thread" ],
-                "nvcc:--gpu-architecture=" : [ "sm_20", "sm_21", "sm_30", "sm_32",
-                                          "sm_35", "sm_50", "sm_52" ] }
+NVCC_PARAMS = { "nvcc:--default-stream="          : [ "legacy", "null", "per-thread" ],
+                "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
+                                                      "sm_30", "sm_32", "sm_35" ],
+                "nvcc:--fmad="                    : [ "true", "false" ],
+                "nvcc:--relocatable-device-code=" : [ "true", "false" ] }
+                "nvcc:--ftz="                     : [ "true", "false" ] }
+                "nvcc:--prec-div="                : [ "true", "false" ] }
+                "nvcc:--prec-sqrt="               : [ "true", "false" ] }
 # (name, min, max)
 NVCC_NUM_PARAMS = [ ]
 # Specify ptxas options:
@@ -38,17 +38,19 @@ PTXAS_NAME = "-Xptxas "
 PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
                  "ptxas:--def-store-cache",
                  "ptxas:--disable-optimizer-consts",
-                 "ptxas:--force-load-cache",
-                 "ptxas:--force-store-cache",
-                 "ptxas:--fmad" ]
+                 "ptxas:--force-load-cache" ]
 # { name : [ args ] }
-PTXAS_PARAMS = { "ptxas:--def-load-cache=" : [ "ca", "cg", "cv", "cs" ],
-                 "ptxas:--gpu-name="       : [ "compute_20", "compute_30",
-                                         "compute_35", "compute_50",
-                                         "compute_52", "sm_20",
-                                         "sm_21", "sm_30", "sm_32",
-                                         "sm_35", "sm_50", "sm_52" ],
-                 "ptxas:--opt-level="      : [ "0", "1", "2", "3" ] }
+PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
+                 "ptxas:--gpu-name="                      : [ "compute_20", "compute_30",
+                                                              "compute_35", "compute_50",
+                                                              "compute_52", "sm_20",
+                                                              "sm_21", "sm_30", "sm_32",
+                                                              "sm_35" ],
+                 "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ] }
+                 "ptxas:--fmad="                          : [ "true", "false" ] }
+                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ] }
+                 "ptxas:--fmad="                          : [ "true", "false" ] }
+                 "ptxas:--fmad="                          : [ "true", "false" ] }
 # ( name, min, max )
 PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
 # Specify NVLINK options:
@@ -74,14 +76,14 @@ class NvccFlagsTuner(MeasurementInterface):
             manipulator.add_parameter(IntegerParameter(param, pmin, pmax))
         return manipulator
 
-    def parse_flags(self, flag_list):
+    def parse_flags(self, flag_list, target):
         cmd = ""
         for full_flag, value in flag_list:
             flag = full_flag.split(":")[1]
             if (value == "on"):
-                cmd += " " + flag + " "
+                cmd += " " + target + " " + flag + " "
             elif (value != "off"):
-                cmd += " " + flag + str(value) + " "
+                cmd += " " + target + " " + flag + str(value) + " "
 
         return cmd
 
@@ -93,11 +95,9 @@ class NvccFlagsTuner(MeasurementInterface):
         nvlink_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvlink") ]
 
         cmd = NVCC_CMD
-        cmd += self.parse_flags(nvcc_flags)
-        cmd += PTXAS_NAME
-        cmd += self.parse_flags(ptxas_flags)
-        cmd += NVLINK_NAME
-        cmd += self.parse_flags(nvlink_flags)
+        cmd += self.parse_flags(nvcc_flags, "")
+        cmd += self.parse_flags(ptxas_flags, PTXAS_NAME)
+        cmd += self.parse_flags(nvlink_flags, NVLINK_NAME)
 
         print cmd
         compile_result = self.call_program(cmd)
