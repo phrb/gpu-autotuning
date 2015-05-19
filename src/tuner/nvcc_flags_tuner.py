@@ -20,7 +20,7 @@ GCC_PARAMS = []
 GCC_NUM_PARAMS = []
 # name
 NVCC_FLAGS = [ "nvcc:--no-align-double",
-               "nvcc:--use_fast_math",
+               "nvcc:--use_fast_math" ]
 # { name : [ args ] }
 NVCC_PARAMS = { "nvcc:--default-stream="          : [ "legacy", "null", "per-thread" ],
                 "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
@@ -37,7 +37,7 @@ PTXAS_NAME = "-Xptxas "
 # name
 PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
                  "ptxas:--def-store-cache",
-                 "ptxas:--disable-optimizer-consts"]
+                 "ptxas:--disable-optimizer-consts" ]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--gpu-name="                      : [ "compute_20", "compute_30",
