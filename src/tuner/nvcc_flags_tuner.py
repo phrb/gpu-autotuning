@@ -13,8 +13,11 @@ argparser.add_argument( "-f", "--file",
                         required = True,
                         help = "A file to tune.")
 
-# Specify compiler options:
-NVCC_NAME = "-Xcompiler"
+# Specify gcc options:
+GCC_NAME = "-Xcompiler"
+GCC_FLAGS = []
+GCC_PARAMS = []
+GCC_NUM_PARAMS = []
 # name
 NVCC_FLAGS = [ "nvcc:--no-align-double",
                "nvcc:--relocatable-device-code",
@@ -28,7 +31,7 @@ NVCC_PARAMS = { "nvcc:--default-stream="   : [ "legacy", "null", "per-thread" ],
                 "nvcc:--gpu-architecture=" : [ "sm_20", "sm_21", "sm_30", "sm_32",
                                           "sm_35", "sm_50", "sm_52" ] }
 # (name, min, max)
-NVCC_NUM_PARAMS = [ ( "nvcc:--maxrregcount=", 16, 63 ) ]
+NVCC_NUM_PARAMS = [ ]
 # Specify ptxas options:
 PTXAS_NAME = "-Xptxas "
 # name
@@ -54,7 +57,6 @@ NVLINK_NAME = "-Xnvlink "
 NVLINK_FLAGS = [ "nvlink:--preserve-relocs" ]
 
 NVCC_CMD = "nvcc "
-NVCC_END = "-o "
 
 class NvccFlagsTuner(MeasurementInterface):
     def manipulator(self):
@@ -72,6 +74,17 @@ class NvccFlagsTuner(MeasurementInterface):
             manipulator.add_parameter(IntegerParameter(param, pmin, pmax))
         return manipulator
 
+    def parse_flags(self, flag_list):
+        cmd = ""
+        for full_flag, value in flag_list:
+            flag = full_flag.split(":")[1]
+            if (value == "on"):
+                cmd += " " + flag + " "
+            elif (value != "off"):
+                cmd += " " + flag + str(value) + " "
+
+        return cmd
+
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
@@ -79,38 +92,24 @@ class NvccFlagsTuner(MeasurementInterface):
         ptxas_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("ptxas") ]
         nvlink_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvlink") ]
 
-        cmd = NVCC_CMD + NVCC_NAME
-        for full_flag, value in nvcc_flags:
-            flag = full_flag.split(":")[1]
-            if (value == "on"):
-                cmd += " " + flag + " "
-            elif (value != "off"):
-                cmd += " " + flag + str(value) + " "
-
+        cmd = NVCC_CMD
+        cmd += self.parse_flags(nvcc_flags)
         cmd += PTXAS_NAME
-        for full_flag, value in ptxas_flags:
-            flag = full_flag.split(":")[1]
-            if (value == "on"):
-                cmd += " " + flag + " "
-            elif (value != "off"):
-                cmd += " " + flag + str(value) + " "
-
+        cmd += self.parse_flags(ptxas_flags)
         cmd += NVLINK_NAME
-        for full_flag, value in nvlink_flags:
-            flag = full_flag.split(":")[1]
-            if (value == "on"):
-                cmd += " " + flag + " "
-            elif (value != "off"):
-                cmd += " " + flag + str(value) + " "
+        cmd += self.parse_flags(nvlink_flags)
 
-        cmd += NVCC_END
-        print cmd
+        compile_result = self.call_program(cmd)
+        assert compile_result['returncode'] == 0
 
-#        return Result(time=0)
-        return None
+        run_result = self.call_program('./tmp.bin')
+        assert run_result['returncode'] == 0
+
+        return Result(time=run_result['time'])
 
 if __name__ == '__main__':
     args = argparser.parse_args()
 
-    NVCC_END += args.filename
+    filename = args.filename
+    NVCC_CMD += filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
