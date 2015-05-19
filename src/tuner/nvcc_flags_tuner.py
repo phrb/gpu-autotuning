@@ -34,7 +34,7 @@ NVCC_NUM_PARAMS = [ ]
 # Specify ptxas options:
 PTXAS_NAME = "-Xptxas "
 # name
-PTXAS_FLAGS  = [ "ptxas:--def-store-cache" ]
+PTXAS_FLAGS  = [ ]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
