@@ -24,7 +24,6 @@ NVCC_FLAGS = [ "nvcc:--no-align-double",
 # { name : [ args ] }
 NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
                                                       "sm_30", "sm_32", "sm_35" ],
-                "nvcc:--fmad="                    : [ "true", "false" ],
                 "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                 "nvcc:--ftz="                     : [ "true", "false" ],
                 "nvcc:--prec-div="                : [ "true", "false" ],
@@ -39,8 +38,7 @@ PTXAS_FLAGS  = [ ]
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
                  "ptxas:--fmad="                          : [ "true", "false" ],
-                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ],
-                 "ptxas:--fmad="                          : [ "true", "false" ] }
+                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ] }
 # ( name, min, max )
 PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
 # Specify NVLINK options:
@@ -89,12 +87,10 @@ class NvccFlagsTuner(MeasurementInterface):
         cmd += self.parse_flags(ptxas_flags, PTXAS_NAME)
         cmd += self.parse_flags(nvlink_flags, NVLINK_NAME)
 
-        print cmd
         compile_result = self.call_program(cmd)
-        print compile_result['returncode']
         assert compile_result['returncode'] == 0
 
-        run_result = self.call_program('./tmp.bin')
+        run_result = self.call_program('./tmp.bin 33554432 0 0')
         assert run_result['returncode'] == 0
 
         return Result(time=run_result['time'])
@@ -103,5 +99,5 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     filename = args.filename
-    NVCC_CMD += "-I /usr/local/cuda/include -L /usr/local/cuda/lib64 " + filename + " -o ./tmp.bin "
+    NVCC_CMD += "-w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 " + filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
