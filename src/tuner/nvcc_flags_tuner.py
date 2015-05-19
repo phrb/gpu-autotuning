@@ -22,10 +22,7 @@ GCC_NUM_PARAMS = []
 NVCC_FLAGS = [ "nvcc:--no-align-double",
                "nvcc:--use_fast_math" ]
 # { name : [ args ] }
-NVCC_PARAMS = { "nvcc:--default-stream="          : [ "legacy", "null", "per-thread" ],
-                "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
-                                                      "sm_30", "sm_32", "sm_35" ],
-                "nvcc:--fmad="                    : [ "true", "false" ],
+NVCC_PARAMS = { "nvcc:--fmad="                    : [ "true", "false" ],
                 "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                 "nvcc:--ftz="                     : [ "true", "false" ],
                 "nvcc:--prec-div="                : [ "true", "false" ],
