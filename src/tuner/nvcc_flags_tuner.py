@@ -77,7 +77,11 @@ class NvccFlagsTuner(MeasurementInterface):
 
         cmd = NVCC_CMD + NVCC_NAME
         nvcc_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvcc") ]
+        ptxas_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("ptxas") ]
+        nvlink_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvlink") ]
         print nvcc_flags
+        print ptxas_flags
+        print nvlink_flags
 
 #        return Result(time=0)
         return None
