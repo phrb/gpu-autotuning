@@ -16,13 +16,13 @@ argparser.add_argument( "-f", "--file",
 # Specify compiler options:
 NVCC_NAME = "-Xcompiler"
 # name
-NVCC_FLAGS = [ "nvcc:--no-align-double=",
-               "nvcc:--relocatable-device-code=",
-               "nvcc:--use_fast_math=",
-               "nvcc:--ftz=",
-               "nvcc:--prec-div=",
-               "nvcc:--prec-sqrt=",
-               "nvcc:--fmad " ]
+NVCC_FLAGS = [ "nvcc:--no-align-double",
+               "nvcc:--relocatable-device-code",
+               "nvcc:--use_fast_math",
+               "nvcc:--ftz",
+               "nvcc:--prec-div",
+               "nvcc:--prec-sqrt",
+               "nvcc:--fmad" ]
 # { name : [ args ] }
 NVCC_PARAMS = { "nvcc:--default-stream="   : [ "legacy", "null", "per-thread" ],
                 "nvcc:--gpu-architecture=" : [ "sm_20", "sm_21", "sm_30", "sm_32",
@@ -32,12 +32,12 @@ NVCC_NUM_PARAMS = [ ( "nvcc:--maxrregcount=", 16, 63 ) ]
 # Specify ptxas options:
 PTXAS_NAME = "-Xptxas "
 # name
-PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations=",
-                 "ptxas:--def-store-cache=",
-                 "ptxas:--disable-optimizer-consts=",
-                 "ptxas:--force-load-cache=",
-                 "ptxas:--force-store-cache=",
-                 "ptxas--fmad=" ]
+PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
+                 "ptxas:--def-store-cache",
+                 "ptxas:--disable-optimizer-consts",
+                 "ptxas:--force-load-cache",
+                 "ptxas:--force-store-cache",
+                 "ptxas:--fmad" ]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache=" : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--gpu-name="       : [ "compute_20", "compute_30",
@@ -51,7 +51,7 @@ PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
 # Specify NVLINK options:
 NVLINK_NAME = "-Xnvlink "
 # name
-NVLINK_FLAGS = [ "nvlink:--preserve-relocs=" ]
+NVLINK_FLAGS = [ "nvlink:--preserve-relocs" ]
 
 NVCC_CMD = "nvcc "
 NVCC_END = "-o "
@@ -62,7 +62,7 @@ class NvccFlagsTuner(MeasurementInterface):
         for flag in NVCC_FLAGS + PTXAS_FLAGS + NVLINK_FLAGS:
             manipulator.add_parameter(
                     EnumParameter(flag,
-                                  ["on", "off", "default"]))
+                                  ["on", "off"]))
 
         for d in [NVCC_PARAMS, PTXAS_PARAMS]:
             for flag, values in d.iteritems():
@@ -82,18 +82,28 @@ class NvccFlagsTuner(MeasurementInterface):
         cmd = NVCC_CMD + NVCC_NAME
         for full_flag, value in nvcc_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + str(value) + " "
+            if (value == "on"):
+                cmd += " " + flag + " "
+            elif (value != "off"):
+                cmd += " " + flag + str(value) + " "
 
         cmd += PTXAS_NAME
         for full_flag, value in ptxas_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + str(value) + " "
+            if (value == "on"):
+                cmd += " " + flag + " "
+            elif (value != "off"):
+                cmd += " " + flag + str(value) + " "
 
         cmd += NVLINK_NAME
         for full_flag, value in nvlink_flags:
             flag = full_flag.split(":")[1]
-            cmd += " " + flag + str(value) + " "
+            if (value == "on"):
+                cmd += " " + flag + " "
+            elif (value != "off"):
+                cmd += " " + flag + str(value) + " "
 
+        cmd += NVCC_END
         print cmd
 
 #        return Result(time=0)
