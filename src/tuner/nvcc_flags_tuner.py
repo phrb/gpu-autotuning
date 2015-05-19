@@ -22,7 +22,9 @@ GCC_NUM_PARAMS = []
 NVCC_FLAGS = [ "nvcc:--no-align-double",
                "nvcc:--use_fast_math" ]
 # { name : [ args ] }
-NVCC_PARAMS = { "nvcc:--fmad="                    : [ "true", "false" ],
+NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
+                                                      "sm_30", "sm_32", "sm_35" ],
+                "nvcc:--fmad="                    : [ "true", "false" ],
                 "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                 "nvcc:--ftz="                     : [ "true", "false" ],
                 "nvcc:--prec-div="                : [ "true", "false" ],
@@ -37,11 +39,6 @@ PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
                  "ptxas:--disable-optimizer-consts" ]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
-                 "ptxas:--gpu-name="                      : [ "compute_20", "compute_30",
-                                                              "compute_35", "compute_50",
-                                                              "compute_52", "sm_20",
-                                                              "sm_21", "sm_30", "sm_32",
-                                                              "sm_35" ],
                  "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
                  "ptxas:--fmad="                          : [ "true", "false" ],
                  "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ],
