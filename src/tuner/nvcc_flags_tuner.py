@@ -34,15 +34,12 @@ NVCC_NUM_PARAMS = [ ]
 # Specify ptxas options:
 PTXAS_NAME = "-Xptxas "
 # name
-PTXAS_FLAGS  = [ "ptxas:--allow-expensive-optimizations",
-                 "ptxas:--def-store-cache",
-                 "ptxas:--disable-optimizer-consts" ]
+PTXAS_FLAGS  = [ "ptxas:--def-store-cache" ]
 # { name : [ args ] }
 PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                  "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
                  "ptxas:--fmad="                          : [ "true", "false" ],
                  "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ],
-                 "ptxas:--fmad="                          : [ "true", "false" ],
                  "ptxas:--fmad="                          : [ "true", "false" ] }
 # ( name, min, max )
 PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
