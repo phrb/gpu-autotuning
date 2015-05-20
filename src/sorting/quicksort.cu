@@ -146,11 +146,10 @@ cudaError_t checkCuda(cudaError_t result)
  // program main
  int main(int argc, char **argv) {
 
-if (argc != 3) {
-		fprintf(stderr, "Syntax: %s <Vector size Width> <device id>\n", argv[0]);
+	if (argc != 2) {
+		fprintf(stderr, "Syntax: %s <Vector size Width> \n", argv[0]);
     		return EXIT_FAILURE;
 	}
-
  	
 	int N = atoi(argv[1]);
 	size_t size = N * sizeof(long int);
@@ -158,9 +157,9 @@ if (argc != 3) {
 	printf("./bitonic_sort starting with %d numbers...\n", N);
 	srand( time(NULL) );
 
-	int devId = atoi(argv[2]);
+	int devId = 0;
 	checkCuda( cudaSetDevice(devId) );
-    cudaDeviceReset();
+    	cudaDeviceReset();
 	
 	cudaDeviceProp prop;
 	checkCuda( cudaGetDeviceProperties(&prop, devId) );

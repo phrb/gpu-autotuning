@@ -248,8 +248,8 @@ int main(int argc, char** argv){
 	//Vetor aux
 	int *vet_d; int *vetFinal_d;
 	
-	if (argc != 4) {
-		fprintf(stderr, "Syntax: %s <Vector size Width> <device id> <CacheConfL1> \n", argv[0]);
+	if (argc != 3) {
+		fprintf(stderr, "Syntax: %s <Vector size Width> <CacheConfL1> \n", argv[0]);
     		return EXIT_FAILURE;
 	}
 
@@ -270,11 +270,11 @@ int main(int argc, char** argv){
 	vet_h[131] = 954;
 	vet_h[132] = 10;
 	
-	int devId = atoi(argv[2]);
-  int CacheConfL1 = atoi(argv[3]);
+	int devId = 0;
+  	int CacheConfL1 = atoi(argv[2]);
 
 	checkCuda( cudaSetDevice(devId) );
-    cudaDeviceReset();
+    	cudaDeviceReset();
 
 	cudaDeviceProp prop;
 	checkCuda( cudaGetDeviceProperties(&prop, devId) );
@@ -290,26 +290,26 @@ int main(int argc, char** argv){
 	int ElemPorBlocos = (N / BLOCK_SIZE);
 	int ElemPorThread = (ElemPorBlocos / nThreadsPerBlock);
 
-  if (CacheConfL1 == 1){
-    cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferShared);
-  }
-  else if (CacheConfL1 == 2){
-    cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferEqual);
-  }
-  else if (CacheConfL1 == 3){
-    cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferL1);
-  }
-  else {
-    cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferNone);
-  }
+	if (CacheConfL1 == 1){
+	cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferShared);
+	}
+	else if (CacheConfL1 == 2){
+	cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferEqual);
+	}
+	else if (CacheConfL1 == 3){
+	cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferL1);
+	}
+	else {
+	cudaFuncSetCacheConfig(subSeqMax, cudaFuncCachePreferNone);
+	}
  
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 	cudaEventRecord(start, 0);
     
-    cudaProfilerStart(); 
+	cudaProfilerStart(); 
 	subSeqMax<<<BLOCK_SIZE, nThreadsPerBlock>>>(vet_d, vetFinal_d, ElemPorThread,N / BLOCK_SIZE);
-    cudaProfilerStop();
+	cudaProfilerStop();
 
 	cudaEventRecord(stop, 0);
 	cudaEventSynchronize(stop);

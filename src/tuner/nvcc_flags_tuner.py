@@ -90,7 +90,7 @@ class NvccFlagsTuner(MeasurementInterface):
         compile_result = self.call_program(cmd)
         assert compile_result['returncode'] == 0
 
-        run_result = self.call_program('./tmp.bin 33554432 0 0')
+        run_result = self.call_program('./tmp.bin 33554432 0')
         assert run_result['returncode'] == 0
 
         return Result(time=run_result['time'])
