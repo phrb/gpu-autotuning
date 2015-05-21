@@ -24,10 +24,12 @@ argparser.add_argument( "-fargs", "--file-args",
 argparser.add_argument( "-ld", "--log-dir",
                         dest     = "logdir",
                         type     = str,
+                        required = True,
                         help     = "Directory to save this tuning run.")
 argparser.add_argument( "-lc", "--log-cmd",
                         dest     = "logcmd",
                         type     = str,
+                        required = True,
                         help     = "File to save best configuration to.")
 
 FARGS = ""
@@ -93,9 +95,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         return cmd
 
-    def run(self, desired_result, input, limit):
-        cfg = desired_result.configuration.data
-
+    def parse_config(self, cfg):
         nvcc_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvcc") ]
         ptxas_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("ptxas") ]
         nvlink_flags = [ (key, value) for key,value in cfg.iteritems() if key.startswith("nvlink") ]
@@ -105,7 +105,13 @@ class NvccFlagsTuner(MeasurementInterface):
         cmd += self.parse_flags(ptxas_flags, PTXAS_NAME)
         cmd += self.parse_flags(nvlink_flags, NVLINK_NAME)
 
-        compile_result = self.call_program(cmd)
+        return cmd
+
+
+    def run(self, desired_result, input, limit):
+        cfg = desired_result.configuration.data
+
+        compile_result = self.call_program(self.parse_config(cfg))
         assert compile_result['returncode'] == 0
 
         run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
@@ -113,9 +119,23 @@ class NvccFlagsTuner(MeasurementInterface):
 
         return Result(time=run_result['time'])
 
+    def save_final_config(self, configuration):
+        cfg = configuration.data
+
+        print "Optimal configuration written to 'final_config.json'."
+        self.manipulator().save_to_file(cfg, LOG_DIR + 'final_config.json')
+
+        cmd = self.parse_config(cfg)
+        print "Optimal config written to " + LOG_DIR + LOG_FILE + ": ", cmd
+        with open(LOG_DIR + LOG_FILE, 'a+') as myfile:
+            myfile.write(cmd + "\n")
+
 if __name__ == '__main__':
     opentuner.init_logging()
-    args = argparser.parse_args()
+    args     = argparser.parse_args()
+
+    LOG_DIR  = args.logdir
+    LOG_FILE = args.logcmd
 
     filename = args.filename
     if (args.fargs):
