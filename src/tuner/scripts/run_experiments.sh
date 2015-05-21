@@ -14,12 +14,8 @@ for i in $(seq 1 $RUNS)
 do
     mkdir ${LOG_DIR}/run_${i}
     python tuner.py --no-dups --stop-after=${TIME} \
-    --logdir=${LOG_DIR}/run_${i}/ \
-    --bestlog=${CONFIG_NAME} \
-    --log-best-data \
-    -i=${INSTANCE_NUMBER} \
-    -f=${INSTANCE_SET} \
-    -id=${INSTANCE_DIR} \
+    --log-dir=${LOG_DIR}/run_${i}/ \
+    --log-cmd=${CONFIG_NAME} \
     --parallelism=${THREADS} \
     --results-log-detail=${LOG_DIR}/run_${i}/logall.txt \
     --results-log=${LOG_DIR}/run_${i}/logbest.txt

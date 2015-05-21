@@ -16,12 +16,19 @@ argparser.add_argument( "-f", "--file",
                         type     = str,
                         required = True,
                         help     = "A file to tune.")
-
 argparser.add_argument( "-fargs", "--file-args",
-                        dest  = "fargs",
-                        type  = str,
-                        nargs = '*',
-                        help  = "Program arguments.")
+                        dest     = "fargs",
+                        type     = str,
+                        nargs    = '*',
+                        help     = "Program arguments.")
+argparser.add_argument( "-ld", "--log-dir",
+                        dest     = "logdir",
+                        type     = str,
+                        help     = "Directory to save this tuning run.")
+argparser.add_argument( "-lc", "--log-cmd",
+                        dest     = "logcmd",
+                        type     = str,
+                        help     = "File to save best configuration to.")
 
 FARGS = ""
 # Specify gcc options:
