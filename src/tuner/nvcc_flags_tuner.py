@@ -6,13 +6,24 @@ from opentuner import MeasurementInterface
 from opentuner import Result
 
 import argparse
+import logging
+
+log = logging.getLogger('nvccflags')
 
 argparser = argparse.ArgumentParser(parents=opentuner.argparsers())
 argparser.add_argument( "-f", "--file",
-                        dest = "filename",
+                        dest     = "filename",
+                        type     = str,
                         required = True,
-                        help = "A file to tune.")
+                        help     = "A file to tune.")
 
+argparser.add_argument( "-fargs", "--file-args",
+                        dest  = "fargs",
+                        type  = str,
+                        nargs = '*',
+                        help  = "Program arguments.")
+
+FARGS = ""
 # Specify gcc options:
 GCC_NAME = "-Xcompiler"
 GCC_FLAGS = []
@@ -90,14 +101,18 @@ class NvccFlagsTuner(MeasurementInterface):
         compile_result = self.call_program(cmd)
         assert compile_result['returncode'] == 0
 
-        run_result = self.call_program('./tmp.bin 33554432 0')
+        run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
         assert run_result['returncode'] == 0
 
         return Result(time=run_result['time'])
 
 if __name__ == '__main__':
+    opentuner.init_logging()
     args = argparser.parse_args()
 
     filename = args.filename
+    if (args.fargs):
+        FARGS = args.fargs
+
     NVCC_CMD += "-w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 " + filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
