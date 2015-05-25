@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <cuda_profiler_api.h>
 
@@ -226,7 +227,6 @@ void subSeqMaxFinal(int *vet, int n){
                             ini_S = fim_S = i+1;
                         }
 
-                        suf += vet[i+1];
 
                     }
                     else{
@@ -236,6 +236,8 @@ void subSeqMaxFinal(int *vet, int n){
              }
         }
     }
+    
+    assert (t_M == 964);
 
 	printf(" \n\n A sub Sequencia deu %d  \n\n", t_M);
 }
@@ -319,10 +321,10 @@ int main(int argc, char** argv){
 
 	cudaMemcpy(vetFinal_h, vetFinal_d, NFinal * sizeof(int), cudaMemcpyDeviceToHost); //Resposta Final
 
-	for(i = 0; i < 4096; i++){
+	/*for(i = 0; i < 4096; i++){
 		if(vetFinal_h[i] != 0 && vetFinal_h[i] != -1 )
 			printf("%d ", vetFinal_h[i]);	
-	}
+	}*/
 		
 	printf("\n\n");
 
