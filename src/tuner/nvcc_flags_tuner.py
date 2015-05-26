@@ -104,7 +104,7 @@ class NvccFlagsTuner(MeasurementInterface):
         with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
             file.write("tested_configurations: " + str(CONFIGS_TESTED) + "\n")
             file.write("failed_configurations: " + str(CONFIGS_FAILED) + "\n")
-            file.write("ratio: " + str(float(CONFIGS_TESTED) / CONFIGS_FAILED) + "\n")
+            file.write("ratio: " + str(CONFIGS_FAILED / float(CONFIGS_TESTED)) + "\n")
 
 if __name__ == '__main__':
     FARGS = ""
