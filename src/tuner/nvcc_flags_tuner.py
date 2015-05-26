@@ -32,42 +32,6 @@ argparser.add_argument( "-lc", "--log-cmd",
                         required = True,
                         help     = "File to save best configuration to.")
 
-FARGS = ""
-# Specify gcc options:
-GCC_NAME = "-Xcompiler"
-GCC_FLAGS = []
-GCC_PARAMS = []
-GCC_NUM_PARAMS = []
-# name
-NVCC_FLAGS = [ "nvcc:--no-align-double",
-               "nvcc:--use_fast_math" ]
-# { name : [ args ] }
-NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
-                                                      "sm_30", "sm_32", "sm_35" ],
-                "nvcc:--relocatable-device-code=" : [ "true", "false" ],
-                "nvcc:--ftz="                     : [ "true", "false" ],
-                "nvcc:--prec-div="                : [ "true", "false" ],
-                "nvcc:--prec-sqrt="               : [ "true", "false" ] }
-# (name, min, max)
-NVCC_NUM_PARAMS = [ ]
-# Specify ptxas options:
-PTXAS_NAME = "-Xptxas "
-# name
-PTXAS_FLAGS  = [ ]
-# { name : [ args ] }
-PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
-                 "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
-                 "ptxas:--fmad="                          : [ "true", "false" ],
-                 "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ] }
-# ( name, min, max )
-PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
-# Specify NVLINK options:
-NVLINK_NAME = "-Xnvlink "
-# name
-NVLINK_FLAGS = [ "nvlink:--preserve-relocs" ]
-
-NVCC_CMD = "nvcc "
-
 class NvccFlagsTuner(MeasurementInterface):
     def manipulator(self):
         manipulator = ConfigurationManipulator()
@@ -115,9 +79,16 @@ class NvccFlagsTuner(MeasurementInterface):
         assert compile_result['returncode'] == 0
 
         run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
-        assert run_result['returncode'] == 0
-
-        return Result(time=run_result['time'])
+        global CONFIGS_TESTED
+        CONFIGS_TESTED += 1
+        if run_result['returncode'] != 0:
+            with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
+                file.write("failed_example_cmd: " + self.parse_config(cfg) + "\n")
+            global CONFIGS_FAILED
+            CONFIGS_FAILED += 1
+            return Result(time=FAIL_PENALTY)
+        else:
+            return Result(time=run_result['time'])
 
     def save_final_config(self, configuration):
         cfg = configuration.data
@@ -127,10 +98,55 @@ class NvccFlagsTuner(MeasurementInterface):
 
         cmd = self.parse_config(cfg)
         print "Optimal config written to " + LOG_DIR + LOG_FILE + ": ", cmd
-        with open(LOG_DIR + LOG_FILE, 'a+') as myfile:
+        with open(LOG_DIR + LOG_FILE, "a+") as myfile:
             myfile.write(cmd + "\n")
 
+        with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
+            file.write("tested_configurations: " + str(CONFIGS_TESTED) + "\n")
+            file.write("failed_configurations: " + str(CONFIGS_FAILED) + "\n")
+            file.write("ratio: " + str(float(CONFIGS_TESTED) / CONFIGS_FAILED) + "\n")
+
 if __name__ == '__main__':
+    FARGS = ""
+    # Specify gcc options:
+    GCC_NAME = "-Xcompiler"
+    GCC_FLAGS = []
+    GCC_PARAMS = []
+    GCC_NUM_PARAMS = []
+    # name
+    NVCC_FLAGS = [ "nvcc:--no-align-double",
+                   "nvcc:--use_fast_math" ]
+    # { name : [ args ] }
+    NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
+                                                          "sm_30", "sm_32", "sm_35" ],
+                    "nvcc:--relocatable-device-code=" : [ "true", "false" ],
+                    "nvcc:--ftz="                     : [ "true", "false" ],
+                    "nvcc:--prec-div="                : [ "true", "false" ],
+                    "nvcc:--prec-sqrt="               : [ "true", "false" ] }
+    # (name, min, max)
+    NVCC_NUM_PARAMS = [ ]
+    # Specify ptxas options:
+    PTXAS_NAME = "-Xptxas "
+    # name
+    PTXAS_FLAGS  = [ ]
+    # { name : [ args ] }
+    PTXAS_PARAMS = { "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
+                     "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ],
+                     "ptxas:--fmad="                          : [ "true", "false" ],
+                     "ptxas:--allow-expensive-optimizations=" : [ "true", "false" ] }
+    # ( name, min, max )
+    PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
+    # Specify NVLINK options:
+    NVLINK_NAME = "-Xnvlink "
+    # name
+    NVLINK_FLAGS = [ "nvlink:--preserve-relocs" ]
+
+    NVCC_CMD = "nvcc "
+
+    FAIL_PENALTY   = 9999
+    CONFIGS_FAILED = 0
+    CONFIGS_TESTED = 0
+
     opentuner.init_logging()
     args     = argparser.parse_args()
 
