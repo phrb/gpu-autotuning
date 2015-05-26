@@ -253,15 +253,8 @@
 
 		// test
 		printf("\nTesting results...\n");
-		for (int x = 0; x < N - 1; ++x) {
-			if (r_values[x] > r_values[x + 1]) {
-				printf("Sorting failed.\n");
-				break;
-			}
-			else
-				if (x == N - 2)
-					printf("SORTING SUCCESSFUL\n");
-		}
+		for (int x = 0; x < N - 1; x++) 
+            assert(r_values[x] <= r_values[x + 1]);
 	}
 
 	// free memory

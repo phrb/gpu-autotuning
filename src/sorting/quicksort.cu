@@ -4,12 +4,12 @@
  * ######## QUICK SORT ########
  *
  */
- 
- #include <time.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <cuda_profiler_api.h>
- // #include <cutil_inline.h>
+#include <assert.h> 
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cuda_profiler_api.h>
+// #include <cutil_inline.h>
 
 // Convenience function for checking CUDA runtime API results
 // can be wrapped around any runtime API call. No-op in release builds.
@@ -216,22 +216,14 @@ cudaError_t checkCuda(cudaError_t result)
  		/*for (int i = 0; i < N; i++) {
  			printf("%d ", r_values[i]);
  		}
- 		printf("\n");
-		*/
+ 		printf("\n");*/
+		
 
 		// test
-                printf("\nTesting results...\n");
-                for (int x = 0; x < N - 1; x++) {
-                        if (r_values[x] > r_values[x + 1]) {
-                                printf("Sorting failed.\n");
-                                break;
-                        }
-                        else
-                                if (x == N - 2)
-                                        printf("SORTING SUCCESSFUL\n");
-                }
-
-	}
+        printf("\nTesting results...\n");
+        for (int x = 0; x < N - 1; x++) 
+            assert(r_values[x] <= r_values[x + 1]);
+    }
  	
  	// free memory
 	cudaFree(d_values);

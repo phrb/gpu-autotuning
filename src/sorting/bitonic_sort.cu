@@ -170,7 +170,7 @@ cudaError_t checkCuda(cudaError_t result)
  		cudaThreadSynchronize() ;
 
 		// execute kernel
-       cudaProfilerStart(); 
+       		cudaProfilerStart(); 
 		for (int k = 2; k <= N; k <<= 1) {
 			for (int j = k >> 1; j > 0; j = j >> 1) {
 				if (N < MAX_THREADS)
@@ -179,7 +179,7 @@ cudaError_t checkCuda(cudaError_t result)
 					Bitonic_Sort <<< N / MAX_THREADS, MAX_THREADS >>> (d_values, j, k, N);
 			}
 		}
-        cudaProfilerStop();
+        	cudaProfilerStop();
  		//cutilCheckMsg( "Kernel execution failed...\n" );
 		//printf("Kernel execution failed...\n");
  
@@ -191,23 +191,16 @@ cudaError_t checkCuda(cudaError_t result)
 		cudaMemcpy(r_values, d_values, size, cudaMemcpyDeviceToHost) ;
 
 	 	// test print
-	 	/*for (int i = 0; i < N; ++i) {
+	 	for (int i = 0; i < N; ++i) {
 	 		printf("%d ", r_values[i]);
 	 	}
 	 	printf("\n");
-		*/
+		
 	
 		// test
 		printf("\nTesting results...\n");
-		for (int x = 0; x < N - 1; x++) {
-			if (r_values[x] > r_values[x + 1]) {
-				printf("Sorting failed.\n");
-				break;
-			}
-			else
-				if (x == N - 2)
-					printf("SORTING SUCCESSFUL\n");
-		}
+		for (int x = 0; x < N - 1; x++) 
+            assert(r_values[x] <= r_values[x + 1]);
 	}
 
  	// free memory
