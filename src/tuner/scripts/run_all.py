@@ -21,7 +21,7 @@ def run(program, arguments, logdir, time):
 #
 program = "../bioinformatic/SubSeqMax.cu"
 logdir  = "logs/SubSeqMax"
-time    = 1800
+time    = 3600
 #
 # Starting a clean experiment.
 #
