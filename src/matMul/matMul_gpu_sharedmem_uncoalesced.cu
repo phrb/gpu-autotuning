@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
   printf("Device: %s\n", prop.name);
 
   //Assert Process
-  char fileName[20] = "matMul_";
+  char fileName[20] = "../matMul/matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
@@ -151,6 +151,7 @@ int main(int argc, char* argv[])
 
     for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
+	   printf("%f, (%d,%d)\n", fabs(P[i * Width + j] - Pt[i * Width + j]), i, j);
 	   assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.01);
         }
     }

@@ -31,6 +31,11 @@ argparser.add_argument( "-lc", "--log-cmd",
                         type     = str,
                         required = True,
                         help     = "File to save best configuration to.")
+argparser.add_argument( "-cp", "--cuda-path",
+                        dest     = "cuda_path",
+                        type     = str,
+                        required = True,
+                        help     = "Path to CUDA libraries.")
 
 class NvccFlagsTuner(MeasurementInterface):
     def manipulator(self):
@@ -75,9 +80,11 @@ class NvccFlagsTuner(MeasurementInterface):
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
+        print self.parse_config(cfg)
         compile_result = self.call_program(self.parse_config(cfg))
         assert compile_result['returncode'] == 0
 
+        print "./tmp.bin " + " ".join(FARGS)
         run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
         global CONFIGS_TESTED
         CONFIGS_TESTED += 1
@@ -141,8 +148,6 @@ if __name__ == '__main__':
     # name
     NVLINK_FLAGS = [ "nvlink:--preserve-relocs" ]
 
-    NVCC_CMD = "nvcc "
-
     FAIL_PENALTY   = 9999
     CONFIGS_FAILED = 0
     CONFIGS_TESTED = 0
@@ -152,10 +157,11 @@ if __name__ == '__main__':
 
     LOG_DIR  = args.logdir
     LOG_FILE = args.logcmd
+    NVCC_CMD = "nvcc -w " + args.cuda_path
 
     filename = args.filename
     if (args.fargs):
         FARGS = args.fargs
 
-    NVCC_CMD += "-w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 " + filename + " -o ./tmp.bin "
+    NVCC_CMD += filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())

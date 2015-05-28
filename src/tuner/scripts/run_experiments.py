@@ -59,7 +59,7 @@ argparser.add_argument( "-cp", "--cuda-path",
                         dest     = "cuda_path",
                         type     = str,
                         default  = "",
-                        required = False,
+                        required = True,
                         help     = "The path for CUDA libraries.")
 
 if __name__ == '__main__':
@@ -79,6 +79,7 @@ if __name__ == '__main__':
         cmd += " --parallelism="        + args.parallelism
         cmd += " --results-log-detail=" + args.logdir + run_id + "/logall.txt"
         cmd += " --results-log="        + args.logdir + run_id + "/logbest.txt"
+        cmd += " --cuda-path="          + "\"" + args.cuda_path + "\""
 
         if args.technique != "":
             cmd += " --technique=" + args.technique

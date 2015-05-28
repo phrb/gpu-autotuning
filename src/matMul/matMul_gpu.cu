@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 
 
   //Assert Process
-  char fileName[20] = "matMul_";
+  char fileName[20] = "../matMul/matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);

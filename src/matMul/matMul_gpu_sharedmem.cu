@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <cuda_profiler_api.h>
+#include <assert.h>
 
 #define Tile_Width 16
 
@@ -130,12 +131,13 @@ int main(int argc, char* argv[])
   printf("Device: %s\n", prop.name);
 
 //Assert Process
-  char fileName[20] = "matMul_";
+  char fileName[20] = "../matMul/matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
   strcat(fileName, ".out");
-  
+
+  printf("filename: %s\n", fileName);
   FILE *ptr_file;
   ptr_file =fopen(fileName, "r");
   if (!ptr_file) return 1;
@@ -149,7 +151,7 @@ int main(int argc, char* argv[])
 
     for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
-	   assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.01);
+            assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.001);
         }
     }
 
