@@ -67,5 +67,109 @@ for i in [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]:
     print "[INFO] Baseline Calculation Done."
 print "[INFO] SubSeqMax Experiments Done."
 #
-# TODO: Write code for the other experiments.
+# MatMulShared Experiments:
 #
+# Parameters:
+#
+args        = argparser.parse_args()
+cuda_path   = args.cuda_path
+program     = "../matMul/matMul_gpu_sharedmem.cu"
+logdir      = "logs/MatMulShared"
+time        = 7200
+runs        = 2
+benchmark   = 20
+#
+# Starting a clean experiment.
+#
+os.system("rm -r " + logdir)
+os.system("mkdir " + logdir)
+
+print "[INFO] Starting MatMulShared Experiments."
+for i in [16, 32, 64, 128, 256, 512, 1024]:
+    logs = logdir + "/size_" + str(i) + "_time_" + str(time)
+    run(program, [str(i), "32", "0"], logs, time, runs, benchmark, cuda_path)
+    print "[INFO] Calculating Baselines for -O0, -O1, -O2, -O3."
+    baseline(program, [str(i), "0"], logdir, benchmark, cuda_path)
+    print "[INFO] Baseline Calculation Done."
+print "[INFO] MatMulShared Experiments Done."
+#
+# MatMulSharedUn Experiments:
+#
+# Parameters:
+#
+args        = argparser.parse_args()
+cuda_path   = args.cuda_path
+program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
+logdir      = "logs/MatMulSharedUn"
+time        = 7200
+runs        = 2
+benchmark   = 20
+#
+# Starting a clean experiment.
+#
+os.system("rm -r " + logdir)
+os.system("mkdir " + logdir)
+
+print "[INFO] Starting MatMulSharedUn Experiments."
+for i in [16, 32, 64, 128, 256, 512, 1024]:
+    logs = logdir + "/size_" + str(i) + "_time_" + str(time)
+    run(program, [str(i), "32", "0"], logs, time, runs, benchmark, cuda_path)
+    print "[INFO] Calculating Baselines for -O0, -O1, -O2, -O3."
+    baseline(program, [str(i), "0"], logdir, benchmark, cuda_path)
+    print "[INFO] Baseline Calculation Done."
+print "[INFO] MatMulSharedUn Experiments Done."
+#
+# MatMulUn Experiments:
+#
+# Parameters:
+#
+args        = argparser.parse_args()
+cuda_path   = args.cuda_path
+program     = "../matMul/matMul_gpu_uncoalesced.cu"
+logdir      = "logs/MatMulUn"
+time        = 7200
+runs        = 2
+benchmark   = 20
+#
+# Starting a clean experiment.
+#
+os.system("rm -r " + logdir)
+os.system("mkdir " + logdir)
+
+print "[INFO] Starting MatMulUn Experiments."
+for i in [16, 32, 64, 128, 256, 512, 1024]:
+    logs = logdir + "/size_" + str(i) + "_time_" + str(time)
+    run(program, [str(i), "32", "0"], logs, time, runs, benchmark, cuda_path)
+    print "[INFO] Calculating Baselines for -O0, -O1, -O2, -O3."
+    baseline(program, [str(i), "0"], logdir, benchmark, cuda_path)
+    print "[INFO] Baseline Calculation Done."
+print "[INFO] MatMulUn Experiments Done."
+#
+# MatMulGPU Experiments:
+#
+# Parameters:
+#
+args        = argparser.parse_args()
+cuda_path   = args.cuda_path
+program     = "../matMul/matMul_gpu.cu"
+logdir      = "logs/MatMulGPU"
+time        = 7200
+runs        = 2
+benchmark   = 20
+#
+# Starting a clean experiment.
+#
+os.system("rm -r " + logdir)
+os.system("mkdir " + logdir)
+
+print "[INFO] Starting MatMulGPU Experiments."
+for i in [16, 32, 64, 128, 256, 512, 1024]:
+    logs = logdir + "/size_" + str(i) + "_time_" + str(time)
+    run(program, [str(i), "32", "0"], logs, time, runs, benchmark, cuda_path)
+    print "[INFO] Calculating Baselines for -O0, -O1, -O2, -O3."
+    baseline(program, [str(i), "0"], logdir, benchmark, cuda_path)
+    print "[INFO] Baseline Calculation Done."
+print "[INFO] MatMulGPU Experiments Done."
+#
+# TODO: Write code for the other experiments.
+0#
