@@ -40,7 +40,7 @@ argparser.add_argument( "-r", "--tuning-runs",
                         help     = "Number of tuning runs to perform.")
 argparser.add_argument( "-br", "--benchmark-runs",
                         dest     = "benchmark",
-                        type     = str,
+                        type     = int,
                         required = True,
                         help     = "Number of times to run the final configuration.")
 argparser.add_argument( "-tech", "--choose-technique",
@@ -55,6 +55,12 @@ argparser.add_argument( "-s", "--seed",
                         default  = "",
                         required = False,
                         help     = "A seed configuration, to start the search in.")
+argparser.add_argument( "-cp", "--cuda-path",
+                        dest     = "cuda_path",
+                        type     = str,
+                        default  = "",
+                        required = False,
+                        help     = "The path for CUDA libraries.")
 
 if __name__ == '__main__':
     args =  argparser.parse_args()
@@ -80,6 +86,27 @@ if __name__ == '__main__':
             cmd += " --seed-configuration=" + args.seed
 
         os.system(cmd)
+
+        #
+        # Compile and run best solution multiple times.
+        #
+        print "[INFO] Tuning Complete, Starting Benchmark:"
+        # Compiling:
+        print "[INFO] Compiling..."
+        os.system("cat " + args.logdir + run_id + "/final")
+        os.system("sh "  + args.logdir + run_id + "/final")
+        print "[INFO] Done."
+        print "[INFO] Running Benchmark:"
+        for j in range(args.benchmark):
+            # Running:
+            time     = "/usr/bin/time -p "
+            binary   = "./tmp.bin " + " ".join(args.fargs) + " "
+            greptime = "2>&1 | grep -oP '(?<=real )[0-9]*.[0-9]*' "
+            logfile  = ">> " + args.logdir + run_id + "/benchmark.txt"
+
+            print time + binary + greptime + logfile
+            os.system(time + binary + greptime + logfile)
+        print "[INFO] Benchmark Done."
 
     os.system("rm -r opentuner.log opentuner.db")
 
