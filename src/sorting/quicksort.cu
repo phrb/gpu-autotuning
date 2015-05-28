@@ -27,7 +27,7 @@ cudaError_t checkCuda(cudaError_t result)
 
  
  #define MAX_THREADS	128 
- //#define N		32768
+
  int*	r_values;
  int*	d_values;
 
@@ -146,12 +146,13 @@ cudaError_t checkCuda(cudaError_t result)
  // program main
  int main(int argc, char **argv) {
 
-	if (argc != 2) {
-		fprintf(stderr, "Syntax: %s <Vector size Width> \n", argv[0]);
+	if (argc != 3 ) {
+		fprintf(stderr, "Syntax: %s <Vector size Width>  <CacheConfL1> \n", argv[0]);
     		return EXIT_FAILURE;
 	}
  	
 	int N = atoi(argv[1]);
+  	int CacheConfL1 = atoi(argv[2]);
 	size_t size = N * sizeof(long int);
 	
 	printf("./bitonic_sort starting with %d numbers...\n", N);
@@ -192,33 +193,31 @@ cudaError_t checkCuda(cudaError_t result)
 
 		printf("Beginning kernel execution...\n");
 
+		if (CacheConfL1 == 1){
+	        cudaFuncSetCacheConfig(quicksort, cudaFuncCachePreferShared);
+	    }
+	    else if (CacheConfL1 == 2){
+    	    cudaFuncSetCacheConfig(quicksort, cudaFuncCachePreferEqual);
+	    }
+	    else if (CacheConfL1 == 3){
+	        cudaFuncSetCacheConfig(quicksort, cudaFuncCachePreferL1);
+	    }
+	    else {
+	        cudaFuncSetCacheConfig(quicksort, cudaFuncCachePreferNone);
+	    }
 		
- 		 cudaThreadSynchronize() ;
-		
-	 	
+ 		 cudaThreadSynchronize() ; 	
 	
 		// execute kernel
         cudaProfilerStart(); 
  		quicksort <<< MAX_THREADS / cThreadsPerBlock, MAX_THREADS / cThreadsPerBlock, cThreadsPerBlock >>> (d_values, N);
         cudaProfilerStop();   
-	 	//cutilCheckMsg( "Kernel execution failed..." );
-		//printf( "Kernel execution failed...");
-		cudaThreadSynchronize() ;
-	 	
-	 	//double gpuTime = cutGetTimerValue(hTimer);
 
-		//printf( "\nKernel execution completed in %f ms\n", gpuTime );
- 	
+		cudaThreadSynchronize() ;
+	 	 	
 	 	// copy data back to host
 		cudaMemcpy(r_values, d_values, size, cudaMemcpyDeviceToHost) ;
  	
-	 	// test print
- 		/*for (int i = 0; i < N; i++) {
- 			printf("%d ", r_values[i]);
- 		}
- 		printf("\n");*/
-		
-
 		// test
         printf("\nTesting results...\n");
         for (int x = 0; x < N - 1; x++) 
