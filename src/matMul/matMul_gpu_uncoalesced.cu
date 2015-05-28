@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -43,7 +44,7 @@ int main(int argc, char* argv[])
 {
 
   if (argc != 4) {
-    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size> <CacheConfL1> \n", argv[0]);
+    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size>  <CacheConfL1>  \n", argv[0]);
     return EXIT_FAILURE;
   }
 
@@ -60,6 +61,7 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
+  float Pt[Width*Width];
 
   // set seed for drand48()
   srand48(42);
@@ -113,16 +115,29 @@ int main(int argc, char* argv[])
   checkCuda( cudaGetDeviceProperties(&prop, devId) );
   printf("Device: %s\n", prop.name);
 
-  /* print result
+  //Assert Process
+  char fileName[20] = "matMul_";
+  char bufferWidth[5] = " ";
+  sprintf(bufferWidth, "%d", Width);
+  strcat(fileName, bufferWidth);
+  strcat(fileName, ".out");
+  
   FILE *ptr_file;
-  ptr_file =fopen("matMul_gpu_globalmem_uncoalesced.out", "w");
+  ptr_file =fopen(fileName, "r");
   if (!ptr_file) return 1;
 
   for (int i=0; i < Width; i++){
-      for (int j=0; j < Width; j++) fprintf(ptr_file,"%6.2f ", P[i * Width + j]);
-      fprintf(ptr_file,"\n");
+      for (int j=0; j < Width; j++){ 
+	fscanf(ptr_file, "%f", &Pt[i * Width + j]);
+      }
   }
-  fclose(ptr_file);*/
+  fclose(ptr_file); 
+
+    for(int i=0 ;i<Width; i++) {
+        for(int j=0; j<Width; j++) {
+	   assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.01);
+        }
+    }
 
 
   // clean up memory
