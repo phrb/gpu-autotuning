@@ -70,30 +70,24 @@ def run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, arg
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-time        = 30
-runs        = 1
-benchmark   = 1
-#
-# SubSeqMax Experiments:
-#
-#program     = "../bioinformatic/SubSeqMax.cu"
-#logdir      = "logs/SubSeqMax"
-#arguments   = "0"
-#steps       = [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]
-#
-#run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
+time        = 3600
+runs        = 2
+benchmark   = 20
 #
 # MatMulShared Experiments:
 #
-#program     = "../matMul/matMul_gpu_sharedmem.cu"
-#logdir      = "logs/MatMulShared"
-arguments   = "32 0"
+program     = "../matMul/matMul_gpu_sharedmem.cu"
+logdir      = "logs/MatMulShared"
+arguments   = "16 0"
 steps       = [128, 256, 512, 1024]
 
 #run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
 #
+# TODO: Fix MatMulSharedUn for all sizes.
+#
 # MatMulSharedUn Experiments:
 #
+steps       = [256]
 program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
 logdir      = "logs/MatMulSharedUn"
 
@@ -101,6 +95,7 @@ run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
 #
 # MatMulUn Experiments:
 #
+steps       = [128, 256, 512, 1024]
 program     = "../matMul/matMul_gpu_uncoalesced.cu"
 logdir      = "logs/MatMulUn"
 
@@ -110,6 +105,15 @@ run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
 #
 program     = "../matMul/matMul_gpu.cu"
 logdir      = "logs/MatMulGPU"
+
+run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
+#
+# SubSeqMax Experiments:
+#
+program     = "../bioinformatic/SubSeqMax.cu"
+logdir      = "logs/SubSeqMax"
+arguments   = "0"
+steps       = [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]
 
 run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
 #
