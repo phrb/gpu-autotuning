@@ -55,6 +55,12 @@ argparser.add_argument( "-s", "--seed",
                         default  = "",
                         required = False,
                         help     = "A seed configuration, to start the search in.")
+argparser.add_argument( "-cp", "--cuda-path",
+                        dest     = "cuda_path",
+                        type     = str,
+                        default  = "",
+                        required = False,
+                        help     = "The path for CUDA libraries.")
 
 if __name__ == '__main__':
     args =  argparser.parse_args()
