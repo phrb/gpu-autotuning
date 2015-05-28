@@ -243,7 +243,7 @@ cudaError_t checkCuda(cudaError_t result)
      *	5. Zero distribution
      */
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 1; ++i) {
 	    // Initialize data set
 	    Init(r_values, i);
 
