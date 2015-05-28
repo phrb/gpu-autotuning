@@ -2,7 +2,7 @@
  * bitonic_sort.cu
  *
  */
- 
+#include <assert.h> 
 #include <math.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -23,10 +23,8 @@ cudaError_t checkCuda(cudaError_t result)
 #endif
   return result;
 }
-
  
  #define 	MAX_THREADS 	128
- //#define 	N 		32768
  
  int* r_values;
  int* d_values;
@@ -120,13 +118,14 @@ cudaError_t checkCuda(cudaError_t result)
  // program main
  int main(int argc, char** argv) {
 
-	if (argc != 2) {
-		fprintf(stderr, "Syntax: %s <Vector size Width> \n", argv[0]);
+	if (argc != 3) {
+		fprintf(stderr, "Syntax: %s <Vector size Width>  <CacheConfL1> \n", argv[0]);
     		return EXIT_FAILURE;
 	}
 
  	
 	int N = atoi(argv[1]);
+  	int CacheConfL1 = atoi(argv[2]);
 	size_t size = N * sizeof(long int);
 	
 	printf("./bitonic_sort starting with %d numbers...\n", N);
@@ -165,10 +164,21 @@ cudaError_t checkCuda(cudaError_t result)
  		cudaMemcpy(d_values, r_values, size, cudaMemcpyHostToDevice) ;
 
 		printf("Beginning kernel execution...\n");
-
+		
+		if (CacheConfL1 == 1){
+	        cudaFuncSetCacheConfig(Bitonic_Sort, cudaFuncCachePreferShared);
+	    }
+	    else if (CacheConfL1 == 2){
+    	    cudaFuncSetCacheConfig(Bitonic_Sort, cudaFuncCachePreferEqual);
+	    }
+	    else if (CacheConfL1 == 3){
+	        cudaFuncSetCacheConfig(Bitonic_Sort, cudaFuncCachePreferL1);
+	    }
+	    else {
+	        cudaFuncSetCacheConfig(Bitonic_Sort, cudaFuncCachePreferNone);
+	    }
  		
  		cudaThreadSynchronize() ;
-
 		// execute kernel
        		cudaProfilerStart(); 
 		for (int k = 2; k <= N; k <<= 1) {
@@ -179,24 +189,13 @@ cudaError_t checkCuda(cudaError_t result)
 					Bitonic_Sort <<< N / MAX_THREADS, MAX_THREADS >>> (d_values, j, k, N);
 			}
 		}
-        	cudaProfilerStop();
- 		//cutilCheckMsg( "Kernel execution failed...\n" );
-		//printf("Kernel execution failed...\n");
+        	cudaProfilerStop(); 		
  
 		cudaThreadSynchronize() ;
-
-		//printf("\nKerned execution completed in %f ms\n", gpuTime);
  
  		// copy data back to host
 		cudaMemcpy(r_values, d_values, size, cudaMemcpyDeviceToHost) ;
 
-	 	// test print
-	 	for (int i = 0; i < N; ++i) {
-	 		printf("%d ", r_values[i]);
-	 	}
-	 	printf("\n");
-		
-	
 		// test
 		printf("\nTesting results...\n");
 		for (int x = 0; x < N - 1; x++) 
