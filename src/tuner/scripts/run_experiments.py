@@ -1,5 +1,6 @@
 #! /usr/bin/python2
 import argparse
+import time
 import os
 
 argparser = argparse.ArgumentParser()
@@ -100,13 +101,18 @@ if __name__ == '__main__':
         print "[INFO] Running Benchmark:"
         for j in range(args.benchmark):
             # Running:
-            time     = "/usr/bin/time -p "
-            binary   = "./tmp.bin " + " ".join(args.fargs) + " "
-            greptime = "2>&1 | grep -oP '(?<=real )[0-9]*.[0-9]*' "
-            logfile  = ">> " + args.logdir + run_id + "/benchmark.txt"
+            cmd     = "./tmp.bin " + " ".join(args.fargs)
+            logfile = args.logdir + run_id + "/benchmark.txt"
 
-            print time + binary + greptime + logfile
-            os.system(time + binary + greptime + logfile)
+            print cmd
+            start   = time.time()
+            os.system(cmd)
+            end     = time.time()
+
+            with open(logfile, "a+") as file:
+                file.write(str(end - start) + "\n")
+
+
         print "[INFO] Benchmark Done."
 
     os.system("rm -r opentuner.log opentuner.db")

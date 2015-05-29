@@ -1,6 +1,7 @@
 #! /usr/bin/python2
 
 import os
+import time
 import argparse
 
 argparser = argparse.ArgumentParser()
@@ -44,12 +45,16 @@ def baseline(program, arguments, logdir, runs, cuda_path):
         print "nvcc -w " + cuda_path + program + " -o tmp.bin " + options + value
         os.system("nvcc -w " + cuda_path + program + " -o tmp.bin " + options + value)
         for i in range(runs):
-            time     = "/usr/bin/time -p "
-            binary   = "./tmp.bin " + " ".join(arguments) + " "
-            greptime = "2>&1 | grep -oP '(?<=real )[0-9]*.[0-9]*' "
-            logfile  = ">> " + logdir + "_baseline/opt_" + value + ".txt"
+            cmd   = "./tmp.bin " + " ".join(arguments) + " "
+            logfile  = logdir + "_baseline/opt_" + value + ".txt"
+ 
+            print cmd
+            start   = time.time()
+            os.system(cmd)
+            end     = time.time()
 
-            os.system(time + binary + greptime + logfile)
+            with open(logfile, "a+") as file:
+                file.write(str(end - start) + "\n")
 
 def run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args):
     print "[INFO] Starting " + program + " Experiments."
