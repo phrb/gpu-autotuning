@@ -81,7 +81,7 @@ logdir      = "logs/MatMulShared"
 arguments   = "16 0"
 steps       = [128, 256, 512, 1024]
 
-#run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
+run(program, steps, arguments, logdir, time, runs, benchmark, cuda_path, args)
 #
 # TODO: Fix MatMulSharedUn for all sizes.
 #

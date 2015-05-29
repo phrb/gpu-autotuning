@@ -80,11 +80,9 @@ class NvccFlagsTuner(MeasurementInterface):
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
-        print self.parse_config(cfg)
         compile_result = self.call_program(self.parse_config(cfg))
         assert compile_result['returncode'] == 0
 
-        print "./tmp.bin " + " ".join(FARGS)
         run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
         global CONFIGS_TESTED
         CONFIGS_TESTED += 1
