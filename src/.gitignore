@@ -2,3 +2,4 @@
 *.swp
 opentuner.*
 tmp.bin
+tuner/logs
