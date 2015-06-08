@@ -85,7 +85,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         # Give a better value to the Tuner (average)
         results = []
-        evaluations = 15
+        evaluations = 20
         for i in range(evaluations):
             run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
             global CONFIGS_TESTED
@@ -99,9 +99,12 @@ class NvccFlagsTuner(MeasurementInterface):
             else:
                 results.append(run_result['time'])
 
-        #Calculate Average:
-        final_result = sum(results) / len(results)
-        return Result(final_result)
+        # Calculate Average:
+        final_result = (sum(results) / len(results))
+        # We now return the average of runs,
+        # the idea is giving more 'context'
+        # to the tuner.
+        return Result(time=final_result)
 
     def save_final_config(self, configuration):
         cfg = configuration.data
