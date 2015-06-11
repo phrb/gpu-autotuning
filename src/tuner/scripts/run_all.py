@@ -95,8 +95,8 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 steps       = [256]
 program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
 logdir      = "logs/MatMulSharedUn"
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
 # MatMulUn Experiments:
 #
