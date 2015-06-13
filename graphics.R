@@ -29,7 +29,7 @@ graphics <- function(){
     plot(logBest[["V2"]]~logBest[["V1"]],
          type="l", col="black",
          xlab="Tunning Time (seconds)",
-         ylab="Execution Time (miliseconds)",
+         ylab="Execution Time (seconds)",
          cex.main=1.43,
          cex.axis = 2.3,
          cex.lab = 2.3
