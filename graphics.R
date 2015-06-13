@@ -12,7 +12,7 @@ graphics <- function(){
     postscript(paste("../../../images/", app[j], "-", gpu[i],
                      "-Box.eps",sep=""),
                height = 11, width = 11)
-    par(mar=c(4, 8, 1, 1) + 0.1, mgp=c(6, 1.5, 0), las=1)
+    par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
     boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)],
             opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
             names = c("-O0", "-O1","-O2","-O3", "All", "Tuned"),
@@ -25,13 +25,14 @@ graphics <- function(){
     postscript(paste("../../../images/", app[j], "-", gpu[i],
                      "-Best.eps",sep=""),
                height = 11, width = 11)
+    par(mar=c(9, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
     plot(logBest[["V2"]]~logBest[["V1"]],
-         type="l", col="blue",
+         type="l", col="black",
          xlab="Tunning Time (seconds)",
          ylab="Execution Time (miliseconds)",
          cex.main=1.43,
-         cex.axis = 1.48,
-         cex.lab = 1.32
+         cex.axis = 2.3,
+         cex.lab = 2.3
          )
 #    abline(h = mean(logAll[["V2"]][(logAll[["V2"]]<9999)]), col = "green", lwd=c(5,5))
 #    points(logBest[["V2"]][(logAll[["V2"]]<9999)]~logBest[["V1"]][(logAll[["V2"]]<9999)],
