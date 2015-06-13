@@ -14,9 +14,9 @@ graphics <- function(){
                height = 10, width = 11)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
     boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)],
-            opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
-            names = c("-O0", "-O1","-O2","-O3", "All", "Tuned"),
-            ylab="Execution Time (miliseconds)",
+            opt3[(opt3 < 9999)], benchmark[(benchmark < 9999)],
+            names = c("-O0", "-O1","-O2","-O3", "Tuned"),
+            ylab="Execution Time (seconds)",
             cex.axis = 2.3,
             cex.lab = 2.3
     )
@@ -34,9 +34,6 @@ graphics <- function(){
          cex.axis = 2.3,
          cex.lab = 2.3
          )
-#    abline(h = mean(logAll[["V2"]][(logAll[["V2"]]<9999)]), col = "green", lwd=c(5,5))
-#    points(logBest[["V2"]][(logAll[["V2"]]<9999)]~logBest[["V1"]][(logAll[["V2"]]<9999)],
-#           cex=3)
     points(logBest[["V2"]]~logBest[["V1"]],
            cex=3)
     dev.off()
@@ -61,6 +58,7 @@ for(i in 1:length(gpu)){
         opt1 <- scan(paste("./size_1024_baseline/opt_1.txt",sep=""))
         opt2 <- scan(paste("./size_1024_baseline/opt_2.txt",sep=""))
         opt3 <- scan(paste("./size_1024_baseline/opt_3.txt",sep=""))
+        benchmark <- scan(paste("./size_1024_time_3600/run_0/benchmark.txt",sep=""))
         logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))
         logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))
         graphics()
@@ -70,6 +68,7 @@ for(i in 1:length(gpu)){
         opt1 <- scan(paste("./size_256_baseline/opt_1.txt",sep=""))
         opt2 <- scan(paste("./size_256_baseline/opt_2.txt",sep=""))
         opt3 <- scan(paste("./size_256_baseline/opt_3.txt",sep=""))
+        benchmark <- scan(paste("./size_256_time_3600/run_0/benchmark.txt",sep=""))
         logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))
         logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))
         graphics()
@@ -79,6 +78,7 @@ for(i in 1:length(gpu)){
         opt1 <- scan(paste("./size_134217728_baseline/opt_1.txt",sep=""))
         opt2 <- scan(paste("./size_134217728_baseline/opt_2.txt",sep=""))
         opt3 <- scan(paste("./size_134217728_baseline/opt_3.txt",sep=""))
+        benchmark <- scan(paste("./size_134217728_time_3600/run_0/benchmark.txt",sep=""))
         logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))
         logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))
         graphics()
@@ -88,6 +88,7 @@ for(i in 1:length(gpu)){
         opt1 <- scan(paste("./size_1073741824_baseline/opt_1.txt",sep=""))
         opt2 <- scan(paste("./size_1073741824_baseline/opt_2.txt",sep=""))
         opt3 <- scan(paste("./size_1073741824_baseline/opt_3.txt",sep=""))
+        benchmark <- scan(paste("./size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
         logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))
         logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))
         graphics()
