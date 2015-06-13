@@ -11,7 +11,7 @@ graphics <- function(){
     setEPS()
     postscript(paste("../../../images/", app[j], "-", gpu[i],
                      "-Box.eps",sep=""),
-               height = 11, width = 11)
+               height = 10, width = 11)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
     boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)],
             opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
