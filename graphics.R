@@ -8,18 +8,30 @@ PaletteColor <- c("red", "blue", "darkgray", "orange","black","lightblue", "ligh
 #Graficos de lineas dos LogBest Para ver cuantas vezes de 3600 são necesarias para encontrar um minimo máximo
 
 graphics <- function(){
-  setEPS()
-  postscript(paste("../../../images/", app[j], gpu[i], "-Box.eps",sep=""))
-  boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)], 
-          opt3[(opt3 < 9999)], logAll[(logAll<9999)], logBest[(logBest < 9999)],
-          names = c("Opt 0", "Opt 1","Opt 2","Opt 3", "All", "OTuner"),
-          main=paste("Opentuner of NVCC of ", app[j], "over ", gpu[i],sep=""),
-          ylab="Time in Miliseconds", 
-          cex.main=1.45,
-          cex.axis = 1.45, 
-          cex.lab = 1.35       
-  )
-  dev.off()     
+    setEPS()
+    postscript(paste("../../../images/", app[j], "-", gpu[i], "-Box.eps",sep=""))  
+    boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)], 
+            opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
+            names = c("Opt 0", "Opt 1","Opt 2","Opt 3", "All", "OTuner"),
+            ylab="Time in Miliseconds", 
+            cex.main=1.45,
+            cex.axis = 1.45, 
+            cex.lab = 1.35       
+    )
+    dev.off()     
+
+      plot(logAll[["V2"]][(logAll[["V2"]]<9999)]~logAll[["V1"]][(logAll[["V2"]]<9999)],
+         type="l", col="blue",
+         xlab="Time in seconds", 
+         ylab="Time in miliseconds", 
+         cex.main=1.45,
+         cex.axis = 1.5, 
+         cex.lab = 1.35  
+         )  
+    abline(h = mean(logAll[["V2"]][(logAll[["V2"]]<9999)]), col = "green", lwd=c(5,5))
+    points(logBest[["V2"]][(logAll[["V2"]]<9999)]~logBest[["V1"]][(logAll[["V2"]]<9999)],
+           cex=3)      
+dev.off()     
 }
 
 setwd(paste(dirpath, sep=""))
@@ -42,8 +54,8 @@ for(i in 1:length(gpu)){
                 opt1 <- scan(paste("./size_1024_baseline/opt_1.txt",sep=""))
                 opt2 <- scan(paste("./size_1024_baseline/opt_2.txt",sep=""))
                 opt3 <- scan(paste("./size_1024_baseline/opt_3.txt",sep=""))
-                logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))[["V2"]]
-                logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))[["V2"]]
+                logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))
+                logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))
                 
                 graphics()
              
@@ -54,8 +66,8 @@ for(i in 1:length(gpu)){
                 opt1 <- scan(paste("./size_256_baseline/opt_1.txt",sep=""))
                 opt2 <- scan(paste("./size_256_baseline/opt_2.txt",sep=""))
                 opt3 <- scan(paste("./size_256_baseline/opt_3.txt",sep=""))
-                logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))[["V2"]]
-                logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))[["V2"]]
+                logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))
+                logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))
                 
                 graphics()
                 
@@ -67,8 +79,8 @@ for(i in 1:length(gpu)){
             opt1 <- scan(paste("./size_134217728_baseline/opt_1.txt",sep=""))
             opt2 <- scan(paste("./size_134217728_baseline/opt_2.txt",sep=""))
             opt3 <- scan(paste("./size_134217728_baseline/opt_3.txt",sep=""))
-            logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))[["V2"]]
-            logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))[["V2"]]            
+            logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))
+            logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))            
             graphics()            
           }        
           
@@ -77,8 +89,8 @@ for(i in 1:length(gpu)){
             opt1 <- scan(paste("./size_1073741824_baseline/opt_1.txt",sep=""))
             opt2 <- scan(paste("./size_1073741824_baseline/opt_2.txt",sep=""))
             opt3 <- scan(paste("./size_1073741824_baseline/opt_3.txt",sep=""))
-            logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))[["V2"]]
-            logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))[["V2"]]            
+            logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))
+            logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))            
             graphics()            
           }        
 #     
