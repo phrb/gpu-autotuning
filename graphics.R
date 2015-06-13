@@ -9,14 +9,16 @@ PaletteColor <- c("red", "blue", "darkgray", "orange","black","lightblue", "ligh
 
 graphics <- function(){
     setEPS()
-    postscript(paste("../../../images/", app[j], "-", gpu[i], "-Box.eps",sep=""))  
+    postscript(paste("../../../images/", app[j], "-", gpu[i],
+                     "-Box.eps",sep=""), 
+               height = 8, width = 12)  
+    par(mar=c(4, 6, 2, 1) + 0.1)
     boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)], 
             opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
             names = c("Opt 0", "Opt 1","Opt 2","Opt 3", "All", "OTuner"),
-            ylab="Time in Miliseconds", 
-            cex.main=1.45,
-            cex.axis = 1.45, 
-            cex.lab = 1.35       
+            ylab="Time in Miliseconds",             
+            cex.axis = 2.5, 
+            cex.lab = 2.5       
     )
     dev.off()     
 
