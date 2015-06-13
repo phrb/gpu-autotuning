@@ -56,52 +56,42 @@ for(i in 1:length(gpu)){
   }
   for(j in 1:length(app)){
     setwd(paste("./", app[j], sep=""))
-
-            if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "./MatMulUn"){
-                opt0 <- scan(paste("./size_1024_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_1024_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_1024_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_1024_baseline/opt_3.txt",sep=""))
-                logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))
-
-                graphics()
-
-            }
-
-            if (app[j] == "MatMulSharedUn" & gpu[i] == "Tesla-K20"){
-                opt0 <- scan(paste("./size_256_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_256_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_256_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_256_baseline/opt_3.txt",sep=""))
-                logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))
-
-                graphics()
-
-            }
-
-
-          if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K40"){
-            opt0 <- scan(paste("./size_134217728_baseline/opt_0.txt",sep=""))
-            opt1 <- scan(paste("./size_134217728_baseline/opt_1.txt",sep=""))
-            opt2 <- scan(paste("./size_134217728_baseline/opt_2.txt",sep=""))
-            opt3 <- scan(paste("./size_134217728_baseline/opt_3.txt",sep=""))
-            logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))
-            logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))
-            graphics()
-          }
-
-          if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K20"){
-            opt0 <- scan(paste("./size_1073741824_baseline/opt_0.txt",sep=""))
-            opt1 <- scan(paste("./size_1073741824_baseline/opt_1.txt",sep=""))
-            opt2 <- scan(paste("./size_1073741824_baseline/opt_2.txt",sep=""))
-            opt3 <- scan(paste("./size_1073741824_baseline/opt_3.txt",sep=""))
-            logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))
-            logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))
-            graphics()
-          }
-#
+    if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn"){
+        opt0 <- scan(paste("./size_1024_baseline/opt_0.txt",sep=""))
+        opt1 <- scan(paste("./size_1024_baseline/opt_1.txt",sep=""))
+        opt2 <- scan(paste("./size_1024_baseline/opt_2.txt",sep=""))
+        opt3 <- scan(paste("./size_1024_baseline/opt_3.txt",sep=""))
+        logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))
+        logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))
+        graphics()
+    }
+    if (app[j] == "MatMulSharedUn"){
+        opt0 <- scan(paste("./size_256_baseline/opt_0.txt",sep=""))
+        opt1 <- scan(paste("./size_256_baseline/opt_1.txt",sep=""))
+        opt2 <- scan(paste("./size_256_baseline/opt_2.txt",sep=""))
+        opt3 <- scan(paste("./size_256_baseline/opt_3.txt",sep=""))
+        logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))
+        logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))
+        graphics()
+    }
+    if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K40"){
+        opt0 <- scan(paste("./size_134217728_baseline/opt_0.txt",sep=""))
+        opt1 <- scan(paste("./size_134217728_baseline/opt_1.txt",sep=""))
+        opt2 <- scan(paste("./size_134217728_baseline/opt_2.txt",sep=""))
+        opt3 <- scan(paste("./size_134217728_baseline/opt_3.txt",sep=""))
+        logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))
+        logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))
+        graphics()
+    }
+    if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K20"){
+        opt0 <- scan(paste("./size_1073741824_baseline/opt_0.txt",sep=""))
+        opt1 <- scan(paste("./size_1073741824_baseline/opt_1.txt",sep=""))
+        opt2 <- scan(paste("./size_1073741824_baseline/opt_2.txt",sep=""))
+        opt3 <- scan(paste("./size_1073741824_baseline/opt_3.txt",sep=""))
+        logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))
+        logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))
+        graphics()
+    }
     setwd("../")
   }
 }
