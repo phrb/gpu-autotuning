@@ -1,4 +1,4 @@
-dirpath <- "/home/marcos/Dropbox/Doctorate/Results/gpu-autotuning/experiments/"
+dirpath <- "~/code/gpu-autotuning/experiments/"
 
 #General Configurations of the graphics
 cexTam=1.25
@@ -11,28 +11,28 @@ graphics <- function(){
     setEPS()
     postscript(paste("../../../images/", app[j], "-", gpu[i],
                      "-Box.eps",sep=""), 
-               height = 8, width = 12)  
-    par(mar=c(4, 6, 2, 1) + 0.1)
+               height = 11, width = 11)  
+    par(mar=c(4, 8, 1, 1) + 0.1, mgp=c(6, 1.5, 0), las=1)
     boxplot(opt0[(opt0 < 9999)], opt1[(opt1 < 9999)], opt2[(opt2 < 9999)], 
             opt3[(opt3 < 9999)], logAll[["V2"]][(logAll[["V2"]]<9999)], logBest[["V2"]][(logBest[["V2"]]<9999)],
-            names = c("Opt 0", "Opt 1","Opt 2","Opt 3", "All", "OTuner"),
-            ylab="Time in Miliseconds",             
-            cex.axis = 2.5, 
-            cex.lab = 2.5       
+            names = c("-O0", "-O1","-O2","-O3", "All", "Tuned"),
+            ylab="Execution Time (miliseconds)",
+            cex.axis = 2.3, 
+            cex.lab = 2.3 
     )
     dev.off()     
 
       plot(logAll[["V2"]][(logAll[["V2"]]<9999)]~logAll[["V1"]][(logAll[["V2"]]<9999)],
          type="l", col="blue",
-         xlab="Time in seconds", 
-         ylab="Time in miliseconds", 
-         cex.main=1.45,
-         cex.axis = 1.5, 
-         cex.lab = 1.35  
+         xlab="Tunning Time (seconds)", 
+         ylab="Execution Time (miliseconds)", 
+         cex.main=1.43,
+         cex.axis = 1.48, 
+         cex.lab = 1.32  
          )  
     abline(h = mean(logAll[["V2"]][(logAll[["V2"]]<9999)]), col = "green", lwd=c(5,5))
     points(logBest[["V2"]][(logAll[["V2"]]<9999)]~logBest[["V1"]][(logAll[["V2"]]<9999)],
-           cex=3)      
+           cex=3) 
 dev.off()     
 }
 
