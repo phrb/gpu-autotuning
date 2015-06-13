@@ -1,0 +1,1 @@
+nvcc -w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 ../matMul/matMul_gpu_sharedmem_uncoalesced.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=true   --ftz=true   --gpu-architecture=sm_32   --prec-div=true  -Xptxas  --fmad=true  -Xptxas  --def-load-cache=cs  -Xptxas  --allow-expensive-optimizations=true  -Xptxas  --maxrregcount=48  -Xptxas  --opt-level=3 

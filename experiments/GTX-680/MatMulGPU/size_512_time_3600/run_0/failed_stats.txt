@@ -1,0 +1,3 @@
+tested_configurations             : 1878
+failed_configurations             : 1
+ratio (% of failed configurations): 0.000532481363152
