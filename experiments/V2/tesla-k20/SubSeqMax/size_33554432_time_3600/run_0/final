@@ -1,1 +1,0 @@
-nvcc -w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 ../bioinformatic/SubSeqMax.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=false   --prec-div=true   --gpu-architecture=sm_21   --ftz=false  -Xptxas  --fmad=true  -Xptxas  --def-load-cache=cv  -Xptxas  --maxrregcount=25  -Xptxas  --opt-level=0  -Xptxas  --allow-expensive-optimizations=true 
