@@ -4,9 +4,6 @@ dirpath <- "~/code/gpu-autotuning/experiments/"
 cexTam=1.25
 PaletteColor <- c("red", "blue", "darkgray", "orange","black","lightblue", "lightblue","violet")
 
-#TODO
-#Graficos de lineas dos LogBest Para ver cuantas vezes de 3600 são necesarias para encontrar um minimo máximo
-
 graphics <- function(){
     setEPS()
     postscript(paste("../../../images/", app[j], "-", gpu[i],
@@ -39,9 +36,87 @@ graphics <- function(){
     dev.off()
 }
 
-setwd(paste(dirpath, sep=""))
+calc_speedup <- function(opt, values){
+    return ((1 - (median(values[values < 9999]) / median(opt[opt < 9999])) ) * 100)
+}
 
-#gpu <- c("GTX-680", "Tesla-K20", "Tesla-K40")
+results_summary <- function(){
+    setEPS()
+    postscript(paste("../images/Summary.eps",sep=""),
+               height = 10, width = 11)
+    par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
+    # MatMulGPU
+    gtx   <- scan(paste("./GTX-680/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k20   <- scan(paste("./Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k40   <- scan(paste("./Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx <- scan(paste("./GTX-680/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
+    o2k20 <- scan(paste("./Tesla-K20/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
+    o2k40 <- scan(paste("./Tesla-K40/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
+
+    matmulgpu <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+
+    # MatMulUn
+    gtx   <- scan(paste("./GTX-680/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k20   <- scan(paste("./Tesla-K20/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k40   <- scan(paste("./Tesla-K40/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx <- scan(paste("./GTX-680/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
+    o2k20 <- scan(paste("./Tesla-K20/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
+    o2k40 <- scan(paste("./Tesla-K40/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
+    
+    matmulun <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+    print(calc_speedup(o2gtx, gtx))
+
+    # MatMulShared
+    gtx   <- scan(paste("./GTX-680/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k20   <- scan(paste("./Tesla-K20/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k40   <- scan(paste("./Tesla-K40/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx <- scan(paste("./GTX-680/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
+    o2k20 <- scan(paste("./Tesla-K20/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
+    o2k40 <- scan(paste("./Tesla-K40/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
+     
+    matmulshared <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+
+    # MatMulSharedUn
+    gtx   <- scan(paste("./GTX-680/MatMulSharedUn/size_256_time_3600/run_0/benchmark.txt",sep=""))
+#   k20   <- scan(paste("./Tesla-K20/MatMulSharedUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
+    k40   <- scan(paste("./Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx <- scan(paste("./GTX-680/MatMulSharedUn/size_256_baseline/opt_2.txt",sep=""))
+#   o2k20 <- scan(paste("./Tesla-K20/MatMulSharedUn/size_1024_baseline/opt_2.txt",sep=""))
+    o2k40 <- scan(paste("./Tesla-K40/MatMulSharedUn/size_256_baseline/opt_2.txt",sep=""))
+    
+    matmulsharedun <- c(calc_speedup(o2gtx, gtx), 0, calc_speedup(o2k40, k40))
+
+    # SubSeqMax
+    gtx   <- scan(paste("./GTX-680/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
+    k20   <- scan(paste("./Tesla-K20/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
+    k40   <- scan(paste("./Tesla-K40/SubSeqMax/size_134217728_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx <- scan(paste("./GTX-680/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
+    o2k20 <- scan(paste("./Tesla-K20/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
+    o2k40 <- scan(paste("./Tesla-K40/SubSeqMax/size_134217728_baseline/opt_2.txt",sep=""))
+     
+    subseqmax <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+
+    final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax)
+
+    barplot(as.matrix(final),
+            ylab="Percentage of Speedup",
+            beside=T,
+            ylim=c(-2.8, 30),
+            xpd=F,
+            col=gray.colors(3, start=0, end=1),
+            cex.names = 2.3,
+            space=c(0,0.3),
+            names=c("#1", "#2", "#3", "#4", "Sub-Array"),
+            cex.axis = 2.3,
+            cex.lab = 2.3
+    )
+    legend(4, 25, c("GTX-680", "Tesla-K20", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=2)
+    dev.off()
+}
+
+setwd(paste(dirpath, sep=""))
+results_summary()
+
 gpu <- c("GTX-680" ,  "Tesla-K20", "Tesla-K40")
 for(i in 1:length(gpu)){
   setwd(paste(dirpath,gpu[i], sep=""))
