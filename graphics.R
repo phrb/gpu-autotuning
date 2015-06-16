@@ -55,6 +55,14 @@ results_summary <- function(){
 
     matmulgpu <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
 
+    print("MMG")
+    print("GTX")
+    print(calc_speedup(o2gtx, gtx))
+    print("K20")
+    print(calc_speedup(o2k20, k20))
+    print("K40") 
+    print(calc_speedup(o2k40, k40))
+
     # MatMulUn
     gtx   <- scan(paste("./GTX-680/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
     k20   <- scan(paste("./Tesla-K20/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
@@ -64,7 +72,14 @@ results_summary <- function(){
     o2k40 <- scan(paste("./Tesla-K40/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
     
     matmulun <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+
+    print("MMU")
+    print("GTX")
     print(calc_speedup(o2gtx, gtx))
+    print("K20")
+    print(calc_speedup(o2k20, k20))
+    print("K40") 
+    print(calc_speedup(o2k40, k40))
 
     # MatMulShared
     gtx   <- scan(paste("./GTX-680/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
@@ -76,6 +91,14 @@ results_summary <- function(){
      
     matmulshared <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
 
+    print("MMS")
+    print("GTX")
+    print(calc_speedup(o2gtx, gtx))
+    print("K20")
+    print(calc_speedup(o2k20, k20))
+    print("K40") 
+    print(calc_speedup(o2k40, k40))
+
     # MatMulSharedUn
     gtx   <- scan(paste("./GTX-680/MatMulSharedUn/size_256_time_3600/run_0/benchmark.txt",sep=""))
 #   k20   <- scan(paste("./Tesla-K20/MatMulSharedUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
@@ -85,6 +108,14 @@ results_summary <- function(){
     o2k40 <- scan(paste("./Tesla-K40/MatMulSharedUn/size_256_baseline/opt_2.txt",sep=""))
     
     matmulsharedun <- c(calc_speedup(o2gtx, gtx), 0, calc_speedup(o2k40, k40))
+
+    print("MMSU")
+    print("GTX")
+    print(calc_speedup(o2gtx, gtx))
+    print("K20")
+    print(calc_speedup(o2k20, k20))
+    print("K40") 
+    print(calc_speedup(o2k40, k40))
 
     # SubSeqMax
     gtx   <- scan(paste("./GTX-680/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
@@ -96,10 +127,18 @@ results_summary <- function(){
      
     subseqmax <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
 
+    print("SSM")
+    print("GTX")
+    print(calc_speedup(o2gtx, gtx))
+    print("K20")
+    print(calc_speedup(o2k20, k20))
+    print("K40") 
+    print(calc_speedup(o2k40, k40))
+
     final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax)
 
     barplot(as.matrix(final),
-            ylab="Percentage of Speedup",
+            ylab="Percentage of Speedup vs. -O2",
             beside=T,
             ylim=c(-2.8, 30),
             xpd=F,
