@@ -70,7 +70,7 @@ if __name__ == '__main__':
     for i in range(args.runs):
         run_id = "/run_" + str(i)
         log_path = args.logdir + run_id
-        os.system("mkdir " + log_path)
+        os.system("mkdir " + "'" + log_path + "'")
 
         cmd += " --stop-after="         + args.time
         cmd += " --file="               + args.filename

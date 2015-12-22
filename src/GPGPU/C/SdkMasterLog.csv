@@ -1,0 +1,2 @@
+scan-Short, Throughput = 3.5867 MElements/s, Time = 0.00029 s, Size = 1024 Elements, NumDevsUsed = 1, Workgroup = 256
+scan-Large, Throughput = 449.2536 MElements/s, Time = 0.00058 s, Size = 262144 Elements, NumDevsUsed = 1, Workgroup = 256

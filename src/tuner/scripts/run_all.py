@@ -22,7 +22,7 @@ argparser.add_argument( "-t", "--tune-only",
                         help    = "Runs tunning only.")
 
 def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
-    os.system("mkdir -p "   + logdir)
+    os.system("mkdir -p " + logdir)
     cmd = "./scripts/run_experiments.py"
     cmd += " -f="        + program
     cmd += " -fargs="    + "\"" + " ".join(arguments) + "\""
@@ -39,7 +39,7 @@ def baseline(program, arguments, logdir, runs, cuda_path):
     options = "-Xptxas --opt-level="
     values  = ["0", "1", "2", "3"]
 
-    os.system("mkdir -p " + logdir + "_baseline")
+    os.system("mkdir -p " + logdir + "_baseline" )
     for value in values:
         # Compiling:
         print "nvcc -w " + cuda_path + program + " -o tmp.bin " + options + value
@@ -58,11 +58,11 @@ def baseline(program, arguments, logdir, runs, cuda_path):
 
 def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args):
     print "[INFO] Starting " + program + " Experiments."
-    os.system("mkdir -p " + logdir)
+    os.system("mkdir -p " + logdir )
     for i in steps:
         print "[INFO] Size: " + str(i)
         if args.baseline == False:
-            logs = logdir + "/size_" + str(i) + "_time_" + str(run_time)
+            logs = logdir + "/size_" + "'" + str(i) + "'" + "_time_" + str(run_time)
             tune(program, [str(i), arguments], logs, run_time, runs, benchmark, cuda_path)
         if args.tune == False:
             print "[INFO] Calculating Baselines for -O0, -O1, -O2, -O3."
@@ -127,16 +127,6 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 # Applications do Benchmark Rodinia: 
 
 #
-# Rodinia: Gaussian limination:
-#
-program     = "../rodinia_3.0/cuda/gaussian/gaussian.cu"
-logdir      = "logs/Gaussian"
-arguments   = "-q"
-steps       = ["-s 128", "-s 256", "-s 512", "-s 1024", "-s 2048"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-#
 # Rodinia: Particle Filter:
 #
 program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
@@ -161,12 +151,18 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
 logdir      = "logs/Pathfinder"
-steps       = ["10000 100 20", "100000 100 20", "500000 100 20", "1000000 100 20", "5000000 100 20", "10000000 100 20"]
+arguments   = " " 
+steps       = ["10000", "100000", "500000", "1000000", "5000000", "10000000"]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 #
-# Rodinia: Pathfinder:
+# TODO: Write code for the other experiments.
+#
+
+"""
+#
+# Rodinia: Hotspot:
 #
 program     = "../rodinia_3.0/cuda/hotspot/hotspot.cu"
 logdir      = "logs/Hotspot"
@@ -174,6 +170,14 @@ steps       = ["512 2 2 ../../../rodinia_3.0/data/hotspot/temp_512  ../../../rod
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
+
 #
-# TODO: Write code for the other experiments.
+# Rodinia: Gaussian limination:
 #
+program     = "../rodinia_3.0/cuda/gaussian/gaussian.cu"
+logdir      = "logs/Gaussian"
+arguments   = "-q -s "
+steps       = [128, 256, 512, 1024, 2048]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+"""
