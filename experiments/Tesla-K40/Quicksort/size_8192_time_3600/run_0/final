@@ -1,0 +1,1 @@
+nvcc -w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 ../sorting/quicksort.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=false   --ftz=true   --gpu-architecture=sm_35   --prec-div=false   --use_fast_math  -Xptxas  --fmad=false  -Xptxas  --def-load-cache=ca  -Xptxas  --allow-expensive-optimizations=true  -Xptxas  --maxrregcount=24  -Xptxas  --opt-level=2 
