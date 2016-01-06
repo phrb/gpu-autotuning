@@ -5,10 +5,12 @@ import time
 import argparse
 
 argparser = argparse.ArgumentParser()
+
 argparser.add_argument( "-cp", "--cuda-path",
                         dest     = "cuda_path",
                         type     = str,
-                        required = True,
+                        required = False,
+                        default = "",                        
                         help     = "The path for CUDA libraries.")
 argparser.add_argument( "-b", "--baseline-only",
                         dest = "baseline",
@@ -32,7 +34,8 @@ def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
     cmd += " -th=1"
     cmd += " -r="        + str(runs)
     cmd += " -br="       + str(benchmark)
-    cmd += " -cp="       + "\"" + cuda_path + "\""
+    if cuda_path != "":
+        cmd += " -cp="       + "\"" + cuda_path + "\""
     os.system(cmd)
 
 def baseline(program, arguments, logdir, runs, cuda_path):
@@ -124,6 +127,38 @@ steps       = [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 """
 
+#
+# Bitonic Sort Experiments:
+#
+program     = "../sorting/bitonic_sort.cu"
+logdir      = "logs/Bitonic"
+arguments   = "0"
+steps       = [2**18, 2**19, 2**20, 2**21, 2**22]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+#
+# Quicksort Experiments:
+#
+program     = "../sorting/quicksort.cu"
+logdir      = "logs/Quicksort"
+arguments   = "0"
+steps       = [2**12, 2**13, 2**14, 2**15, 2**16]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Vector Addition Experiments:
+#
+program     = "../vectorAdd/vectorAdd.cu"
+logdir      = "logs/VecAdd"
+arguments   = " "
+steps       = [2**15, 2**17, 2**18, 2**20, 2**22]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+"""
 # Applications do Benchmark Rodinia: 
 
 #
@@ -132,9 +167,10 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
 logdir      = "logs/ParticleFilterNaive"
 arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [1000, 5000, 8000, 10000, 20000, 50000, 100000]
+steps       = [1000, 5000, 10000, 20000, 50000]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 
 #
 # Rodinia: Particle Filter:
@@ -142,7 +178,7 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
 logdir      = "logs/ParticleFilterFloat"
 arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [1000, 5000, 8000, 10000, 20000, 50000, 100000]
+steps       = [1000, 5000, 10000, 20000, 50000]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
@@ -152,15 +188,11 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
 logdir      = "logs/Pathfinder"
 arguments   = " " 
-steps       = ["10000", "100000", "500000", "1000000", "5000000", "10000000"]
+steps       = ["100000", "1000000", "5000000", "10000000"]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
-#
-# TODO: Write code for the other experiments.
-#
 
-"""
 #
 # Rodinia: Hotspot:
 #
@@ -181,3 +213,7 @@ steps       = [128, 256, 512, 1024, 2048]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 """
+
+#
+# TODO: Write code for the other experiments.
+#
