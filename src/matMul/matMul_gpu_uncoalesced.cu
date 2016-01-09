@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
-  float Pt[Width*Width];
+  float Pt[Width];
 
   // set seed for drand48()
   srand48(42);
@@ -127,15 +127,15 @@ int main(int argc, char* argv[])
   if (!ptr_file) return 1;
 
   for (int i=0; i < Width; i++){
-      for (int j=0; j < Width; j++){ 
-	fscanf(ptr_file, "%f", &Pt[i * Width + j]);
-      }
+        fscanf(ptr_file, "%f", &Pt[i]);
   }
   fclose(ptr_file); 
 
     for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
-	   assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.01);
+            if(i == j){
+    	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.01);
+            }
         }
     }
 
@@ -144,6 +144,7 @@ int main(int argc, char* argv[])
   free(M);
   free(N);
   free(P);
+  free(Pt);
   checkCuda( cudaFree(Md) );
   checkCuda( cudaFree(Nd) );
   checkCuda( cudaFree(Pd) );

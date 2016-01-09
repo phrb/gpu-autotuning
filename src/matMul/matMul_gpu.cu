@@ -61,15 +61,21 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
-  float Pt[Width*Width];
+  float Pt[Width];
+  
 
   // set seed for drand48()
   srand48(42);
 
   // initialize host matrices
   printf("Initialize host matrices...\n");
-  randomInit(M, Width*Width);
-  randomInit(N, Width*Width);
+    for (int i=0; i<Width*Width; i++)
+    M[i] =   i   % 10 + 1;
+  for (int i=0; i<Width*Width; i++)
+    N[i] = (i+1) % 11 + 1;
+    
+    //randomInit(M, Width*Width);
+  //randomInit(N, Width*Width);
 
   // allocate device matrices (linearized)
   printf("Allocate device matrices (linearized)...\n");
@@ -115,7 +121,6 @@ int main(int argc, char* argv[])
   checkCuda( cudaGetDeviceProperties(&prop, devId) );
   printf("Device: %s\n", prop.name);
 
-
   //Assert Process
   char fileName[20] = "../matMul/matMul_";
   char bufferWidth[5] = " ";
@@ -128,25 +133,23 @@ int main(int argc, char* argv[])
   if (!ptr_file) return 1;
 
   for (int i=0; i < Width; i++){
-      for (int j=0; j < Width; j++){ 
-	fscanf(ptr_file, "%f", &Pt[i * Width + j]);
-      }
+        fscanf(ptr_file, "%f", &Pt[i]);
   }
   fclose(ptr_file); 
 
     for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
-	   assert(fabs(P[i * Width + j] - Pt[i * Width + j]) < 0.01);
+            if(i == j){
+    	   	    assert(fabs(P[i * Width + j] - Pt[i]) < 0.01);
+            }
         }
     }
-
-
-
 
   // clean up memory
   free(M);
   free(N);
   free(P);
+  free(Pt);
   checkCuda( cudaFree(Md) );
   checkCuda( cudaFree(Nd) );
   checkCuda( cudaFree(Pd) );
