@@ -10,7 +10,7 @@ argparser.add_argument( "-cp", "--cuda-path",
                         dest     = "cuda_path",
                         type     = str,
                         required = False,
-                        default = "",                        
+                        default = "",
                         help     = "The path for CUDA libraries.")
 argparser.add_argument( "-b", "--baseline-only",
                         dest = "baseline",
@@ -50,7 +50,7 @@ def baseline(program, arguments, logdir, runs, cuda_path):
         for i in range(runs):
             cmd   = "./tmp.bin " + " ".join(arguments) + " "
             logfile  = logdir + "_baseline/opt_" + value + ".txt"
- 
+
             print cmd
             start   = time.time()
             os.system(cmd)
@@ -81,51 +81,50 @@ cuda_path   = args.cuda_path
 run_time    = 3600
 runs        = 2
 benchmark   = 20
-"""
-#
-# MatMulShared Experiments:
-#
-program     = "../matMul/matMul_gpu_sharedmem.cu"
-logdir      = "logs/MatMulShared"
-arguments   = "16 0"
-steps       = [128, 256, 512, 1024]
 
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-#
-# TODO: Fix MatMulSharedUn for all sizes.
-#
-# MatMulSharedUn Experiments:
-#
-steps       = [256]
-program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
-logdir      = "logs/MatMulSharedUn"
+##
+## MatMulShared Experiments:
+##
+#program     = "../matMul/matMul_gpu_sharedmem.cu"
+#logdir      = "logs/MatMulShared"
+#arguments   = "16 0"
+#steps       = [128, 256, 512, 1024]
 #
 #run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+##
+## TODO: Fix MatMulSharedUn for all sizes.
+##
+## MatMulSharedUn Experiments:
+##
+#steps       = [256]
+#program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
+#logdir      = "logs/MatMulSharedUn"
+##
+##run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+##
+## MatMulUn Experiments:
+##
+#steps       = [128, 256, 512, 1024]
+#program     = "../matMul/matMul_gpu_uncoalesced.cu"
+#logdir      = "logs/MatMulUn"
 #
-# MatMulUn Experiments:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+##
+## MatMulGPU Experiments:
+##
+#program     = "../matMul/matMul_gpu.cu"
+#logdir      = "logs/MatMulGPU"
 #
-steps       = [128, 256, 512, 1024]
-program     = "../matMul/matMul_gpu_uncoalesced.cu"
-logdir      = "logs/MatMulUn"
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+##
+## SubSeqMax Experiments:
+##
+#program     = "../bioinformatic/SubSeqMax.cu"
+#logdir      = "logs/SubSeqMax"
+#arguments   = "0"
+#steps       = [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]
 #
-# MatMulGPU Experiments:
-#
-program     = "../matMul/matMul_gpu.cu"
-logdir      = "logs/MatMulGPU"
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-#
-# SubSeqMax Experiments:
-#
-program     = "../bioinformatic/SubSeqMax.cu"
-logdir      = "logs/SubSeqMax"
-arguments   = "0"
-steps       = [2**25, 2**26, 2**27, 2**28, 2**29, 2**30]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-"""
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 #
 # Bitonic Sort Experiments:
@@ -158,61 +157,59 @@ steps       = [2**15, 2**17, 2**18, 2**20, 2**22]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
-"""
-# Applications do Benchmark Rodinia: 
-
+## Applications do Benchmark Rodinia:
 #
-# Rodinia: Particle Filter:
+##
+## Rodinia: Particle Filter:
+##
+#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
+#logdir      = "logs/ParticleFilterNaive"
+#arguments   = "-x 128 -y 128 -z 10 -np "
+#steps       = [1000, 5000, 10000, 20000, 50000]
 #
-program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
-logdir      = "logs/ParticleFilterNaive"
-arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [1000, 5000, 10000, 20000, 50000]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-# Rodinia: Particle Filter:
 #
-program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
-logdir      = "logs/ParticleFilterFloat"
-arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [1000, 5000, 10000, 20000, 50000]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+##
+## Rodinia: Particle Filter:
+##
+#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
+#logdir      = "logs/ParticleFilterFloat"
+#arguments   = "-x 128 -y 128 -z 10 -np "
+#steps       = [1000, 5000, 10000, 20000, 50000]
 #
-# Rodinia: Pathfinder:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
-logdir      = "logs/Pathfinder"
-arguments   = " " 
-steps       = ["100000", "1000000", "5000000", "10000000"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-
+##
+## Rodinia: Pathfinder:
+##
+#program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
+#logdir      = "logs/Pathfinder"
+#arguments   = " "
+#steps       = ["100000", "1000000", "5000000", "10000000"]
 #
-# Rodinia: Hotspot:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-program     = "../rodinia_3.0/cuda/hotspot/hotspot.cu"
-logdir      = "logs/Hotspot"
-steps       = ["512 2 2 ../../../rodinia_3.0/data/hotspot/temp_512  ../../../rodinia_3.0/data/hotspot/power_512 output.out"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-
 #
-# Rodinia: Gaussian limination:
+##
+## Rodinia: Hotspot:
+##
+#program     = "../rodinia_3.0/cuda/hotspot/hotspot.cu"
+#logdir      = "logs/Hotspot"
+#steps       = ["512 2 2 ../../../rodinia_3.0/data/hotspot/temp_512  ../../../rodinia_3.0/data/hotspot/power_512 output.out"]
 #
-program     = "../rodinia_3.0/cuda/gaussian/gaussian.cu"
-logdir      = "logs/Gaussian"
-arguments   = "-q -s "
-steps       = [128, 256, 512, 1024, 2048]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-"""
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#
+#
+##
+## Rodinia: Gaussian limination:
+##
+#program     = "../rodinia_3.0/cuda/gaussian/gaussian.cu"
+#logdir      = "logs/Gaussian"
+#arguments   = "-q -s "
+#steps       = [128, 256, 512, 1024, 2048]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 #
 # TODO: Write code for the other experiments.
