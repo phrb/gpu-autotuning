@@ -1,4 +1,6 @@
 
+NVCC_FLAGS = -arch sm_20
+
 ifdef OUTPUT
 override OUTPUT = -DOUTPUT
 endif
@@ -9,7 +11,7 @@ heartwall: main.o ./AVI/avilib.o ./AVI/avimod.o
 
 # compile main function file into object (binary)
 main.o: main.cu kernel.cu define.c
-	nvcc $(OUTPUT) $(KERNEL_DIM) main.cu -I./AVI -c -O3
+	nvcc $(OUTPUT) $(KERNEL_DIM) main.cu $(NVCC_FLAGS) -I./AVI -c -O3
 
 ./AVI/avilib.o ./AVI/avimod.o:
 	cd AVI; make;

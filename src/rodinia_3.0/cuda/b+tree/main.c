@@ -62,7 +62,7 @@
 // #include <sys/time.h>							// (in directory known to compiler)			needed by ???
 #include <math.h>									// (in directory known to compiler)			needed by log, pow
 #include <string.h>									// (in directory known to compiler)			needed by memset
-
+#include <assert.h>
 //======================================================================================================================================================150
 //	COMMON
 //======================================================================================================================================================150
@@ -1952,13 +1952,6 @@ main(	int argc,
      printf("%s",commandBuffer);
      //
 
-
-     pFile = fopen (output,"w+");
-     if (pFile==NULL) 
-       fputs ("Fail to open %s !\n",output);
-     fprintf(pFile,"******starting******\n");
-     fclose(pFile);
-
 	// ------------------------------------------------------------60
 	// general variables
 	// ------------------------------------------------------------60
@@ -2224,12 +2217,23 @@ main(	int argc,
 				    fputs ("Fail to open %s !\n",output);
 				  }
 				
-				fprintf(pFile,"\n ******command: k count=%d \n",count);
-				for(i = 0; i < count; i++){
-				  fprintf(pFile, "%d    %d\n",i, ans[i].value);
-				}
-				fprintf(pFile, " \n");
-                                fclose(pFile);
+                
+                 int* ansTemp = (int*) malloc(count * sizeof(int));
+  
+                //Assert Process
+                char fileNameAns[20] = "./ans.txt";
+                  
+                pFile = fopen(fileNameAns, "r");
+                assert(pFile);
+
+                for (i=0; i < count; i++){
+                fscanf(pFile, "%d", &ansTemp[i]);
+                }
+                fclose(pFile);
+
+                for (i=0; i < count; i++){
+                    assert(ansTemp[i] == ans[i].value);
+                } 
 				
 				// free memory
 				free(currKnode);
@@ -2371,12 +2375,39 @@ main(	int argc,
 				    fputs ("Fail to open %s !\n",output);
 				  }
 
-				fprintf(pFile,"\n******command: j count=%d, rSize=%d \n",count, rSize);				
-				for(i = 0; i < count; i++){
-				  fprintf(pFile, "%d    %d    %d\n",i, recstart[i],reclength[i]);
-				}
-				fprintf(pFile, " \n");
-                                fclose(pFile);
+				
+                 int* recLengthTemp = (int*) malloc(count * sizeof(int));
+                 int* recStartTemp = (int*) malloc(count * sizeof(int));
+  
+                //Assert Process
+                char fileNameRecLength[20] = "./recLength.txt";
+                  
+                pFile = fopen(fileNameRecLength, "r");
+                assert(pFile);
+
+                for (i=0; i < count; i++){
+                fscanf(pFile, "%d", &recLengthTemp[i]);
+                }
+                fclose(pFile);
+                
+                                //Assert Process
+                char fileNameRecStart[20] = "./recstart.txt";
+                  
+                pFile = fopen(fileNameRecStart, "r");
+                assert(pFile);
+
+                for (i=0; i < count; i++){
+                fscanf(pFile, "%d", &recStartTemp[i]);
+                }
+                fclose(pFile);                
+                
+               for (i=0; i < count; i++){
+                    assert(recStartTemp[i] == recstart[i]);
+                } 
+
+                for (i=0; i < count; i++){
+                    assert(recLengthTemp[i] == reclength[i]);
+                } 
 
 
 				// free memory

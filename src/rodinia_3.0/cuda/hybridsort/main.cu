@@ -13,6 +13,7 @@
 #include <iostream>
 #include "bucketsort.cuh"
 #include "mergesort.cuh"
+#include <assert.h> 
 using namespace std; 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,6 +222,9 @@ void cudaSort(float *origList, float minimum, float maximum,
 		checkCudaErrors(	cudaMemcpy((void *) resultList, 
 				(void *)mergeresult, numElements * sizeof(float), cudaMemcpyDeviceToHost) );
 	sdkStopTimer(&downloadTimer); 
+	
+    for (int x = 0; x < numElements - 1; x++) 
+            assert(resultList[x] <= resultList[x + 1]);
 
 	// Clean up
 	finish_bucketsort(); 

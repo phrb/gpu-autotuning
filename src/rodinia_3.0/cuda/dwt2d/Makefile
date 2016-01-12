@@ -9,7 +9,7 @@ cudagdb=0 #compile for use with cuda-gdb, note that 'dbg' must be 1 as well
 performancetest=1
 
 # NVCC Options
-NVCCFLAGS += -arch sm_20
+NVCC_FLAGS += -arch sm_20
 
 # Files
 CFILES := 
@@ -24,7 +24,7 @@ include ../../common/make.config
 
 # Common flags
 COMMONFLAGS += $(INCLUDES) 
-NVCCFLAGS += $(COMMONFLAGS)
+NVCC_FLAGS += $(COMMONFLAGS)
 CXXFLAGS += $(COMMONFLAGS)
 CFLAGS += $(COMMONFLAGS) -std=c99 
 LDFLAGS += -L$(CUDA_INSTALL_PATH)/lib64 -lcudart
@@ -58,16 +58,16 @@ CXXFLAGS += $(CXXWARN_FLAGS)
 # Debug/release flags
 ifeq ($(dbg),1)
     COMMONFLAGS += -g 
-    NVCCFLAGS   += -D_DEBUG
+    NVCC_FLAGS   += -D_DEBUG
     CXXFLAGS    += -D_DEBUG
     CFLAGS      += -D_DEBUG
 
     ifeq ($(cudagdb),1)
-        NVCCFLAGS += -G
+        NVCC_FLAGS += -G
     endif
 else 
     COMMONFLAGS += -O2 
-    NVCCFLAGS   += --compiler-options -fno-strict-aliasing
+    NVCC_FLAGS   += --compiler-options -fno-strict-aliasing
     CXXFLAGS    += -fno-strict-aliasing
     CFLAGS      += -fno-strict-aliasing
 endif
@@ -99,7 +99,7 @@ CUOBJS=$(CUFILES:.cu=.cu.o)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %.cu.o: %.cu
-	$(NVCC) $(OUTPUT) $(NVCCFLAGS) -c $< -o $@
+	$(NVCC) $(OUTPUT) $(NVCC_FLAGS) -c $< -o $@
 
 %.cpp.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

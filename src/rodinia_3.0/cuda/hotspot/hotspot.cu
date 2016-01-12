@@ -331,9 +331,46 @@ void run(int argc, char** argv)
     cudaMemcpy(MatrixOut, MatrixTemp[ret], sizeof(float)*size, cudaMemcpyDeviceToHost);
 
     writeoutput(MatrixOut,grid_rows, grid_cols, ofile);
+    
+    //Assert Process
+    
+    float* SolutionTemp = (float*) malloc(size * sizeof(float));
+       
+    char fileName[20] = "./output_";
+    char bufferPyramid[5] = " ";    
+    sprintf(bufferPyramid, "%d", pyramid_height);
+    strcat(fileName, bufferPyramid);
+    
+    strcat(fileName, "_");
+    
+    char bufferIter[5] = " ";    
+    sprintf(bufferIter, "%d", total_iterations);
+    strcat(fileName, bufferIter);
+    
+    strcat(fileName, ".out");
+
+    FILE *ptr_file;
+    ptr_file =fopen(fileName, "r");
+    assert(ptr_file);
+
+	for (int i=0; i < grid_rows; i++) 
+	 for (int j=0; j < grid_cols; j++)
+	 {
+		 fscanf(ptr_file, "%f", &SolutionTemp[i*grid_cols+j]);
+	 }
+    fclose(ptr_file); 
+    
+	for (int i=0; i < grid_rows; i++) 
+	    for (int j=0; j < grid_cols; j++)
+	    {
+	    //printf("%f  =  %f\n", SolutionTemp[i*grid_cols+j], MatrixOut[i*grid_cols+j]);
+		 assert(fabs(SolutionTemp[i*grid_cols+j] - MatrixOut[i*grid_cols+j]) < 0.0001);
+	    }
+	 
 
     cudaFree(MatrixPower);
     cudaFree(MatrixTemp[0]);
     cudaFree(MatrixTemp[1]);
     free(MatrixOut);
+    free(SolutionTemp);
 }

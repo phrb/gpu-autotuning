@@ -18,6 +18,7 @@
 #include "cuda.h"
 #include <string.h>
 #include <math.h>
+#include <assert.h>
 
 #ifdef RD_WG_SIZE_0_0
         #define MAXBLOCKSIZE RD_WG_SIZE_0_0
@@ -184,6 +185,43 @@ int main(int argc, char *argv[])
         printf("The final solution is: \n");
         PrintAry(finalVec,Size);
     }
+    
+      /* print result
+    FILE *ptr_file;
+    ptr_file =fopen("solution.txt", "w");
+    assert(ptr_file);
+
+      for (int i=0; i < Size; i++){
+            fprintf(ptr_file, "%f ", finalVec[i]);
+      }
+
+  fclose(ptr_file); */
+  
+   float* SolutionTemp = (float*) malloc(Size * sizeof(float));
+  
+    //Assert Process
+  char fileName[20] = "./solution_";
+  char bufferWidth[5] = " ";
+  sprintf(bufferWidth, "%d", Size);
+  strcat(fileName, bufferWidth);
+  strcat(fileName, ".txt");
+  
+  FILE *ptr_file;
+  ptr_file =fopen(fileName, "r");
+  assert(ptr_file);
+
+  for (int i=0; i < Size; i++){
+        fscanf(ptr_file, "%f", &SolutionTemp[i]);
+  }
+  fclose(ptr_file);  
+  
+ 
+  for (int i=0; i < Size; i++){
+	assert(fabs(finalVec[i] - SolutionTemp[i]) < 0.00001);
+}
+
+
+    
     printf("\nTime total (including memory transfers)\t%f sec\n", time_total * 1e-6);
     printf("Time for CUDA kernels:\t%f sec\n",totalKernelTime * 1e-6);
     

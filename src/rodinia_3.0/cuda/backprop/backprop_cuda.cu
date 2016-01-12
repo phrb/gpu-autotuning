@@ -7,7 +7,7 @@
 #include <math.h>
 #include <cuda.h>
 #include <sys/time.h>
-
+#include <assert.h>
 // includes, kernels
 #include "backprop_cuda_kernel.cu"
 #include "backprop.h"
@@ -136,7 +136,27 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
 	}
   
   cudaMemcpy(partial_sum, hidden_partial_sum, num_blocks * WIDTH * sizeof(float), cudaMemcpyDeviceToHost);
-     
+
+
+//printf("%f sum", *partial_sum);
+
+	if(in == 524288){
+		assert((*partial_sum -4.180565) < 0.0001);
+	} else if(in == 262144){
+                assert((*partial_sum - 5.157075) < 0.0001);
+        } else if(in == 131072){
+                assert((*partial_sum - 4.709704) < 0.0001);
+        } else if(in == 65536){
+                assert((*partial_sum - 4.986990) < 0.0001);
+        } else if(in == 32768){
+                assert((*partial_sum - 5.288210) < 0.0001);
+        } else if(in == 16384){
+                assert((*partial_sum - 4.965582) < 0.0001);
+        } else if(in == 8192){
+                assert((*partial_sum - 4.953535) < 0.0001);
+	}    
+
+
   for (int j = 1; j <= hid; j++) {
     sum = 0.0;
     for (int k = 0; k < num_blocks; k++) {	
@@ -179,6 +199,10 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
 
   cudaMemcpy(net->input_units, input_cuda, (in + 1) * sizeof(float), cudaMemcpyDeviceToHost);
   cudaMemcpy(input_weights_one_dim, input_hidden_cuda, (in + 1) * (hid + 1) * sizeof(float), cudaMemcpyDeviceToHost);
+
+  
+//  printf("%f weight, %f net, %d in %d hid\n", *input_weights_one_dim, *net->input_units, in, hid);
+  assert((*input_weights_one_dim == 0.486904) < 0.00001);
     
   cudaFree(input_cuda);
   cudaFree(output_hidden_cuda);
