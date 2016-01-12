@@ -7,12 +7,13 @@ import json
 mpl.use('agg')
 
 import matplotlib.pyplot as plt
+import numpy as np
 
-plt.rc('text', usetex = True)
+plt.rc('text', usetex = False)
 plt.rc('font', family = 'serif')
 
 font = {'family' : 'serif',
-        'size'   : 14}
+        'size'   : 10}
 
 mpl.rc('font', **font)
 
@@ -30,53 +31,207 @@ NVCC_FLAGS       = { "nvcc:--no-align-double"                 : ["on", "off"],
                                                                   "sm_30", "sm_32", "sm_35" ],
                      "ptxas:--def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
                      "ptxas:--opt-level="                     : [ "0", "1", "2", "3" ] }
+
 PTXAS_NUM_PARAMS = [ ( "ptxas:--maxrregcount=", 16, 63 ) ]
 
+FAIL_FLAGS       = { "no-align-double"                : ["on", "off"],
+                     "use_fast_math"                  : ["on", "off"],
+                     "preserve-relocs"                : ["on", "off"],
+                     "relocatable-device-code="       : [ "true", "false" ],
+                     "ftz="                           : [ "true", "false" ],
+                     "prec-div="                      : [ "true", "false" ],
+                     "prec-sqrt="                     : [ "true", "false" ],
+                     "fmad="                          : [ "true", "false" ],
+                     "allow-expensive-optimizations=" : [ "true", "false" ],
+                     "gpu-architecture="              : [ "sm_20", "sm_21",
+                                                          "sm_30", "sm_32", "sm_35" ],
+                     "def-load-cache="                : [ "ca", "cg", "cv", "cs" ],
+                     "opt-level="                     : [ "0", "1", "2", "3" ] }
+
 FLAGS = {}
+FFLAGS = {}
+TOTAL_FAILED = 0
 
-for flag in NVCC_FLAGS:
-    for modifier in NVCC_FLAGS[flag]:
-        FLAGS[flag + modifier] = 0
+def init_flags():
+    for flag in NVCC_FLAGS:
+        for modifier in NVCC_FLAGS[flag]:
+            if flag[-1] != "=":
+                FLAGS[flag + "=" + modifier] = 0
+            else:
+                FLAGS[flag + modifier] = 0
 
-print FLAGS
+def init_fail_flags():
+    for flag in FAIL_FLAGS:
+        for modifier in FAIL_FLAGS[flag]:
+            if flag[-1] != "=":
+                FFLAGS[flag + "=" + modifier] = 0
+            else:
+                FFLAGS[flag + modifier] = 0
 
-file = open("experiments/GTX-680/MatMulShared/size_1024_time_3600/run_0/final_config.json")
-json_file = json.loads(file.read())
+def clear_flags():
+    for flag in FLAGS:
+        FLAGS[flag] = 0
 
-print json_file, type(json_file)
+def clear_fail_flags():
+    for flag in FFLAGS:
+        FFLAGS[flag] = 0
 
-for flag in json_file:
-    if flag != "ptxas:--maxrregcount=":
-        print flag
-        parameter = flag + json_file[flag]
-        if parameter in FLAGS:
-            FLAGS[parameter] += 1
+def parse_json_flags(filename):
+        file = open(filename)
+        json_file = json.loads(file.read())
 
-print FLAGS
+        for flag in json_file:
+            if flag != "ptxas:--maxrregcount=":
+                if flag[-1] != "=":
+                    parameter = flag + "=" + json_file[flag]
+                else:
+                    parameter = flag + json_file[flag]
 
-#
-# Navigate directories:
-#
-#for run in os.listdir(d1_path):
-#    with open(d1_path + run + "/results.log") as file:
-#        best = file.read().splitlines()
-#        d1_data.append(float(best[-1].split(" ")[1]))
-#
+                if parameter in FLAGS:
+                    FLAGS[parameter] += 1
 
-#
-# Plot code goes here
-#
+        file.close()
+
+def parse_fail_flags(filename):
+    global TOTAL_FAILED
+    file = open(filename)
+    lines = file.read().split("failed_example_cmd: ")
+    for line in lines:
+        TOTAL_FAILED += 1
+        flags = [flag.split(" ", 1)[0] for flag in line.split("--")[1:]]
+        if "no-align-double" in flags:
+            flags.remove("no-align-double")
+            FFLAGS["no-align-double=on"] += 1
+        else:
+            FFLAGS["no-align-double=off"] += 1
+
+        if "use_fast_math" in flags:
+            flags.remove("use_fast_math")
+            FFLAGS["use_fast_math=on"] += 1
+        else:
+            FFLAGS["use_fast_math=off"] += 1
+
+        if "preserve-relocs" in flags:
+            flags.remove("preserve-relocs")
+            FFLAGS["preserve-relocs=on"] += 1
+        else:
+            FFLAGS["preserve-relocs=off"] += 1
+
+        for flag in flags:
+            opt, mod = flag.split("=")
+            if opt != "maxrregcount":
+                parameter = opt + "=" + mod
+                if parameter in FFLAGS:
+                    FFLAGS[parameter] += 1
+
+init_flags()
+
+parse_json_flags("experiments/GTX-680/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+
+parse_json_flags("experiments/GTX-680/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+
+parse_json_flags("experiments/GTX-680/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
+
+parse_json_flags("experiments/GTX-680/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+
+fig = plt.figure(1, figsize=(10, 7))
+
+ax = fig.add_subplot(111)
+ax.bar(range(len(FLAGS.keys())), FLAGS.values(), 1, color='black')
 
 #
 # Plot config:
 #
-#ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
-#                      alpha=0.5)
+
+ax.set_xticks(np.arange(0.5, len(FLAGS.keys()), 1))
+ax.set_xticklabels([key.split(":--")[1] for key in FLAGS.keys()], rotation = 90)
+
+ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
+                      alpha=0.5)
+
+#ax.set_title("")
+ax.set_ylabel("Autotuned Flags in the GTX-680, Tesla-K20 and Tesla-K40")
+
+plt.autoscale()
+fig.tight_layout()
+
+fig.savefig('flags.eps', format = 'eps', dpi = 1000)
+
+plt.clf()
+
+clear_flags()
+
+parse_json_flags("experiments/GTX-680/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K40/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+parse_json_flags("experiments/Tesla-K20/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+
+fig = plt.figure(1, figsize=(10, 7))
+
+ax = fig.add_subplot(111)
+ax.bar(range(len(FLAGS.keys())), FLAGS.values(), 1, color='black')
+
 #
-#ax.set_title("TSP Solution (85900 Cities) Cost After Tuning for 15 minutes (4 runs)")
-#ax.set_ylabel("Solution Cost")
+# Plot config:
 #
-#fig.tight_layout()
+
+ax.set_xticks(np.arange(0.5, len(FLAGS.keys()), 1))
+ax.set_xticklabels([key.split(":--")[1] for key in FLAGS.keys()], rotation = 90)
+
+ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
+                      alpha=0.5)
+
+#ax.set_title("")
+ax.set_ylabel("Autotuned Flags in the GTX-680, Tesla-K20 and Tesla-K40")
+
+plt.autoscale()
+fig.tight_layout()
+
+fig.savefig('subseqmax_flags.eps', format = 'eps', dpi = 1000)
+
+plt.clf()
+
+init_fail_flags()
+
+parse_fail_flags("experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/GTX-680/MatMulGPU/size_512_time_3600/run_0/failed_configurations.txt")
+
+parse_fail_flags("experiments/GTX-680/MatMulShared/size_512_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
+
+parse_fail_flags("experiments/GTX-680/MatMulUn/size_128_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
+
+parse_fail_flags("experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/failed_configurations.txt")
+
+fig = plt.figure(1, figsize=(10, 7))
+
+ax = fig.add_subplot(111)
+ax.bar(range(len(FFLAGS.keys())), [value / float(TOTAL_FAILED) for value in FFLAGS.values()], 1, color='black')
+
 #
-#fig.savefig('flags.eps', format = 'eps', dpi = 1000)
+# Plot config:
 #
+
+ax.set_xticks(np.arange(0.5, len(FFLAGS.keys()), 1))
+ax.set_xticklabels(FFLAGS.keys(), rotation = 90)
+
+ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
+                      alpha=0.5)
+
+#ax.set_title("")
+ax.set_ylabel("Percentage of Flags in Failed Configurations")
+
+plt.autoscale()
+fig.tight_layout()
+
+fig.savefig('fail_flags.eps', format = 'eps', dpi = 1000)
