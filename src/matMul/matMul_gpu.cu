@@ -1,8 +1,8 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <cuda_profiler_api.h>
+#include <assert.h>
 
 // Convenience function for checking CUDA runtime API results
 // can be wrapped around any runtime API call. No-op in release builds.
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 {
 
   if (argc != 4) {
-    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size>  <CacheConfL1> \n", argv[0]);
+    fprintf(stderr, "Syntax: %s <matrix size Width> < Block_size>  <CacheConfL1>  \n", argv[0]);
     return EXIT_FAILURE;
   }
 
@@ -61,21 +61,14 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
-  float Pt[Width];
-  
 
   // set seed for drand48()
   srand48(42);
 
   // initialize host matrices
   printf("Initialize host matrices...\n");
-    for (int i=0; i<Width*Width; i++)
-    M[i] =   i   % 10 + 1;
-  for (int i=0; i<Width*Width; i++)
-    N[i] = (i+1) % 11 + 1;
-    
-    //randomInit(M, Width*Width);
-  //randomInit(N, Width*Width);
+  randomInit(M, Width*Width);
+  randomInit(N, Width*Width);
 
   // allocate device matrices (linearized)
   printf("Allocate device matrices (linearized)...\n");
@@ -109,8 +102,9 @@ int main(int argc, char* argv[])
   int GridSize = (Width + BlockSize-1) / BlockSize;
   dim3 gridDim(GridSize, GridSize);
   dim3 blockDim(BlockSize, BlockSize);
+  
 
-  cudaProfilerStart();
+  cudaProfilerStart(); 
   matMul<<< gridDim, blockDim >>>(Pd, Md, Nd, Width, BlockSize);
   cudaProfilerStop();
 
@@ -120,27 +114,30 @@ int main(int argc, char* argv[])
   cudaDeviceProp prop;
   checkCuda( cudaGetDeviceProperties(&prop, devId) );
   printf("Device: %s\n", prop.name);
+  
+    float* Pt = (float*) malloc(Width * sizeof(float));
 
-  //Assert Process
-  char fileName[20] = "../matMul/matMul_";
+      //Assert Process
+  char fileName[20] = "./matMul_";
   char bufferWidth[5] = " ";
-  sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
   strcat(fileName, ".out");
   
   FILE *ptr_file;
   ptr_file =fopen(fileName, "r");
-  if (!ptr_file) return 1;
 
+  assert(ptr_file); 
+    
   for (int i=0; i < Width; i++){
-        fscanf(ptr_file, "%f", &Pt[i]);
-  }
-  fclose(ptr_file); 
+    fscanf(ptr_file, "%f", &Pt[i]);
+  }  
 
-    for(int i=0 ;i<Width; i++) {
+  fclose(ptr_file); 
+  
+      for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
             if(i == j){
-    	   	    assert(fabs(P[i * Width + j] - Pt[i]) < 0.01);
+        	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.1);
             }
         }
     }
