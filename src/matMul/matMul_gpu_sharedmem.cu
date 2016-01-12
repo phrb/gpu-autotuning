@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
-  float Pt[Width];
+  
   
   // set seed for drand48()
   srand48(42);
@@ -129,9 +129,11 @@ int main(int argc, char* argv[])
   cudaDeviceProp prop;
   checkCuda( cudaGetDeviceProperties(&prop, devId) );
   printf("Device: %s\n", prop.name);
-
+  
+  float* Pt = (float*) malloc(Width * sizeof(float));
+    
   //Assert Process
-  char fileName[20] = "../matMul/matMul_";
+  char fileName[20] = "./matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
@@ -139,26 +141,30 @@ int main(int argc, char* argv[])
   
   FILE *ptr_file;
   ptr_file =fopen(fileName, "r");
-  if (!ptr_file) return 1;
-
+  assert(ptr_file);  
+    
   for (int i=0; i < Width; i++){
-        fscanf(ptr_file, "%f", &Pt[i]);
-  }
-  fclose(ptr_file); 
+    fscanf(ptr_file, "%f", &Pt[i]);
+  }  
 
-    for(int i=0 ;i<Width; i++) {
+  fclose(ptr_file); 
+  
+      for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
             if(i == j){
-    	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.01);
+    	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.1);
             }
         }
     }
-
+  
+  
+      
   //clean up memory
   free(M);
   free(N);
   free(P);
   free(Pt);
+
   checkCuda( cudaFree(Md) );
   checkCuda( cudaFree(Nd) );
   checkCuda( cudaFree(Pd) );

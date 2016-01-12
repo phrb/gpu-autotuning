@@ -20,6 +20,7 @@
 #include <string.h>
 #include <math.h>
 #include <cuda.h>
+#include <assert.h>
 
 #define MAX_THREADS_PER_BLOCK 512
 
@@ -37,7 +38,7 @@ struct Node
 #include "kernel.cu"
 #include "kernel2.cu"
 
-void BFSGraph(int argc, char** argv);
+void BFSGraph(int argc, char* argv[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main Program
@@ -49,9 +50,9 @@ int main( int argc, char** argv)
 	BFSGraph( argc, argv);
 }
 
-void Usage(int argc, char**argv){
+void Usage(int argc, char** argv){
 
-fprintf(stderr,"Usage: %s <input_file>\n", argv[0]);
+fprintf(stderr,"Usage: %s <input_file> <file_assert>\n", argv[0]);
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,12 +62,14 @@ void BFSGraph( int argc, char** argv)
 {
 
     char *input_f;
-	if(argc!=2){
+	if(argc!=3){
 	Usage(argc, argv);
 	exit(0);
 	}
 	
 	input_f = argv[1];
+	char *fileassert = argv[2];
+	
 	printf("Reading File\n");
 	//Read in Graph from a file
 	fp = fopen(input_f,"r");
@@ -206,15 +209,42 @@ void BFSGraph( int argc, char** argv)
 	// copy result from device to host
 	cudaMemcpy( h_cost, d_cost, sizeof(int)*no_of_nodes, cudaMemcpyDeviceToHost) ;
 
-	//Store the result into a file
+
+	/*
+	Store the result into a file
 	FILE *fpo = fopen("result.txt","w");
 	for(int i=0;i<no_of_nodes;i++)
-		fprintf(fpo,"%d) cost:%d\n",i,h_cost[i]);
+		fprintf(fpo,"%d ",h_cost[i]);
 	fclose(fpo);
 	printf("Result stored in result.txt\n");
 
+    */
+    
+ int* CostTemp = (int*) malloc(no_of_nodes * sizeof(int));
+  
+    //Assert Process
+  char fileName[20] = "./result_";
+  char bufferWidth[5] = " ";
+  sprintf(bufferWidth, "%c", *fileassert);
+  strcat(fileName, bufferWidth);
+  strcat(fileName, ".out");
+  
+  FILE *ptr_file;
+  ptr_file =fopen(fileName, "r");
+  assert(ptr_file);
+
+  for (int i=0; i < no_of_nodes; i++){
+        fscanf(ptr_file, "%d", &CostTemp[i]);
+  }
+  fclose(ptr_file);  
+  
+ 
+  for (int i=0; i < no_of_nodes; i++){
+	assert(h_cost[i] == CostTemp[i]);
+}
 
 	// cleanup memory
+	free( CostTemp);
 	free( h_graph_nodes);
 	free( h_graph_edges);
 	free( h_graph_mask);

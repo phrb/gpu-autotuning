@@ -1,7 +1,7 @@
 include ../../common/make.config
 
 CUDA_LIB =	-lcuda -lcudart
-CUDA_FLAG = -arch sm_20
+NVCC_FLAGS = -arch sm_20
 
 # ====================================================================================================100
 #	END
@@ -130,7 +130,7 @@ main.o:	./common.h \
 				-c \
 				-o ./kernel/kernel_gpu_cuda_wrapper.o \
 				-O3 \
-				$(CUDA_FLAG)
+				$(NVCC_FLAGS)
 
 ./kernel/kernel_gpu_cuda_wrapper_2.o:	./common.h \
 										./kernel/kernel_gpu_cuda_wrapper_2.h \
@@ -139,7 +139,7 @@ main.o:	./common.h \
 				-c \
 				-o ./kernel/kernel_gpu_cuda_wrapper_2.o \
 				-O3 \
-				$(CUDA_FLAG)
+				$(NVCC_FLAGS)
 
 # ======================================================================================================================================================150
 #	UTILITIES
@@ -168,7 +168,7 @@ main.o:	./common.h \
 				-c \
 				-o ./util/cuda/cuda.o \
 				-O3 \
-				$(CUDA_FLAG)
+				$(NVCC_FLAGS)
 
 # ======================================================================================================================================================150
 #	END

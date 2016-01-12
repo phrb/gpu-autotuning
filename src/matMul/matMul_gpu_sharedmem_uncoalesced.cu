@@ -1,8 +1,8 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <cuda_profiler_api.h>
+#include <assert.h>
 
 #define Tile_Width 16
 
@@ -76,7 +76,6 @@ int main(int argc, char* argv[])
   float* M = (float*) malloc(Width * Width * sizeof(float));
   float* N = (float*) malloc(Width * Width * sizeof(float));
   float* P = (float*) malloc(Width * Width * sizeof(float));
-  float Pt[Width];
 
   // set seed for drand48()
   srand48(42);
@@ -115,9 +114,8 @@ int main(int argc, char* argv[])
     cudaFuncSetCacheConfig(matMul, cudaFuncCachePreferNone);
   }
 
-
   int GridSize = (Width + Tile_Width-1) / Tile_Width;
-  dim3 gridDim(GridSize, Tile_Width);
+  dim3 gridDim(GridSize, GridSize);
   dim3 blockDim(Tile_Width, Tile_Width);
 
   cudaProfilerStart();
@@ -131,8 +129,10 @@ int main(int argc, char* argv[])
   checkCuda( cudaGetDeviceProperties(&prop, devId) );
   printf("Device: %s\n", prop.name);
 
-    //Assert Process
-  char fileName[20] = "../matMul/matMul_";
+  float* Pt = (float*) malloc(Width * sizeof(float));
+    
+      //Assert Process
+  char fileName[20] = "./matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
@@ -140,17 +140,19 @@ int main(int argc, char* argv[])
   
   FILE *ptr_file;
   ptr_file =fopen(fileName, "r");
-  if (!ptr_file) return 1;
 
+  assert(ptr_file); 
+    
   for (int i=0; i < Width; i++){
-        fscanf(ptr_file, "%f", &Pt[i]);
-  }
-  fclose(ptr_file); 
+    fscanf(ptr_file, "%f", &Pt[i]);
+  }  
 
-    for(int i=0 ;i<Width; i++) {
+  fclose(ptr_file); 
+  
+      for(int i=0 ;i<Width; i++) {
         for(int j=0; j<Width; j++) {
             if(i == j){
-    	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.01);
+        	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.1);
             }
         }
     }

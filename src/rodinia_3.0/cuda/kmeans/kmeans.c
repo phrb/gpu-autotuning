@@ -78,6 +78,7 @@
 #include <fcntl.h>
 #include <omp.h>
 #include "kmeans.h"
+#include <assert.h>
 
 extern double wtime(void);
 
@@ -256,14 +257,39 @@ int setup(int argc, char **argv) {
 	   :displayed only for when k=1*/
 	if((min_nclusters == max_nclusters) && (isOutput == 1)) {
 		printf("\n================= Centroid Coordinates =================\n");
+
+	FILE *fp;
+	FILE *fpAssert;
+        //Assert Process
+    	float *SolutionTemp = (float*) malloc(max_nclusters * nfeatures *  sizeof(float));
+	int index=0;
+
+	fp = fopen("output.out", "w" );
+	fpAssert = fopen("output_assert.out", "r" );
 		for(i = 0; i < max_nclusters; i++){
 			printf("%d:", i);
 			for(j = 0; j < nfeatures; j++){
-				printf(" %.2f", cluster_centres[i][j]);
+				printf(" %f ", cluster_centres[i][j]);
+	 			fprintf(fp, "%f ",  cluster_centres[i][j]);
+				fscanf(fpAssert, "%f", &SolutionTemp[index]);
+				index++;
 			}
 			printf("\n\n");
 		}
+	 close(fp);
+	index=0;
+	for(i = 0; i < max_nclusters; i++){
+		for(j = 0; j < nfeatures; j++){
+ 			assert(fabs( cluster_centres[i][j] - SolutionTemp[index]) < 0.001);
+			index++;
+		}
 	}
+
+	free(SolutionTemp);
+	}
+
+
+
 	
 	len = (float) ((max_nclusters - min_nclusters + 1)*nloops);
 

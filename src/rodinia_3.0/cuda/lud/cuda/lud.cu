@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "common.h"
+#include "../common/common.h"
 
 #ifdef RD_WG_SIZE_0_0
         #define BLOCK_SIZE RD_WG_SIZE_0_0
@@ -144,7 +144,48 @@ main ( int argc, char *argv[] )
   printf("Time consumed(ms): %lf\n", 1000*get_interval_by_sec(&sw));
 
   cudaFree(d_m);
+  
+    /* print result 
+  FILE *ptr_file;
+  ptr_file =fopen("lud.out", "w");
+  assert(ptr_file);
 
+  for (int ty=0; ty < matrix_dim; ty++){
+      for (int tx=0; tx < matrix_dim; tx++){
+        if(ty == tx){        
+            fprintf(ptr_file, "%f ", m[ty * matrix_dim + tx]);
+         }	
+     }
+  }
+  fclose(ptr_file); 
+  */
+  
+    float* Pt = (float*) malloc(matrix_dim * sizeof(float));
+    
+  //Assert Process
+  char fileName[20] = "./lud_";
+  char bufferWidth[5] = " ";
+  sprintf(bufferWidth, "%d", matrix_dim);
+  strcat(fileName, bufferWidth);
+  strcat(fileName, ".out");
+  
+  FILE *ptr_file;
+  ptr_file =fopen(fileName, "r");
+  assert(ptr_file);  
+    
+  for (int i=0; i < matrix_dim; i++){
+    fscanf(ptr_file, "%f", &Pt[i]);
+  }  
+
+  fclose(ptr_file); 
+  
+      for(int i=0 ;i<matrix_dim; i++) {
+        for(int j=0; j<matrix_dim; j++) {
+            if(i == j){
+    	   	assert(fabs(m[i * matrix_dim + j] - Pt[i]) < 0.1);
+            }
+        }
+    }
 
   if (do_verify){
     printf("After LUD\n");
