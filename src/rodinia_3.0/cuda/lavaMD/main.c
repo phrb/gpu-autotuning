@@ -20,6 +20,7 @@
 #include <stdio.h>					// (in path known to compiler)			needed by printf
 #include <stdlib.h>					// (in path known to compiler)			needed by malloc
 #include <stdbool.h>				// (in path known to compiler)			needed by true/false
+#include <assert.h>
 
 //======================================================================================================================================================150
 //	UTILITIES
@@ -225,7 +226,7 @@ main(	int argc,
 	//====================================================================================================100
 
 	// random generator seed set to random value - time in this case
-	srand(time(NULL));
+	srand(5);
 
 	// input (distances)
 	rv_cpu = (FOUR_VECTOR*)malloc(dim_cpu.space_mem);
@@ -275,16 +276,104 @@ main(	int argc,
 	//======================================================================================================================================================150
 
 	// dump results
+
+    FILE *fptrV;
+    FILE *fptrX;
+    FILE *fptrY;
+    FILE *fptrZ;
 #ifdef OUTPUT
-        FILE *fptr;
-	fptr = fopen("result.txt", "w");	
+
+	fptrV = fopen("resultV.txt", "w");	
 	for(i=0; i<dim_cpu.space_elem; i=i+1){
-        	fprintf(fptr, "%f, %f, %f, %f\n", fv_cpu[i].v, fv_cpu[i].x, fv_cpu[i].y, fv_cpu[i].z);
+        	fprintf(fptrV, "%f ", fv_cpu[i].v);
 	}
-	fclose(fptr);
+	
+	fptrX = fopen("resultX.txt", "w");	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fprintf(fptrX, "%f ",  fv_cpu[i].x);
+	}
+	
+	fptrY = fopen("resultY.txt", "w");	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fprintf(fptrY, "%f ", fv_cpu[i].y);
+	}
+	
+	fptrZ = fopen("resultZ.txt", "w");	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fprintf(fptrZ, "%f ",  fv_cpu[i].z);
+	}
+	fclose(fptrV);
+	fclose(fptrX);
+	fclose(fptrY);
+	fclose(fptrZ);
 #endif       	
 
+#ifndef OUTPUT
+    // Assert Process
+    float* Tempfv_cpu_V = (float *)malloc(dim_cpu.space_elem * sizeof(float));
+    float* Tempfv_cpu_X = (float *)malloc(dim_cpu.space_elem * sizeof(float));
+    float* Tempfv_cpu_Y = (float *)malloc(dim_cpu.space_elem * sizeof(float));
+    float* Tempfv_cpu_Z = (float *)malloc(dim_cpu.space_elem * sizeof(float));
+    
 
+    char fileNameV[20] = "./resultV_";
+    char bufferWidthV[5] = " ";
+    sprintf(bufferWidthV, "%d", dim_cpu.boxes1d_arg);
+    strcat(fileNameV, bufferWidthV);
+    strcat(fileNameV, ".txt");
+
+    char fileNameX[20] = "./resultX_";
+    char bufferWidthX[5] = " ";
+    sprintf(bufferWidthX, "%d", dim_cpu.boxes1d_arg);
+    strcat(fileNameX, bufferWidthX);
+    strcat(fileNameX, ".txt");
+
+    char fileNameY[20] = "./resultY_";
+    char bufferWidthY[5] = " ";
+    sprintf(bufferWidthY, "%d", dim_cpu.boxes1d_arg);
+    strcat(fileNameY, bufferWidthY);
+    strcat(fileNameY, ".txt");
+
+    char fileNameZ[20] = "./resultV_";
+    char bufferWidthZ[5] = " ";
+    sprintf(bufferWidthZ, "%d", dim_cpu.boxes1d_arg);
+    strcat(fileNameZ, bufferWidthZ);
+    strcat(fileNameZ, ".txt");
+   
+	fptrV = fopen(fileNameV, "r");	
+	assert(fptrV);
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fscanf(fptrV, "%f", &Tempfv_cpu_V[i]);
+	}	;
+
+	fptrX = fopen(fileNameX, "r");
+	assert(fptrX);	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fscanf(fptrX, "%f",  &Tempfv_cpu_X[i]);
+	}	
+
+	fptrY = fopen(fileNameY, "r");	
+	assert(fptrY);	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fscanf(fptrY, "%f", &Tempfv_cpu_Y[i]);
+	}	
+
+	fptrZ = fopen(fileNameZ, "r");	
+	assert(fptrZ);	
+	for(i=0; i<dim_cpu.space_elem; i=i+1){
+        	fscanf(fptrZ, "%f",  &Tempfv_cpu_Z[i]);
+	} 
+	
+	fclose(fptrV);
+	fclose(fptrX);
+	fclose(fptrY);
+	fclose(fptrZ);
+	
+    free(Tempfv_cpu_V);
+    free(Tempfv_cpu_X);
+    free(Tempfv_cpu_Y);
+    free(Tempfv_cpu_Z);
+#endif 
 
 	free(rv_cpu);
 	free(qv_cpu);

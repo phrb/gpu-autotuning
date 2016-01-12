@@ -2240,6 +2240,7 @@ main(	int argc,
 				free(offset);
 				free(keys);
 				free(ans);
+				free(ansTemp);
 
 				// break out of case
 				break;
