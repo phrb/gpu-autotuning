@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
   float* Pt = (float*) malloc(Width * sizeof(float));
     
   //Assert Process
-  char fileName[20] = "./matMul_";
+  char fileName[20] = "../matMul/matMul_";
   char bufferWidth[5] = " ";
   sprintf(bufferWidth, "%d", Width);
   strcat(fileName, bufferWidth);
@@ -150,12 +150,8 @@ int main(int argc, char* argv[])
   fclose(ptr_file); 
   
       for(int i=0 ;i<Width; i++) {
-        for(int j=0; j<Width; j++) {
-            if(i == j){
-    	   	assert(fabs(P[i * Width + j] - Pt[i]) < 0.1);
-            }
+    	   	assert(fabs(P[i * Width + i] - Pt[i]) < 0.1);
         }
-    }
   
   
       
