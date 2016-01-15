@@ -1,0 +1,5 @@
+Command to execute the experiments:
+
+./scripts/run_all.py -cp "-I /usr/local/cuda/include -L /usr/local/cuda/lib64 "
+
+If the libraries are in the same locations

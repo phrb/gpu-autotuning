@@ -86,10 +86,11 @@ class NvccFlagsTuner(MeasurementInterface):
         # Give a better value to the Tuner (average)
         results = []
         evaluations = 20
+        global CONFIGS_TESTED
+        CONFIGS_TESTED += 1
         for i in range(evaluations):
             run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
-            global CONFIGS_TESTED
-            CONFIGS_TESTED += 1
+
             if run_result['returncode'] != 0:
                 with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
                     file.write("failed_example_cmd: " + self.parse_config(cfg) + "\n")

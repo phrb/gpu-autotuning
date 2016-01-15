@@ -1,4 +1,4 @@
-dirpath <- "~/Dropbox/Doctorate/Results/gpu-autotuning/experiments/"
+dirpath <- "~/Dropbox/Doctorate/Results/2016/gpu-autotuning/experiments/"
 
 #General Configurations of the graphics
 cexTam=1.25
@@ -6,7 +6,7 @@ PaletteColor <- c("red", "blue", "darkgray", "orange","black","lightblue", "ligh
 
 graphics <- function(){
     setEPS()
-    postscript(paste("../../../images/", app[j], "-", gpu[i],
+    postscript(paste("../../../images/", app[j], "-", sizes[k], "-", gpu[i],
                      "-Box.eps",sep=""),
                height = 10, width = 11)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
@@ -19,7 +19,7 @@ graphics <- function(){
     )
     dev.off()
     
-    postscript(paste("../../../images/", app[j], "-", gpu[i],
+    postscript(paste("../../../images/", app[j],"-", sizes[k], "-", gpu[i],
                      "-Best.eps",sep=""),
                height = 11, width = 11)
     par(mar=c(9, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
@@ -156,7 +156,7 @@ results_summary <- function(){
 setwd(paste(dirpath, sep=""))
 results_summary()
     
-    gpu <- c("GTX-680" ,  "Tesla-K20", "Tesla-K40")
+    gpu <- c("Tesla-K40")
 
     for(i in 1:length(gpu)){
         setwd(paste(dirpath,gpu[i], sep=""))
@@ -171,49 +171,95 @@ results_summary()
         if (gpu[i]== "Tesla-K40"){
             app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd")
         }    
-        
+                
         for(j in 1:length(app)){
             setwd(paste("./", app[j], sep=""))
             if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn"){
-                opt0 <- scan(paste("./size_1024_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_1024_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_1024_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_1024_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_1024_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_1024_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_1024_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
+                sizes <- c(128, 256, 512, 1024)
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+
+                    graphics()
+                }
             }
             if (app[j] == "MatMulSharedUn"){
-                opt0 <- scan(paste("./size_256_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_256_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_256_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_256_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_256_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_256_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_256_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
+                sizes <- c(256)
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+                    
+                    graphics()
+                }
             }
-            if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_134217728_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_134217728_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_134217728_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_134217728_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_134217728_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_134217728_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_134217728_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
+            if ((app[j] == "SubSeqMax" & gpu[i] == "Tesla-K40") || (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K20") || (app[j] == "SubSeqMax" & gpu[i] == "GTX-680")){
+                sizes <- c(33554432, 67108864, 134217728)#, 268435456, 536870912, 134217728 )
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+                    
+                    graphics()
+                }
+            }            
+            if (app[j] == "Bitonic" & gpu[i] == "Tesla-K40"){
+                sizes <- c(262144, 524288, 1048576, 2097152, 4194304 )
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+                    
+                    graphics()
+                }
             }
-            if (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K20"){
-                opt0 <- scan(paste("./size_1073741824_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_1073741824_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_1073741824_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_1073741824_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_1073741824_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_1073741824_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
+            if (app[j] == "Quicksort" & gpu[i] == "Tesla-K40"){
+                sizes <- c(4096, 8192, 16384, 32768, 65536 )
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+                    
+                    graphics()
+                }
             }
+            
+            if (app[j] == "VecAdd" & gpu[i] == "Tesla-K40"){
+                sizes <- c(32768, 131072, 262144, 1048576, 4194304 )
+                for(k in 1:length(sizes)){
+                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
+                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
+                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
+                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
+                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
+                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
+                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
+                    
+                    graphics()
+                }
+            }
+            
             if (app[j] == "Pathfinder" & gpu[i] == "Tesla-K40"){
                 opt0 <- scan(paste("./size_100000_baseline/opt_0.txt",sep=""))
                 opt1 <- scan(paste("./size_100000_baseline/opt_1.txt",sep=""))
@@ -245,37 +291,7 @@ results_summary()
                 logBest <- read.table(paste("./size_50000_time_3600/run_0/logbest.txt",sep=""))
                 graphics()
             }
-            if (app[j] == "Bitonic" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_4194304_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_4194304_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_4194304_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_4194304_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_4194304_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_4194304_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_4194304_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
-            }
-            if (app[j] == "Quicksort" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_32768_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_32768_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_32768_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_32768_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_32768_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_32768_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_32768_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
-            }
-            
-            if (app[j] == "VecAdd" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_1048576_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_1048576_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_1048576_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_1048576_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_1048576_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_1048576_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_1048576_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
-            }
+
             setwd("../")
         }
     }
