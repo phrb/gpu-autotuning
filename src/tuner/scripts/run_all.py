@@ -78,7 +78,7 @@ args        = argparser.parse_args()
 cuda_path   = args.cuda_path
 run_time    = 3600
 runs        = 2
-benchmark   = 20
+benchmark   = 10
 
 #
 # MatMulShared Experiments:
