@@ -1,0 +1,1 @@
+nvcc -w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 ../vectorAdd/vectorAdd.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=false   --no-align-double   --ftz=true   --gpu-architecture=sm_21   --prec-div=true  -Xptxas  --fmad=true  -Xptxas  --def-load-cache=cv  -Xptxas  --allow-expensive-optimizations=true  -Xptxas  --maxrregcount=61  -Xptxas  --opt-level=3 
