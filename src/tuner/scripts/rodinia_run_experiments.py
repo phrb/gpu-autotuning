@@ -1,4 +1,5 @@
 #! /usr/bin/python2
+import subprocess
 import argparse
 import time
 import os
@@ -93,21 +94,34 @@ if __name__ == '__main__':
         # Compile and run best solution multiple times.
         #
         print "[INFO] Tuning Complete, Starting Benchmark:"
-        # Compiling:
         print "[INFO] Compiling..."
-        os.system("cat " + args.logdir + run_id + "/final")
-        os.system("sh "  + args.logdir + run_id + "/final")
+        os.environ["NVCC_FLAGS"] = ""
+        old_path = os.getcwd()
+        file = open(args.logdir + run_id + "/final")
+        os.chdir(args.filename)
+        subprocess.call("make clean", shell = True)
+        subprocess.call("rm -f *.o *~ *.linkinfo", shell = True)
+
+        configs = file.readlines()[-1].rstrip()
+
+        os.environ["NVCC_FLAGS"] = configs
+        compile_result = subprocess.call("make",
+                                         shell = True)
+        os.chdir(old_path)
+        file.close()
+
         print "[INFO] Done."
         print "[INFO] Running Benchmark:"
         for j in range(args.benchmark):
             # Running:
-            cmd     = "./tmp.bin " + " ".join(args.fargs)
             logfile = args.logdir + run_id + "/benchmark.txt"
 
-            print cmd
+            old_path = os.getcwd()
+            os.chdir(args.filename)
             start   = time.time()
-            os.system(cmd)
+            subprocess.call("./run", shell = True)
             end     = time.time()
+            os.chdir(old_path)
 
             with open(logfile, "a+") as file:
                 file.write(str(end - start) + "\n")

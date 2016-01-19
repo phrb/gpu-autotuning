@@ -8,7 +8,7 @@ from opentuner import Result
 import subprocess
 import argparse
 import logging
-import time 
+import time
 import os
 
 log = logging.getLogger('nvccflags')
@@ -83,24 +83,15 @@ class NvccFlagsTuner(MeasurementInterface):
         cfg = desired_result.configuration.data
 
         os.environ["NVCC_FLAGS"] = ""
-        print "Cleaning"
-        subprocess.call("ls -la " + FILENAME, shell = True)
         old_path = os.getcwd()
         os.chdir(FILENAME)
         subprocess.call("make clean", shell = True)
         subprocess.call("rm -f *.o *~ *.linkinfo", shell = True)
-        os.chdir(old_path)
-        subprocess.call("ls -la " + FILENAME, shell = True)
-        print "Cleaned"
 
         os.environ["NVCC_FLAGS"] = self.parse_config(cfg)
-        print "Compiling"
-        old_path = os.getcwd()
-        os.chdir(FILENAME)
         compile_result = subprocess.call("make",
                                          shell = True)
         os.chdir(old_path)
-        print "Compiled"
 
         # Give a better value to the Tuner (average)
         results = []
