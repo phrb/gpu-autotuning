@@ -5,8 +5,11 @@ from opentuner import IntegerParameter
 from opentuner import MeasurementInterface
 from opentuner import Result
 
+import subprocess
 import argparse
 import logging
+import time 
+import os
 
 log = logging.getLogger('nvccflags')
 
@@ -76,12 +79,28 @@ class NvccFlagsTuner(MeasurementInterface):
 
         return cmd
 
-
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
-        compile_result = self.call_program(self.parse_config(cfg))
-        assert compile_result['returncode'] == 0
+        os.environ["NVCC_FLAGS"] = ""
+        print "Cleaning"
+        subprocess.call("ls -la " + FILENAME, shell = True)
+        old_path = os.getcwd()
+        os.chdir(FILENAME)
+        subprocess.call("make clean", shell = True)
+        subprocess.call("rm -f *.o *~ *.linkinfo", shell = True)
+        os.chdir(old_path)
+        subprocess.call("ls -la " + FILENAME, shell = True)
+        print "Cleaned"
+
+        os.environ["NVCC_FLAGS"] = self.parse_config(cfg)
+        print "Compiling"
+        old_path = os.getcwd()
+        os.chdir(FILENAME)
+        compile_result = subprocess.call("make",
+                                         shell = True)
+        os.chdir(old_path)
+        print "Compiled"
 
         # Give a better value to the Tuner (average)
         results = []
@@ -89,7 +108,10 @@ class NvccFlagsTuner(MeasurementInterface):
         global CONFIGS_TESTED
         CONFIGS_TESTED += 1
         for i in range(evaluations):
-            run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
+            old_path = os.getcwd()
+            os.chdir(FILENAME)
+            run_result = self.call_program("./run")
+            os.chdir(old_path)
 
             if run_result['returncode'] != 0:
                 with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
@@ -102,6 +124,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         # Calculate Average:
         final_result = (sum(results) / len(results))
+
         # We now return the average of runs,
         # the idea is giving more 'context'
         # to the tuner.
@@ -167,11 +190,11 @@ if __name__ == '__main__':
 
     LOG_DIR  = args.logdir
     LOG_FILE = args.logcmd
-    NVCC_CMD = "nvcc -w " + args.cuda_path
+    NVCC_CMD = "" + args.cuda_path
+    CUDA_PATH = args.cuda_path
 
-    filename = args.filename
+    FILENAME = args.filename
     if (args.fargs):
         FARGS = args.fargs
 
-    NVCC_CMD += filename + " -o ./tmp.bin "
     NvccFlagsTuner.main(argparser.parse_args())
