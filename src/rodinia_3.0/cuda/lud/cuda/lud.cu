@@ -179,12 +179,8 @@ main ( int argc, char *argv[] )
 
   fclose(ptr_file); 
   
-      for(int i=0 ;i<matrix_dim; i++) {
-        for(int j=0; j<matrix_dim; j++) {
-            if(i == j){
-    	   	assert(fabs(m[i * matrix_dim + j] - Pt[i]) < 0.1);
-            }
-        }
+    for(int i=0 ;i<matrix_dim; i++) {
+      	assert(fabs(m[i * matrix_dim + i] - Pt[i]) < 0.1);
     }
 
   if (do_verify){
