@@ -1,11 +1,11 @@
 include ../../common/make.config
 
 # C compiler
-CC = gcc
+CC = gcc-4.8
 CC_FLAGS = -g  -O2
 
 # CUDA compiler
-NVCC = $(CUDA_DIR)/bin/nvcc
+NVCC = $(CUDA_DIR)/bin/nvcc -ccbin gcc-4.8
 
 backprop: backprop.o facetrain.o imagenet.o backprop_cuda.o 
 	$(CC) $(CC_FLAGS) backprop.o facetrain.o imagenet.o backprop_cuda.o -o backprop -L$(CUDA_LIB_DIR) -lcuda -lcudart -lm

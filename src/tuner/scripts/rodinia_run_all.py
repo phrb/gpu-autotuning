@@ -87,9 +87,9 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-run_time    = 60
-runs        = 1
-benchmark   = 1
+run_time    = 3600
+runs        = 2
+benchmark   = 5
 #
 # TODO: Write code for the other experiments.
 #
