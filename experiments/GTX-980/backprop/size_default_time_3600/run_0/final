@@ -1,0 +1,1 @@
+-I /usr/local/cuda/include  --prec-sqrt=true   --relocatable-device-code=false   --gpu-architecture=sm_30   --no-align-double   --prec-div=false   --ftz=false   --use_fast_math  -Xptxas  --fmad=false  -Xptxas  --def-load-cache=cs  -Xptxas  --allow-expensive-optimizations=false  -Xptxas  --opt-level=0  -Xptxas  --maxrregcount=50 
