@@ -9,7 +9,7 @@
 #include "master.cu"
 #include "embedded_fehlberg_7_8.cu"
 #include "solver.cu"
-
+#include <assert.h>
 //====================================================================================================100
 //	MAIN FUNCTION
 //====================================================================================================100
@@ -175,16 +175,58 @@ int work(	int xmax,
 	  // print results
 	  int k;
 	  for(i=0; i<workload; i++){
-	  fprintf(pFile, "WORKLOAD %d:\n", i);
+	  //fprintf(pFile, "WORKLOAD %d:\n", i);
 	  for(j=0; j<(xmax+1); j++){
-	  fprintf(pFile, "\tTIME %d:\n", j);
+	  //fprintf(pFile, "\tTIME %d:\n", j);
 	  for(k=0; k<EQUATIONS; k++){
-	  fprintf(pFile, "\t\ty[%d][%d][%d]=%10.7e\n", i, j, k, y[i][j][k]);
+	  fprintf(pFile, "%f ", y[i][j][k]);
 	}
 	}
 	}
 
 	  fclose (pFile);
+
+	 //float* yT = (float*) malloc(workload*xmax*EQUATIONS * sizeof(float));	
+	//yT = (fp ***) malloc(workload* sizeof(fp **));
+	
+	fp*** yT = (fp ***) malloc(workload* sizeof(fp **));
+	for(i=0; i<workload; i++){
+		yT[i] = (fp**)malloc((1+xmax)*sizeof(fp*));
+		for(j=0; j<(1+xmax); j++){
+			yT[i][j]= (fp *) malloc(EQUATIONS* sizeof(fp));
+		}
+	}
+
+
+	  //Assert Process
+	  char fileName[20] = "./output_";
+	  char bufferWidth[5] = " ";
+	  sprintf(bufferWidth, "%d", xmax);
+	  strcat(fileName, bufferWidth);
+	  strcat(fileName, ".txt");
+
+         pFile = fopen (fileName,"r");
+	 assert(pFile);
+
+          for(i=0; i<workload; i++){
+          	for(j=0; j<(xmax+1); j++){
+          		for(k=0; k<EQUATIONS; k++){
+  			        fscanf(pFile, "%f", &yT[i][ j][ k]);
+		        }
+	        }
+        }
+	  fclose (pFile);
+
+	for(i=0; i<workload; i++){
+                for(j=0; j<(xmax+1); j++){
+                        for(k=0; k<EQUATIONS; k++){
+                               assert(fabs(yT[i][j][ k] - y[i][j][k]) < 0.1);
+                        }
+                }
+        }
+
+
+
 
 
 
@@ -193,6 +235,15 @@ int work(	int xmax,
 	//================================================================================80
 	//	DEALLOCATION
 	//================================================================================80
+
+
+	for (i= 0; i< workload; i++){
+		for (j= 0; j< (1+xmax); j++){
+			free(yT[i][j]);
+		}
+		free(yT[i]);
+	}
+	free(yT);
 
 	// y values
 	for (i= 0; i< workload; i++){

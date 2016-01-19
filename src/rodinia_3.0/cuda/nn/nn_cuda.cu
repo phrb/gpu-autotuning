@@ -9,6 +9,7 @@
 #include <float.h>
 #include <vector>
 #include "cuda.h"
+#include <assert.h>
 
 #define min( a, b )			a > b ? b : a
 #define ceilDiv( a, b )		( a + b - 1 ) / b
@@ -151,14 +152,52 @@ int main(int argc, char* argv[])
     //Copy data from device memory to host memory
     cudaMemcpy( distances, d_distances, sizeof(float)*numRecords, cudaMemcpyDeviceToHost );
 
+
+
 	// find the resultsCount least distances
     findLowest(records,distances,numRecords,resultsCount);
 
     // print out results
     if (!quiet)
     for(i=0;i<resultsCount;i++) {
-      printf("%s --> Distance=%f\n",records[i].recString,records[i].distance);
+    //  printf("%s --> Distance=%f\n",records[i].recString,records[i].distance);
     }
+	  
+	  
+	  FILE * pFile;
+	  pFile = fopen ("output.txt","w");
+      assert(pFile);
+	  // print results
+
+	  for(i=0;i<resultsCount;i++) {
+	    fprintf(pFile, "%f ", records[i].distance);	
+	    }
+	
+	fclose(pFile);
+
+	//Assert Process
+
+	float* distTemp = (float*) malloc(resultsCount * sizeof(float));		
+
+	char fileName[20] = "./output_";
+	char bufferWidth[5] = " ";
+	sprintf(bufferWidth, "%d", resultsCount);
+	strcat(fileName, bufferWidth);
+	strcat(fileName, ".txt");
+
+	pFile = fopen (fileName,"r");
+	assert(pFile);
+
+	for(i=0;i<resultsCount;i++) {
+		fscanf(pFile, "%f", &distTemp[i]);
+	}
+
+	for(i=0;i<resultsCount;i++) {
+                assert(fabs( distTemp[i] - records[i].distance) < 0.001);
+        }
+
+	fclose(pFile);
+    
     free(distances);
     //Free memory
 	cudaFree(d_locations);
