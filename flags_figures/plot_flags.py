@@ -126,20 +126,20 @@ def parse_fail_flags(filename):
 
 init_flags()
 
-parse_json_flags("experiments/GTX-680/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/GTX-680/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/final_config.json")
 
-parse_json_flags("experiments/GTX-680/MatMulShared/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/GTX-680/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/final_config.json")
 
-parse_json_flags("experiments/GTX-680/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/GTX-680/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/final_config.json")
 
-parse_json_flags("experiments/GTX-680/MatMulUn/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/GTX-680/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/final_config.json")
 
 fig = plt.figure(1, figsize=(10, 7))
 
@@ -168,9 +168,9 @@ plt.clf()
 
 clear_flags()
 
-parse_json_flags("experiments/GTX-680/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K40/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
-parse_json_flags("experiments/Tesla-K20/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/GTX-680/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K40/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
+parse_json_flags("../experiments/Tesla-K20/SubSeqMax/size_134217728_time_3600/run_0/final_config.json")
 
 fig = plt.figure(1, figsize=(10, 7))
 
@@ -199,19 +199,19 @@ plt.clf()
 
 init_fail_flags()
 
-parse_fail_flags("experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/GTX-680/MatMulGPU/size_512_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/GTX-680/MatMulGPU/size_512_time_3600/run_0/failed_configurations.txt")
 
-parse_fail_flags("experiments/GTX-680/MatMulShared/size_512_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/GTX-680/MatMulShared/size_512_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
 
-parse_fail_flags("experiments/GTX-680/MatMulUn/size_128_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
-parse_fail_flags("experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/GTX-680/MatMulUn/size_128_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
 
-parse_fail_flags("experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/failed_configurations.txt")
+parse_fail_flags("../experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/failed_configurations.txt")
 
 fig = plt.figure(1, figsize=(10, 7))
 
