@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
   
  
   for (int i=0; i < Size; i++){
-	assert(fabs(finalVec[i] - SolutionTemp[i]) < 0.00001);
+	assert(fabs(finalVec[i] - SolutionTemp[i]) < 0.01);
 }
 
 

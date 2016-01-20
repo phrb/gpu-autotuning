@@ -1,5 +1,5 @@
 include ../../common/make.config
-CC := $(CUDA_DIR)/bin/nvcc -ccbin gcc-4.8
+CC := $(CUDA_DIR)/bin/nvcc  
 
 ifdef VERIFY
 override VERIFY = -DVERIFY

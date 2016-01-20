@@ -9,7 +9,7 @@ SRC = bfs.cu
 EXE = bfs
 
 release: $(SRC)
-	$(CC) $(SRC) -o $(EXE) -I$(INCLUDE) $(NVCC_FLAGS) -L$(CUDA_LIB_DIR) 
+	$(CC) $(SRC) -o $(EXE) -I$(INCLUDE) $(NVCC_FLAGS) -L$(CUDA_LIB_DIR) -lcuda -lcudart -lm
 
 enum: $(SRC)
 	$(CC) -deviceemu $(SRC) -o $(EXE) -I$(INCLUDE) $(NVCC_FLAGS) -L$(CUDA_LIB_DIR) 

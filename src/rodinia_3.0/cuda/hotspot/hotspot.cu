@@ -364,7 +364,7 @@ void run(int argc, char** argv)
 	    for (int j=0; j < grid_cols; j++)
 	    {
 	    //printf("%f  =  %f\n", SolutionTemp[i*grid_cols+j], MatrixOut[i*grid_cols+j]);
-		 assert(fabs(SolutionTemp[i*grid_cols+j] - MatrixOut[i*grid_cols+j]) < 0.0001);
+		 assert(fabs(SolutionTemp[i*grid_cols+j] - MatrixOut[i*grid_cols+j]) < 0.001);
 	    }
 	 
 

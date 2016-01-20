@@ -87,18 +87,139 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-run_time    = 3600
+run_time    = 60
 runs        = 2
 benchmark   = 5
+
 #
-# TODO: Write code for the other experiments.
-#
-#
-# Rodinia: Gaussian limination:
+# Rodinia: Back Propagation 
 #
 program     = "../rodinia_3.0/cuda/backprop"
 logdir      = "logs/backprop"
 arguments   = " "
 steps       = ["default"]
-#
+
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+#
+# Rodinia: Breadth-First Search
+#
+program     = "../rodinia_3.0/cuda/bfs"
+logdir      = "logs/bfs"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+#
+# Rodinia: B+ Tree
+#
+program     = "../rodinia_3.0/cuda/b+tree"
+logdir      = "logs/b+tree"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Gaussian Elimination
+#
+program     = "../rodinia_3.0/cuda/gaussian"
+logdir      = "logs/gaussian"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Heartwall
+#
+program     = "../rodinia_3.0/cuda/heartwall"
+logdir      = "logs/heartwall"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Hotspots
+#
+program     = "../rodinia_3.0/cuda/hotspot"
+logdir      = "logs/hotspot"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Hybrid sort
+#
+program     = "../rodinia_3.0/cuda/hybridsort"
+logdir      = "logs/hybridsort"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: K-Means
+#
+program     = "../rodinia_3.0/cuda/kmeans"
+logdir      = "logs/kmeans"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Lava Molecular Dynamics
+#
+program     = "../rodinia_3.0/cuda/lavaMD"
+logdir      = "logs/lavaMD"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: LU Decomposition
+#
+program     = "../rodinia_3.0/cuda/lud"
+logdir      = "logs/lud"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: Myocite
+#
+program     = "../rodinia_3.0/cuda/myocyte"
+logdir      = "logs/myocite"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+#
+# Rodinia: KNN
+#
+program     = "../rodinia_3.0/cuda/nn"
+logdir      = "logs/nn"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+#
+# TODO: Write code for the other experiments.
+#
