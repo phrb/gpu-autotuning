@@ -1,10 +1,8 @@
 include ../../common/make.config
 
-CC := $(CUDA_DIR)/bin/nvcc
+CC := $(CUDA_DIR)/bin/nvcc -ccbin gcc-4.8
 
 INCLUDE := $(CUDA_DIR)/include
-
-NVCC_FLAGS = -arch sm_20
 
 SRC = bfs.cu
 
