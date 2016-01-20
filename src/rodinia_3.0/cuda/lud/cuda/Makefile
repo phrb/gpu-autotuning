@@ -1,16 +1,9 @@
-CC = gcc
-NVCC = nvcc
+CC = gcc-4.8
+NVCC = nvcc -ccbin gcc-4.8
 
 DEFS += \
 		-DGPU_TIMER \
 		$(SPACE)
-
-NVCC_FLAGS += -I../common \
-			 -O3 \
-			 -use_fast_math \
-			 -arch=sm_20 \
-			 -lm \
-			 $(SPACE)
 
 CFLAGS += -I../common \
 					-I/usr/include/cuda \
@@ -31,14 +24,14 @@ OBJS = ../common/common.o lud.o lud_kernel.o
 all : $(EXECUTABLE)
 
 .c.o : 
-	$(NVCC) $(KERNEL_DIM) $(NVCCFLAGS) $(DEFS) -o $@ -c $<
+	$(NVCC) $(KERNEL_DIM) $(NVCC_FLAGS) $(DEFS) -o $@ -c $<
 
 %.o:	%.cu 
-	$(NVCC) $(KERNEL_DIM) $(NVCCFLAGS) $(DEFS) -o $@ -c $<
+	$(NVCC) $(KERNEL_DIM) $(NVCC_FLAGS) $(DEFS) -o $@ -c $<
 
 
 $(EXECUTABLE) : $(OBJS)
-	$(NVCC) $(NVCCFLAGS) -o $@  $?
+	$(NVCC) $(NVCC_FLAGS) -o $@  $?
 
 clean:
 	rm -f $(EXECUTABLE) $(OBJS) *.linkinfo
