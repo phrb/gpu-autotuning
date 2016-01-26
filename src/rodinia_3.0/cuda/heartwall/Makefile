@@ -8,7 +8,7 @@ heartwall: main.o ./AVI/avilib.o ./AVI/avimod.o
 
 # compile main function file into object (binary)
 main.o: main.cu kernel.cu define.c
-	nvcc -ccbin gcc-4.8 $(OUTPUT) $(KERNEL_DIM) main.cu $(NVCC_FLAGS) -I./AVI -c -O3
+	nvcc -ccbin gcc-4.8 $(OUTPUT) $(KERNEL_DIM) main.cu $(NVCC_FLAGS) -I./AVI -c 
 
 ./AVI/avilib.o ./AVI/avimod.o:
 	cd AVI; make;
