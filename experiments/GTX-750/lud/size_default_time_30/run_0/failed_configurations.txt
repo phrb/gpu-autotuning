@@ -1,0 +1,1 @@
+failed_example_cmd: -I /usr/local/cuda-7.5/include -L /usr/local/cuda-7.5/lib64   --prec-sqrt=true   --relocatable-device-code=false   --prec-div=false   --no-align-double   --ftz=false   --gpu-architecture=sm_32  -Xptxas  --fmad=true  -Xptxas  --def-load-cache=ca  -Xptxas  --maxrregcount=63  -Xptxas  --allow-expensive-optimizations=false  -Xptxas  --opt-level=3 

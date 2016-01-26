@@ -156,26 +156,30 @@ results_summary <- function(){
 setwd(paste(dirpath, sep=""))
 results_summary()
     
-    gpu <- c("Tesla-K40")
+    gpu <- c("Tesla-K40", "GTX-750", "GTX-980")
 
     for(i in 1:length(gpu)){
         setwd(paste(dirpath,gpu[i], sep=""))
         
-        if (gpu[i]== "GTX-680"){
-            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax")
-        }
-        
-        if (gpu[i]== "Tesla-K20"){
-            app <- c("MatMulGPU", "MatMulShared",  "MatMulUn", "SubSeqMax")
-        }
+#         if (gpu[i]== "GTX-680"){
+#             app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax")
+#         }
+#         
+#         if (gpu[i]== "Tesla-K20"){
+#             app <- c("MatMulGPU", "MatMulShared",  "MatMulUn", "SubSeqMax")
+#         }
         if (gpu[i]== "Tesla-K40"){
-            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd")
+            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", "gaussian", "hotspot", "kmeans", "lud", "nn", "bfs", "b+tree", "heartwall", "hybridsort", "lavaMD", "myocite")
         }    
+        if (gpu[i]== "GTX-980" | gpu[i]== "GTX-750"){
+            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",  "lavaMD", "myocite")
+        }    
+
                 
         for(j in 1:length(app)){
             setwd(paste("./", app[j], sep=""))
-            if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn"){
-                sizes <- c(128, 256, 512, 1024)
+            if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn" | app[j] == "MatMulSharedUn"){
+                sizes <- c(2048, 4096, 8192, 16384, 32768)
                 for(k in 1:length(sizes)){
                     opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
                     opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
@@ -188,22 +192,9 @@ results_summary()
                     graphics()
                 }
             }
-            if (app[j] == "MatMulSharedUn"){
-                sizes <- c(256)
-                for(k in 1:length(sizes)){
-                    opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
-                    opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
-                    opt2 <- scan(paste("./size_", sizes[k], "_baseline/opt_2.txt",sep=""))
-                    opt3 <- scan(paste("./size_", sizes[k], "_baseline/opt_3.txt",sep=""))
-                    benchmark <- scan(paste("./size_", sizes[k], "_time_3600/run_0/benchmark.txt",sep=""))
-                    logAll <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logall.txt",sep=""))
-                    logBest <- read.table(paste("./size_", sizes[k], "_time_3600/run_0/logbest.txt",sep=""))
-                    
-                    graphics()
-                }
-            }
-            if ((app[j] == "SubSeqMax" & gpu[i] == "Tesla-K40") || (app[j] == "SubSeqMax" & gpu[i] == "Tesla-K20") || (app[j] == "SubSeqMax" & gpu[i] == "GTX-680")){
-                sizes <- c(33554432, 67108864, 134217728)#, 268435456, 536870912, 134217728 )
+
+            if (app[j] == "SubSeqMax"){
+                sizes <- c(67108864, 134217728, 268435456, 536870912, 1073741824 )
                 for(k in 1:length(sizes)){
                     opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
                     opt1 <- scan(paste("./size_", sizes[k], "_baseline/opt_1.txt",sep=""))
@@ -216,7 +207,7 @@ results_summary()
                     graphics()
                 }
             }            
-            if (app[j] == "Bitonic" & gpu[i] == "Tesla-K40"){
+            if (app[j] == "Bitonic" ){
                 sizes <- c(262144, 524288, 1048576, 2097152, 4194304 )
                 for(k in 1:length(sizes)){
                     opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
@@ -230,7 +221,7 @@ results_summary()
                     graphics()
                 }
             }
-            if (app[j] == "Quicksort" & gpu[i] == "Tesla-K40"){
+            if (app[j] == "Quicksort"){
                 sizes <- c(4096, 8192, 16384, 32768, 65536 )
                 for(k in 1:length(sizes)){
                     opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
@@ -245,7 +236,7 @@ results_summary()
                 }
             }
             
-            if (app[j] == "VecAdd" & gpu[i] == "Tesla-K40"){
+            if (app[j] == "VecAdd"){
                 sizes <- c(32768, 131072, 262144, 1048576, 4194304 )
                 for(k in 1:length(sizes)){
                     opt0 <- scan(paste("./size_", sizes[k], "_baseline/opt_0.txt",sep=""))
@@ -260,17 +251,7 @@ results_summary()
                 }
             }
             
-            if (app[j] == "Pathfinder" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_100000_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_100000_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_100000_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_100000_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_100000_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_100000_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_100000_time_3600/run_0/logbest.txt",sep=""))
-                graphics()
-            }
-            if (app[j] == "ParticleFilterFloat" & gpu[i] == "Tesla-K40"){
+            if (app[j] == "ParticleFilterNaive" & gpu[i] == "Tesla-K40"){
                 opt0 <- scan(paste("./size_50000_baseline/opt_0.txt",sep=""))
                 opt1 <- scan(paste("./size_50000_baseline/opt_1.txt",sep=""))
                 opt2 <- scan(paste("./size_50000_baseline/opt_2.txt",sep=""))
@@ -281,14 +262,18 @@ results_summary()
                 graphics()
             }
             
-            if (app[j] == "ParticleFilterNaive" & gpu[i] == "Tesla-K40"){
-                opt0 <- scan(paste("./size_50000_baseline/opt_0.txt",sep=""))
-                opt1 <- scan(paste("./size_50000_baseline/opt_1.txt",sep=""))
-                opt2 <- scan(paste("./size_50000_baseline/opt_2.txt",sep=""))
-                opt3 <- scan(paste("./size_50000_baseline/opt_3.txt",sep=""))
-                benchmark <- scan(paste("./size_50000_time_3600/run_0/benchmark.txt",sep=""))
-                logAll <- read.table(paste("./size_50000_time_3600/run_0/logall.txt",sep=""))
-                logBest <- read.table(paste("./size_50000_time_3600/run_0/logbest.txt",sep=""))
+            if (app[j] == "backprop" | app[j] ==  "gaussian" | app[j] ==  "hotspot" | 
+                    app[j] ==  "kmeans" | app[j] ==  "lud" | app[j] ==  "nn" | 
+                    app[j] ==  "bfs" | app[j] ==  "b+tree" | app[j] ==  "heartwall" | 
+                    app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocite"){
+                sizes <- c(0)
+                opt0 <- scan(paste("./size_default_baseline/opt_0.txt",sep=""))
+                opt1 <- scan(paste("./size_default_baseline/opt_1.txt",sep=""))
+                opt2 <- scan(paste("./size_default_baseline/opt_2.txt",sep=""))
+                opt3 <- scan(paste("./size_default_baseline/opt_3.txt",sep=""))
+                benchmark <- scan(paste("./size_default_time_3600/run_0/benchmark.txt",sep=""))
+                logAll <- read.table(paste("./size_default_time_3600/run_0/logall.txt",sep=""))
+                logBest <- read.table(paste("./size_default_time_3600/run_0/logbest.txt",sep=""))
                 graphics()
             }
 
