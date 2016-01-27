@@ -59,6 +59,7 @@ def build_arff(filename):
 def build_for_GPU(gpu_list):
     global FLAG_DATA
 
+    FLAG_DATA[u'data'] = []
     for gpu_name in gpu_list:
         build_arff("../experiments/" + gpu_name + "/MatMulGPU/size_8192_time_3600/run_0/final_config.json")
         build_arff("../experiments/" + gpu_name + "/MatMulShared/size_8192_time_3600/run_0/final_config.json")
@@ -76,6 +77,7 @@ def build_for_GPU(gpu_list):
 def build_rodinia_for_GPU(gpu_list):
     global FLAG_DATA
 
+    FLAG_DATA[u'data'] = []
     for gpu_name in gpu_list:
         build_arff("../experiments/" + gpu_name + "/b+tree/size_default_time_3600/run_0/final_config.json")
         build_arff("../experiments/" + gpu_name + "/backprop/size_default_time_3600/run_0/final_config.json")
@@ -92,6 +94,21 @@ def build_rodinia_for_GPU(gpu_list):
     file.close()
     return
 
+def build_rodinia_for(exp_list, gpu_list):
+    global FLAG_DATA
+
+    FLAG_DATA[u'data'] = []
+    for exp_name in exp_list:
+        for gpu_name in gpu_list:
+            build_arff("../experiments/" + gpu_name + "/" + exp_name  + "/final_config.json")
+
+    exps = [exp.split("/")[0] for exp in exp_list]
+    file = open("arff/Rodinia_" + "_".join(exps) + "_" + "_".join(gpu_list) + ".arff", "w")
+    file.write(arff.dumps(FLAG_DATA))
+    file.close()
+    return
+
+
 build_for_GPU(["GTX-980"])
 build_for_GPU(["Tesla-K40"])
 build_for_GPU(["GTX-750"])
@@ -101,6 +118,30 @@ build_rodinia_for_GPU(["GTX-980"])
 build_rodinia_for_GPU(["Tesla-K40"])
 build_rodinia_for_GPU(["GTX-750"])
 build_rodinia_for_GPU(["GTX-980", "GTX-750", "Tesla-K40"])
+
+experiments = [
+    "b+tree/size_default_time_3600/run_0",
+    "backprop/size_default_time_3600/run_0",
+    "bfs/size_default_time_3600/run_0",
+    "gaussian/size_default_time_3600/run_0",
+    "heartwall/size_default_time_3600/run_0",
+    "hotspot/size_default_time_3600/run_0",
+    "lavaMD/size_default_time_3600/run_0",
+    "lud/size_default_time_3600/run_0",
+    "myocyte/size_default_time_3600/run_0",
+]
+
+gpus = ["GTX-980", "GTX-750", "Tesla-K40"]
+
+build_rodinia_for([experiments[1]], gpus)
+
+build_rodinia_for([experiments[1]], ["GTX-980", "GTX-750"])
+build_rodinia_for([experiments[1]], ["Tesla-K40", "GTX-750"])
+build_rodinia_for([experiments[1]], ["GTX-980", "Tesla-K40"])
+build_rodinia_for([experiments[1]], ["Tesla-K40"])
+build_rodinia_for([experiments[1]], ["GTX-750"])
+build_rodinia_for([experiments[1]], ["GTX-980"])
+
 ##
 ##init_fail_flags()
 ##

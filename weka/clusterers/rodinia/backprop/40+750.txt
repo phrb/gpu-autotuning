@@ -1,0 +1,70 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 2 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     Flag Data
+Instances:    2
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 2
+Within cluster sum of squared errors: 0.0
+
+Initial starting points (random):
+
+Cluster 0: on,off,off,false,true,false,true,true,true,sm_20,cg,3,32
+Cluster 1: on,on,off,false,true,false,false,true,true,sm_35,ca,0,16
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                             Cluster#
+Attribute                        Full Data          0          1
+                                     (2.0)      (1.0)      (1.0)
+================================================================
+no-align-double                         on         on         on
+use_fast_math                           on        off         on
+preserve-relocs                        off        off        off
+relocatable-device-code              false      false      false
+ftz                                   true       true       true
+prec-div                             false      false      false
+prec-sqrt                             true       true      false
+fmad                                  true       true       true
+allow-expensive-optimizations         true       true       true
+gpu-architecture                     sm_20      sm_20      sm_35
+def-load-cache                          ca         cg         ca
+opt-level                                0          3          0
+maxrregcount                            24         32         16
+
+
+
+
+Time taken to build model (full training data) : 0 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      1 ( 50%)
+1      1 ( 50%)
+
+

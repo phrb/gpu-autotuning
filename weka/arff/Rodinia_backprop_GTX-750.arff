@@ -15,14 +15,7 @@
 @ATTRIBUTE maxrregcount NUMERIC
 
 @DATA
-on,on,on,false,true,true,false,true,true,sm_20,cg,0,53
-on,off,off,false,true,true,true,false,true,sm_20,cv,0,59
-off,on,off,false,false,false,false,false,false,sm_21,ca,2,36
-off,on,off,true,false,true,true,false,true,sm_21,ca,1,56
-on,off,off,false,true,true,true,false,false,sm_30,ca,3,31
-on,off,on,false,true,true,true,true,true,sm_20,ca,1,24
-off,off,on,true,true,true,false,false,true,sm_35,ca,3,56
-on,off,off,false,false,true,true,false,false,sm_21,cs,1,44
+on,off,off,false,true,false,true,true,true,sm_20,cg,3,32
 % 
 % 
 % 
