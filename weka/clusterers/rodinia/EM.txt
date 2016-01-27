@@ -1,0 +1,107 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.EM -I 100 -N -1 -X 10 -max -1 -ll-cv 1.0E-6 -ll-iter 1.0E-6 -M 1.0E-6 -K 10 -num-slots 1 -S 100
+Relation:     Flag Data
+Instances:    102
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+EM
+==
+
+Number of clusters selected by cross validation: 1
+Number of iterations performed: 2
+
+
+                                Cluster
+Attribute                             0
+                                    (1)
+========================================
+no-align-double
+  on                                  61
+  off                                 43
+  [total]                            104
+use_fast_math
+  on                                  55
+  off                                 49
+  [total]                            104
+preserve-relocs
+  on                                  59
+  off                                 45
+  [total]                            104
+relocatable-device-code
+  true                                25
+  false                               79
+  [total]                            104
+ftz
+  true                                55
+  false                               49
+  [total]                            104
+prec-div
+  true                                51
+  false                               53
+  [total]                            104
+prec-sqrt
+  true                                65
+  false                               39
+  [total]                            104
+fmad
+  true                                57
+  false                               47
+  [total]                            104
+allow-expensive-optimizations
+  true                                49
+  false                               55
+  [total]                            104
+gpu-architecture
+  sm_20                               21
+  sm_21                               19
+  sm_30                               17
+  sm_32                               31
+  sm_35                               19
+  [total]                            107
+def-load-cache
+  ca                                  29
+  cg                                  29
+  cv                                  21
+  cs                                  27
+  [total]                            106
+opt-level
+  0                                   25
+  1                                   29
+  2                                   29
+  3                                   23
+  [total]                            106
+maxrregcount
+  mean                           38.1961
+  std. dev.                      14.4304
+
+
+
+Time taken to build model (full training data) : 0.39 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      102 (100%)
+
+
+Log likelihood: -14.45193

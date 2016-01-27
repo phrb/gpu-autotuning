@@ -1,0 +1,111 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.Canopy -N -1 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t2 -1.0 -t1 -1.25 -S 1
+Relation:     Flag Data
+Instances:    102
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+Canopy clustering
+=================
+
+Number of canopies (cluster centers) found: 35
+T2 radius: 1.776     
+T1 radius: 2.220     
+
+Cluster 0: off,on,on,false,true,false,true,false,true,sm_32,cs,3,43.666667,{6} <0,12,19>
+Cluster 1: off,on,off,true,false,true,true,true,true,sm_21,ca,1,59,{4} <1,9,13>
+Cluster 2: on,off,off,true,false,false,false,true,false,sm_20,cv,1,29,{2} <2>
+Cluster 3: on,on,off,false,true,true,true,true,false,sm_30,cg,3,25.666667,{6} <3,4,5,9,13,21,23>
+Cluster 4: on,on,on,false,true,true,true,true,false,sm_30,cv,2,53,{4} <3,4,9,13,19,24,25>
+Cluster 5: on,on,off,false,true,true,true,true,true,sm_32,cg,1,34,{6} <3,5,9,21,31,33>
+Cluster 6: off,off,on,false,false,false,true,false,false,sm_21,cs,1,34.8,{10} <6>
+Cluster 7: on,off,on,false,false,false,false,true,true,sm_35,ca,1,34,{4} <7,17,18,31,34>
+Cluster 8: off,off,on,true,true,false,true,true,true,sm_21,cs,0,23,{2} <8,20,30>
+Cluster 9: on,on,off,true,true,true,true,true,false,sm_21,cv,1,43,{2} <1,3,4,5,9>
+Cluster 10: on,on,on,true,false,true,false,true,true,sm_20,cs,2,33,{2} <10,25,33>
+Cluster 11: on,on,off,false,false,false,true,false,false,sm_30,cs,0,50,{2} <11,25>
+Cluster 12: off,on,off,false,true,false,false,true,true,sm_32,cs,2,16,{2} <0,12,17>
+Cluster 13: off,on,off,false,false,true,true,true,false,sm_30,ca,2,47,{2} <1,3,4,13,26>
+Cluster 14: on,on,on,false,true,false,false,false,false,sm_35,ca,2,63,{2} <14,17,18,19,24,26,34>
+Cluster 15: on,off,off,false,true,true,true,false,true,sm_20,cv,0,59,{2} <15,16,19,21,31>
+Cluster 16: on,off,on,false,false,true,true,false,false,sm_32,cv,0,17,{2} <15,16,18,24>
+Cluster 17: on,on,off,false,true,false,false,true,true,sm_35,ca,0,23,{4} <7,12,14,17,33>
+Cluster 18: on,off,on,false,false,false,false,false,false,sm_20,ca,0,35.5,{4} <7,14,16,18,27>
+Cluster 19: on,on,on,false,true,false,true,false,true,sm_20,cv,2,18,{2} <0,4,14,15,19,25>
+Cluster 20: off,off,on,false,false,false,true,true,true,sm_32,cg,0,31,{2} <8,20,27>
+Cluster 21: on,off,off,false,true,false,true,true,true,sm_20,cg,3,32,{2} <3,5,15,21,31,34>
+Cluster 22: off,off,on,true,true,true,false,false,true,sm_35,ca,3,56,{2} <22>
+Cluster 23: on,on,off,false,false,true,false,true,false,sm_20,cg,3,26,{4} <3,23,33>
+Cluster 24: on,on,on,false,true,true,false,false,false,sm_32,cv,0,59,{2} <4,14,16,24,32,33>
+Cluster 25: on,on,on,false,false,false,true,true,true,sm_30,cs,2,18,{2} <4,10,11,19,25>
+Cluster 26: off,on,off,false,false,false,false,false,false,sm_21,ca,2,36,{2} <13,14,26>
+Cluster 27: off,off,on,false,false,false,false,true,false,sm_20,cg,2,38,{2} <18,20,27>
+Cluster 28: off,on,on,true,false,true,true,false,true,sm_35,cg,2,59,{2} <28,32>
+Cluster 29: on,off,off,true,true,true,false,false,false,sm_21,cg,3,41,{2} <29>
+Cluster 30: off,off,on,true,true,false,true,false,false,sm_35,cv,0,62,{2} <8,30>
+Cluster 31: on,off,on,false,true,true,true,true,true,sm_20,ca,1,24,{2} <5,7,15,21,31,33,34>
+Cluster 32: off,on,on,true,false,true,false,false,false,sm_32,cv,2,35,{2} <24,28,32>
+Cluster 33: on,on,on,false,true,true,false,true,true,sm_20,cg,0,53,{2} <5,10,17,23,24,31,33>
+Cluster 34: on,off,on,false,true,false,true,true,false,sm_35,ca,3,61,{2} <7,14,21,31,34>
+
+
+
+Time taken to build model (full training data) : 0.01 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+ 0        6 (  6%)
+ 1        4 (  4%)
+ 2        2 (  2%)
+ 3        4 (  4%)
+ 4        4 (  4%)
+ 5        6 (  6%)
+ 6       10 ( 10%)
+ 7        4 (  4%)
+ 8        2 (  2%)
+ 9        2 (  2%)
+10        2 (  2%)
+11        2 (  2%)
+12        2 (  2%)
+13        4 (  4%)
+14        2 (  2%)
+15        2 (  2%)
+16        2 (  2%)
+17        4 (  4%)
+18        4 (  4%)
+19        2 (  2%)
+20        2 (  2%)
+21        2 (  2%)
+22        2 (  2%)
+23        4 (  4%)
+24        2 (  2%)
+25        2 (  2%)
+26        2 (  2%)
+27        2 (  2%)
+28        2 (  2%)
+29        2 (  2%)
+30        2 (  2%)
+31        2 (  2%)
+32        2 (  2%)
+33        2 (  2%)
+34        2 (  2%)

@@ -1,0 +1,68 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 2 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     Flag Data
+Instances:    102
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 4
+Within cluster sum of squared errors: 497.4149611728244
+
+Initial starting points (random):
+
+Cluster 0: off,off,on,false,false,false,true,true,true,sm_32,cg,0,31
+Cluster 1: on,on,on,false,true,true,false,true,true,sm_20,cg,0,53
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                             Cluster#
+Attribute                        Full Data          0          1
+                                   (102.0)     (50.0)     (52.0)
+================================================================
+no-align-double                         on        off         on
+use_fast_math                           on        off         on
+preserve-relocs                         on         on        off
+relocatable-device-code              false      false      false
+ftz                                   true      false       true
+prec-div                             false      false       true
+prec-sqrt                             true       true       true
+fmad                                  true      false       true
+allow-expensive-optimizations        false      false       true
+gpu-architecture                     sm_32      sm_32      sm_20
+def-load-cache                          ca         cs         ca
+opt-level                                1          1          3
+maxrregcount                       38.1961      40.32    36.1538
+
+
+
+
+Time taken to build model (full training data) : 0.02 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0       50 ( 49%)
+1       52 ( 51%)
