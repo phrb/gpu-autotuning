@@ -36,7 +36,7 @@ main.o:	define.c \
 				file.c \
 				timer.c
 	nvcc -ccbin gcc-4.8 $(NVCC_FLAGS) main.cu \
-				-c -O3 -g
+				-c -g
 
 # delete all object files
 clean:
