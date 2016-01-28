@@ -1,4 +1,4 @@
-dirpath <- "~/Dropbox/Doctorate/Results/2016/gpu-autotuning/experiments/"
+dirpath <- "./experiments/"
 
 #General Configurations of the graphics
 cexTam=1.25
@@ -36,8 +36,8 @@ graphics <- function(){
     dev.off()
 }
 
-calc_speedup <- function(opt, values){
-    return ((1 - (median(values[values < 9999]) / median(opt[opt < 9999])) ) * 100)
+calc_speedup <- function(old, new){
+    return (median(old[old < 9999]) / median(new[new < 9999]))
 }
 
 results_summary <- function(){
@@ -46,110 +46,90 @@ results_summary <- function(){
                height = 10, width = 11)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
     # MatMulGPU
-    gtx   <- scan(paste("./GTX-680/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k20   <- scan(paste("./Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k40   <- scan(paste("./Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    o2gtx <- scan(paste("./GTX-680/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
-    o2k20 <- scan(paste("./Tesla-K20/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
-    o2k40 <- scan(paste("./Tesla-K40/MatMulGPU/size_1024_baseline/opt_2.txt",sep=""))
+    gtx9   <- scan(paste("./GTX-980/MatMulGPU/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/MatMulGPU/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/MatMulGPU/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/MatMulGPU/size_8192_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/MatMulGPU/size_8192_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/MatMulGPU/size_8192_baseline/opt_2.txt",sep=""))
     
-    matmulgpu <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
-    
-    print("MMG")
-    print("GTX")
-    print(calc_speedup(o2gtx, gtx))
-    print("K20")
-    print(calc_speedup(o2k20, k20))
-    print("K40") 
-    print(calc_speedup(o2k40, k40))
+    matmulgpu <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
     
     # MatMulUn
-    gtx   <- scan(paste("./GTX-680/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k20   <- scan(paste("./Tesla-K20/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k40   <- scan(paste("./Tesla-K40/MatMulUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    o2gtx <- scan(paste("./GTX-680/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
-    o2k20 <- scan(paste("./Tesla-K20/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
-    o2k40 <- scan(paste("./Tesla-K40/MatMulUn/size_1024_baseline/opt_2.txt",sep=""))
+    gtx9   <- scan(paste("./GTX-980/MatMulUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/MatMulUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/MatMulUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/MatMulUn/size_8192_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/MatMulUn/size_8192_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/MatMulUn/size_8192_baseline/opt_2.txt",sep=""))
     
-    matmulun <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
-    
-    print("MMU")
-    print("GTX")
-    print(calc_speedup(o2gtx, gtx))
-    print("K20")
-    print(calc_speedup(o2k20, k20))
-    print("K40") 
-    print(calc_speedup(o2k40, k40))
+    matmulun <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
     
     # MatMulShared
-    gtx   <- scan(paste("./GTX-680/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k20   <- scan(paste("./Tesla-K20/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k40   <- scan(paste("./Tesla-K40/MatMulShared/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    o2gtx <- scan(paste("./GTX-680/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
-    o2k20 <- scan(paste("./Tesla-K20/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
-    o2k40 <- scan(paste("./Tesla-K40/MatMulShared/size_1024_baseline/opt_2.txt",sep=""))
+    gtx9   <- scan(paste("./GTX-980/MatMulShared/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/MatMulShared/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/MatMulShared/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/MatMulShared/size_8192_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/MatMulShared/size_8192_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/MatMulShared/size_8192_baseline/opt_2.txt",sep=""))
     
-    matmulshared <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
-    
-    print("MMS")
-    print("GTX")
-    print(calc_speedup(o2gtx, gtx))
-    print("K20")
-    print(calc_speedup(o2k20, k20))
-    print("K40") 
-    print(calc_speedup(o2k40, k40))
+    matmulshared <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
     
     # MatMulSharedUn
-    gtx   <- scan(paste("./GTX-680/MatMulSharedUn/size_256_time_3600/run_0/benchmark.txt",sep=""))
-    #   k20   <- scan(paste("./Tesla-K20/MatMulSharedUn/size_1024_time_3600/run_0/benchmark.txt",sep=""))
-    k40   <- scan(paste("./Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/benchmark.txt",sep=""))
-    o2gtx <- scan(paste("./GTX-680/MatMulSharedUn/size_256_baseline/opt_2.txt",sep=""))
-    #   o2k20 <- scan(paste("./Tesla-K20/MatMulSharedUn/size_1024_baseline/opt_2.txt",sep=""))
-    o2k40 <- scan(paste("./Tesla-K40/MatMulSharedUn/size_256_baseline/opt_2.txt",sep=""))
+    gtx9   <- scan(paste("./GTX-980/MatMulSharedUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/MatMulSharedUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/MatMulSharedUn/size_8192_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/MatMulSharedUn/size_8192_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/MatMulSharedUn/size_8192_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/MatMulSharedUn/size_8192_baseline/opt_2.txt",sep=""))
     
-    matmulsharedun <- c(calc_speedup(o2gtx, gtx), 0, calc_speedup(o2k40, k40))
-    
-    print("MMSU")
-    print("GTX")
-    print(calc_speedup(o2gtx, gtx))
-    print("K20")
-    print(calc_speedup(o2k20, k20))
-    print("K40") 
-    print(calc_speedup(o2k40, k40))
-    
+    matmulsharedun <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+
     # SubSeqMax
-    gtx   <- scan(paste("./GTX-680/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
-    k20   <- scan(paste("./Tesla-K20/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
-    k40   <- scan(paste("./Tesla-K40/SubSeqMax/size_134217728_time_3600/run_0/benchmark.txt",sep=""))
-    o2gtx <- scan(paste("./GTX-680/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
-    o2k20 <- scan(paste("./Tesla-K20/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
-    o2k40 <- scan(paste("./Tesla-K40/SubSeqMax/size_134217728_baseline/opt_2.txt",sep=""))
+    gtx9   <- scan(paste("./GTX-980/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/SubSeqMax/size_1073741824_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/SubSeqMax/size_1073741824_baseline/opt_2.txt",sep=""))
     
-    subseqmax <- c(calc_speedup(o2gtx, gtx), calc_speedup(o2k20, k20), calc_speedup(o2k40, k40))
+    subseqmax <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+
+    # Bitonic
+    gtx9   <- scan(paste("./GTX-980/Bitonic/size_4194304_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/Bitonic/size_4194304_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/Bitonic/size_4194304_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/Bitonic/size_4194304_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/Bitonic/size_4194304_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/Bitonic/size_4194304_baseline/opt_2.txt",sep=""))
     
-    print("SSM")
-    print("GTX")
-    print(calc_speedup(o2gtx, gtx))
-    print("K20")
-    print(calc_speedup(o2k20, k20))
-    print("K40") 
-    print(calc_speedup(o2k40, k40))
+    bitonic <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+
+    # Quicksort
+    gtx9   <- scan(paste("./GTX-980/Quicksort/size_65536_time_3600/run_0/benchmark.txt",sep=""))
+    gtx7   <- scan(paste("./GTX-750/Quicksort/size_65536_time_3600/run_0/benchmark.txt",sep=""))
+    k40    <- scan(paste("./Tesla-K40/Quicksort/size_65536_time_3600/run_0/benchmark.txt",sep=""))
+    o2gtx9 <- scan(paste("./GTX-980/Quicksort/size_65536_baseline/opt_2.txt",sep=""))
+    o2gtx7 <- scan(paste("./GTX-750/Quicksort/size_65536_baseline/opt_2.txt",sep=""))
+    o2k40  <- scan(paste("./Tesla-K40/Quicksort/size_65536_baseline/opt_2.txt",sep=""))
     
-    final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax)
+    quick <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+
+    final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax, BIT=bitonic, QCK=quick)
     
     barplot(as.matrix(final),
             ylab="Percentage of Speedup vs. -O2",
             beside=T,
-            ylim=c(-2.8, 30),
+            ylim=c(1, 8),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 2.3,
             space=c(0,0.3),
-            names=c("#1", "#2", "#3", "#4", "Sub-Array"),
+            names=c("#1", "#2", "#3", "#4", "Sub-Array", "Bitonic", "Quicksort"),
             cex.axis = 2.3,
             cex.lab = 2.3
     )
-    legend(4, 25, c("GTX-680", "Tesla-K20", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=2)
+    legend(2, 2, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=2)
     dev.off()
 }
 
@@ -159,7 +139,9 @@ results_summary()
     gpu <- c("Tesla-K40", "GTX-750", "GTX-980")
 
     for(i in 1:length(gpu)){
-        setwd(paste(dirpath,gpu[i], sep=""))
+        print(getwd())
+        setwd(paste(gpu[i], sep=""))
+        print(getwd())
         
 #         if (gpu[i]== "GTX-680"){
 #             app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax")
@@ -169,15 +151,23 @@ results_summary()
 #             app <- c("MatMulGPU", "MatMulShared",  "MatMulUn", "SubSeqMax")
 #         }
         if (gpu[i]== "Tesla-K40"){
-            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", "gaussian", "hotspot", "kmeans", "lud", "nn", "bfs", "b+tree", "heartwall", "hybridsort", "lavaMD", "myocite")
+            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", 
+                     "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", 
+                     "gaussian", "hotspot", "kmeans", "lud", "nn", 
+                     "bfs", "b+tree", "heartwall", "hybridsort", "lavaMD", "myocyte")
         }    
         if (gpu[i]== "GTX-980" | gpu[i]== "GTX-750"){
-            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",  "lavaMD", "myocite")
+            app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn",
+                     "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop",
+                     "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",
+                     "lavaMD", "myocyte")
         }    
 
                 
         for(j in 1:length(app)){
+            print(getwd())
             setwd(paste("./", app[j], sep=""))
+            print(getwd())
             if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn" | app[j] == "MatMulSharedUn"){
                 sizes <- c(2048, 4096, 8192, 16384, 32768)
                 for(k in 1:length(sizes)){
@@ -265,7 +255,7 @@ results_summary()
             if (app[j] == "backprop" | app[j] ==  "gaussian" | app[j] ==  "hotspot" | 
                     app[j] ==  "kmeans" | app[j] ==  "lud" | app[j] ==  "nn" | 
                     app[j] ==  "bfs" | app[j] ==  "b+tree" | app[j] ==  "heartwall" | 
-                    app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocite"){
+                    app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocyte"){
                 sizes <- c(0)
                 opt0 <- scan(paste("./size_default_baseline/opt_0.txt",sep=""))
                 opt1 <- scan(paste("./size_default_baseline/opt_1.txt",sep=""))
@@ -277,6 +267,9 @@ results_summary()
                 graphics()
             }
 
-            setwd("../")
+            print(getwd())
+            setwd("..")
+            print(getwd())
         }
+        setwd("..")
     }
