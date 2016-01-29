@@ -43,8 +43,8 @@ def baseline(program, arguments, logdir, runs, cuda_path):
     os.system("mkdir -p " + logdir + "_baseline" )
     for value in values:
         # Compiling:
-        print "nvcc -w " + cuda_path + program + " -o tmp.bin " + options + value
-        os.system("nvcc -w " + cuda_path + program + " -o tmp.bin " + options + value)
+        print "nvcc -w -ccbin g++-4.8 " + cuda_path + program + " -o tmp.bin " + options + value
+        os.system("nvcc -w -ccbin g++-4.8 " + cuda_path + program + " -o tmp.bin " + options + value)
         for i in range(runs):
             cmd   = "./tmp.bin " + " ".join(arguments) + " "
             logfile  = logdir + "_baseline/opt_" + value + ".txt"
@@ -77,7 +77,7 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
 run_time    = 3600
-runs        = 2
+runs        = 1
 benchmark   = 10
 
 #
@@ -86,7 +86,7 @@ benchmark   = 10
 program     = "../matMul/matMul_gpu_sharedmem.cu"
 logdir      = "logs/MatMulShared"
 arguments   = "16 0"
-steps       = [2048, 4096, 8192, 16384, 32768]
+steps       = [8192]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
@@ -94,7 +94,7 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # MatMulSharedUn Experiments:
 #
-steps       = [2048, 4096, 8192, 16384, 32768]
+steps       = [8192]
 program     = "../matMul/matMul_gpu_sharedmem_uncoalesced.cu"
 logdir      = "logs/MatMulSharedUn"
 
@@ -102,7 +102,7 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # MatMulUn Experiments:
 #
-steps       = [2048, 4096, 8192, 16384, 32768]
+steps       = [ 8192]
 program     = "../matMul/matMul_gpu_uncoalesced.cu"
 logdir      = "logs/MatMulUn"
 
@@ -110,7 +110,7 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # MatMulGPU Experiments:
 #
-steps       = [2048, 4096, 8192, 16384, 32768]
+steps       = [ 8192]
 program     = "../matMul/matMul_gpu.cu"
 logdir      = "logs/MatMulGPU"
 
@@ -118,22 +118,22 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # SubSeqMax Experiments:
 #
-program     = "../bioinformatic/SubSeqMax.cu"
-logdir      = "logs/SubSeqMax"
-arguments   = "0"
-steps       = [2**26, 2**27, 2**28, 2**29, 2**30]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+#program     = "../bioinformatic/SubSeqMax.cu"
+#logdir      = "logs/SubSeqMax"
+#arguments   = "0"
+#steps       = [2**26, 2**27, 2**28, 2**29, 2**30]
 #
-# Bitonic Sort Experiments:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-program     = "../sorting/bitonic_sort.cu"
-logdir      = "logs/Bitonic"
-arguments   = "0"
-steps       = [2**18, 2**19, 2**20, 2**21, 2**22]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+##
+## Bitonic Sort Experiments:
+##
+#program     = "../sorting/bitonic_sort.cu"
+#logdir      = "logs/Bitonic"
+#arguments   = "0"
+#steps       = [2**18, 2**19, 2**20, 2**21, 2**22]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 #
 # Quicksort Experiments:
@@ -141,7 +141,7 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 program     = "../sorting/quicksort.cu"
 logdir      = "logs/Quicksort"
 arguments   = "0"
-steps       = [2**12, 2**13, 2**14, 2**15, 2**16]
+steps       = [ 2**16]
 
 run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
@@ -149,12 +149,12 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # Vector Addition Experiments:
 #
-program     = "../vectorAdd/vectorAdd.cu"
-logdir      = "logs/VecAdd"
-arguments   = " "
-steps       = [2**15, 2**17, 2**18, 2**20, 2**22]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#program     = "../vectorAdd/vectorAdd.cu"
+#logdir      = "logs/VecAdd"
+#arguments   = " "
+#steps       = [2**15, 2**17, 2**18, 2**20, 2**22]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 ## Applications do Benchmark Rodinia:
 #
