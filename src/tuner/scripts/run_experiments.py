@@ -1,4 +1,6 @@
 #! /usr/bin/python2
+
+import subprocess
 import argparse
 import time
 import os
@@ -65,21 +67,21 @@ argparser.add_argument( "-cp", "--cuda-path",
 
 if __name__ == '__main__':
     args =  argparser.parse_args()
-    cmd  = "python2 nvcc_flags_tuner.py --no-dups"
 
     for i in range(args.runs):
+        cmd    = "python2 nvcc_flags_tuner.py --no-dups"
         run_id = "/run_" + str(i)
         log_path = args.logdir + run_id
-        os.system("mkdir " + "'" + log_path + "'")
+        subprocess.call("mkdir " + "'" + log_path + "'", shell = True)
 
         cmd += " --stop-after="         + args.time
         cmd += " --file="               + args.filename
         cmd += " --file-args="          + "\"" + " ".join(args.fargs) + "\""
-        cmd += " --log-dir="            + args.logdir + run_id + "/"
+        cmd += " --log-dir="            + log_path + "/"
         cmd += " --log-cmd="            + args.logcmd
         cmd += " --parallelism="        + args.parallelism
-        cmd += " --results-log-detail=" + args.logdir + run_id + "/logall.txt"
-        cmd += " --results-log="        + args.logdir + run_id + "/logbest.txt"
+        cmd += " --results-log-detail=" + log_path + "/logall.txt"
+        cmd += " --results-log="        + log_path + "/logbest.txt"
         cmd += " --cuda-path="          + "\"" + args.cuda_path + "\""
 
         if args.technique != "":
@@ -87,7 +89,7 @@ if __name__ == '__main__':
         if args.seed != "":
             cmd += " --seed-configuration=" + args.seed
 
-        os.system(cmd)
+        subprocess.call(cmd, shell = True)
 
         #
         # Compile and run best solution multiple times.
@@ -95,18 +97,17 @@ if __name__ == '__main__':
         print "[INFO] Tuning Complete, Starting Benchmark:"
         # Compiling:
         print "[INFO] Compiling..."
-        os.system("cat " + args.logdir + run_id + "/final")
-        os.system("sh "  + args.logdir + run_id + "/final")
+        subprocess.call("cat " + log_path + "/final", shell = True)
+        subprocess.call("sh "  + log_path + "/final", shell = True)
         print "[INFO] Done."
         print "[INFO] Running Benchmark:"
         for j in range(args.benchmark):
             # Running:
             cmd     = "./tmp.bin " + " ".join(args.fargs)
-            logfile = args.logdir + run_id + "/benchmark.txt"
+            logfile = log_path + "/benchmark.txt"
 
-            print cmd
             start   = time.time()
-            os.system(cmd)
+            subprocess.call(cmd, shell = True)
             end     = time.time()
 
             with open(logfile, "a+") as file:
@@ -115,5 +116,5 @@ if __name__ == '__main__':
 
         print "[INFO] Benchmark Done."
 
-    os.system("rm -r opentuner.log opentuner.db")
+        subprocess.call("rm -r opentuner.log opentuner.db", shell = True)
 
