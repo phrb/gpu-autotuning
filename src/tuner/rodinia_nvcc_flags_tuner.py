@@ -89,9 +89,10 @@ class NvccFlagsTuner(MeasurementInterface):
         subprocess.call("rm -f *.o *~ *.linkinfo", shell = True)
 
         os.environ["NVCC_FLAGS"] = self.parse_config(cfg)
-        compile_result = subprocess.call("make",
-                                         shell = True)
+        compile_result = subprocess.call("make", shell = True)
         os.chdir(old_path)
+        if compile_result != 0:
+            return Result(time=FAIL_PENALTY)
 
         # Give a better value to the Tuner (average)
         results = []
