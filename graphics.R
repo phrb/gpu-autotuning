@@ -40,6 +40,67 @@ calc_speedup <- function(old, new){
     return (median(old[old < 9999]) / median(new[new < 9999]))
 }
 
+rodinia_results_summary <- function(){
+    app <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", 
+             "heartwall", "lavaMD", "myocyte")
+    for(j in 1:length(app)){
+        
+        gtx9   <- scan(paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
+        gtx7   <- scan(paste("./GTX-750/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
+        k40    <- scan(paste("./Tesla-K40/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
+        o2gtx9 <- scan(paste("./GTX-980/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
+        o2gtx7 <- scan(paste("./GTX-750/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
+        o2k40  <- scan(paste("./Tesla-K40/", app[j], "/size_default_baseline/opt_2.txt",sep=""))            
+        
+        if(app[j] == "backprop"){
+            backprop <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if(app[j] == "gaussian"){
+            gaussian <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if(app[j] == "hotspot"){
+            hotspot <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if(app[j] == "lud"){
+            lud <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if (app[j] == "bfs"){
+            bfs <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if (app[j] == "b+tree"){
+            b_tree <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if (app[j] == "heartwall"){
+            heartwall <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if (app[j] == "lavaMD"){
+            lavaMD <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if (app[j] == "myocyte"){
+            myocyte <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        }
+    }
+    
+    final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud,
+                        BFS=bfs, BPT=b_tree, HTW=heartwall, LMD=lavaMD,
+                        MYO=myocyte)
+    print(as.matrix(final))
+
+    setEPS()
+    postscript(paste("../images/RodiniaSummary.eps",sep=""),
+               height = 10, width = 18)
+    par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
+    
+    print("Got here")
+    barplot(as.matrix(final),
+            ylab="Percentage of Speedup vs. -O2",
+            beside=T,
+            ylim=c(1, 4),
+            xpd=F,
+            col=gray.colors(3, start=0, end=1),
+            cex.names = 3,
+            space=c(0,0.3),
+            #names <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall", "lavaMD", "myocyte"),
+            cex.axis = 3,
+            cex.lab = 3
+    )
+    print("past it")
+    legend("topright", c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    dev.off()
+}
+
 results_summary <- function(){
     app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd")
     for(j in 1:length(app)){
@@ -129,6 +190,7 @@ results_summary <- function(){
 setwd(paste(dirpath, sep=""))
 
 results_summary()
+rodinia_results_summary()
     
 gpu <- c("Tesla-K40", "GTX-750", "GTX-980")
 
@@ -137,18 +199,10 @@ for(i in 1:length(gpu)){
     setwd(paste(gpu[i], sep=""))
     print(getwd())
 
-    if (gpu[i]== "Tesla-K40"){
-        app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", 
-                 "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop", 
-                 "gaussian", "hotspot", "kmeans", "lud", "nn", 
-                 "bfs", "b+tree", "heartwall", "hybridsort", "lavaMD", "myocyte")
-    }    
-    if (gpu[i]== "GTX-980" | gpu[i]== "GTX-750"){
-        app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn",
-                 "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop",
-                 "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",
-                 "lavaMD", "myocyte")
-    }    
+    app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn",
+             "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop",
+             "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",
+             "lavaMD", "myocyte")
 
     for(j in 1:length(app)){
         print(getwd())
