@@ -236,8 +236,9 @@ void subSeqMaxFinal(int *vet, int n){
              }
         }
     }
-    
+    printf("Assertion started\n");
     assert (t_M == 964);
+    printf("Assertion Finished");
 
 	printf(" \n\n A sub Sequencia deu %d  \n\n", t_M);
 }

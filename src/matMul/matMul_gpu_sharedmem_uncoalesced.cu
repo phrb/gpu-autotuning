@@ -148,11 +148,11 @@ int main(int argc, char* argv[])
   }  
 
   fclose(ptr_file); 
-  
+   printf("Assertion started\n");
  for(int i=0 ;i<Width; i++) {
    assert(fabs(P[i * Width + i] - Pt[i]) < 0.1);
   }
-
+      printf("Assertion Finished");
 
   // clean up memory
   free(M);

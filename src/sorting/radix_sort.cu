@@ -28,7 +28,7 @@ cudaError_t checkCuda(cudaError_t result)
 #endif
 
 #ifndef N
-#define 	N 	128
+#define 	N 	2048
 #endif 
 
 
@@ -302,9 +302,10 @@ cudaError_t checkCuda(cudaError_t result)
 	    //printf("\n");
 
 	    // test
-	    printf("\nTesting results...\n");
+	    printf("Assertion started\n");
 	    for (int x = 0; x < N - 1; x++) 
             assert(r_values[x] <= r_values[x + 1]);
+	    printf("Assertion Finished");
     }
 
     // free memory

@@ -106,8 +106,10 @@ int main(int argc, char** argv)
         if (fabs(h_C[i] - sum) > 1e-5)
             break;
     }
+    printf("Assertion started\n");
     printf("%s \n", (i == N) ? "PASSED" : "FAILED");    
     assert(i == N);
+    printf("Assertion Finished");
 //	GpuProfiling::printResults();
 
     Cleanup();

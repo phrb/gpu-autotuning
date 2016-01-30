@@ -219,9 +219,10 @@ cudaError_t checkCuda(cudaError_t result)
 		cudaMemcpy(r_values, d_values, size, cudaMemcpyDeviceToHost) ;
  	
 		// test
-        printf("\nTesting results...\n");
+        printf("Assertion started\n");
         for (int x = 0; x < N - 1; x++) 
             assert(r_values[x] <= r_values[x + 1]);
+    	printf("Assertion Finished");
     }
  	
  	// free memory
