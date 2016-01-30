@@ -1,4 +1,5 @@
 #! /usr/bin/python2
+
 import subprocess
 import argparse
 import time
@@ -66,12 +67,12 @@ argparser.add_argument( "-cp", "--cuda-path",
 
 if __name__ == '__main__':
     args =  argparser.parse_args()
-    cmd  = "python2 rodinia_nvcc_flags_tuner.py --no-dups"
 
     for i in range(args.runs):
-        run_id = "/run_" + str(i)
+        cmd      = "python2 rodinia_nvcc_flags_tuner.py --no-dups"
+        run_id   = "/run_" + str(i)
         log_path = args.logdir + run_id
-        os.system("mkdir " + "'" + log_path + "'")
+        subprocess.call("mkdir " + "'" + log_path + "'", shell = True)
 
         cmd += " --stop-after="         + args.time
         cmd += " --file="               + args.filename
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         if args.seed != "":
             cmd += " --seed-configuration=" + args.seed
 
-        os.system(cmd)
+        subprocess.call(cmd, shell = True)
 
         #
         # Compile and run best solution multiple times.
@@ -105,8 +106,7 @@ if __name__ == '__main__':
         configs = file.readlines()[-1].rstrip()
 
         os.environ["NVCC_FLAGS"] = configs
-        compile_result = subprocess.call("make",
-                                         shell = True)
+        compile_result = subprocess.call("make", shell = True)
         os.chdir(old_path)
         file.close()
 
@@ -129,5 +129,5 @@ if __name__ == '__main__':
 
         print "[INFO] Benchmark Done."
 
-    os.system("rm -r opentuner.log opentuner.db")
+        subprocess.call("rm -r opentuner.log opentuner.db", shell = True)
 
