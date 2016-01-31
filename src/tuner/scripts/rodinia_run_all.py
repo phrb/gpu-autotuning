@@ -158,12 +158,12 @@ benchmark   = 8
 #
 # Rodinia: Hybrid sort
 #
-program     = "../rodinia_3.0/cuda/hybridsort"
-logdir      = "logs/hybridsort"
-arguments   = " "
-steps       = ["default"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#program     = "../rodinia_3.0/cuda/hybridsort"
+#logdir      = "logs/hybridsort"
+#arguments   = " "
+#steps       = ["default"]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 
 #
