@@ -18,7 +18,7 @@ graphics <- function(){
             cex.lab = 2.3
     )
     dev.off()
-    
+
     postscript(paste("../../../images/", app[j],"-", sizes[k], "-", gpu[i],
                      "-Best.eps",sep=""),
                height = 11, width = 11)
@@ -41,17 +41,44 @@ calc_speedup <- function(old, new){
 }
 
 rodinia_results_summary <- function(){
-    app <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", 
+    app <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree",
              "heartwall", "lavaMD", "myocyte")
     for(j in 1:length(app)){
-        
-        gtx9   <- scan(paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
-        gtx7   <- scan(paste("./GTX-750/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
-        k40    <- scan(paste("./Tesla-K40/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep=""))
+
+        target <- paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
+        print(target)
+
+        if(file.exists(target)) {
+            gtx9 <- scan(target)
+        }
+        else {
+            gtx9 <- scan(paste("./GTX-980/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))
+        }
+
+        target <- paste("./GTX-750/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
+        print(target)
+
+        if(file.exists(target)) {
+            gtx7 <- scan(target)
+        }
+        else {
+            gtx7 <- scan(paste("./GTX-750/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))
+        }
+
+        target <- paste("./Tesla-K40/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
+        print(target)
+
+        if(file.exists(target)) {
+            k40 <- scan(target)
+        }
+        else {
+            k40 <- scan(paste("./Tesla-K40/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))
+        }
+
         o2gtx9 <- scan(paste("./GTX-980/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
         o2gtx7 <- scan(paste("./GTX-750/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
-        o2k40  <- scan(paste("./Tesla-K40/", app[j], "/size_default_baseline/opt_2.txt",sep=""))            
-        
+        o2k40  <- scan(paste("./Tesla-K40/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
+
         if(app[j] == "backprop"){
             backprop <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         } else if(app[j] == "gaussian"){
@@ -72,7 +99,7 @@ rodinia_results_summary <- function(){
             myocyte <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
     }
-    
+
     final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud,
                         BFS=bfs, BPT=b_tree, HTW=heartwall, LMD=lavaMD,
                         MYO=myocyte)
@@ -82,12 +109,11 @@ rodinia_results_summary <- function(){
     postscript(paste("../images/RodiniaSummary.eps",sep=""),
                height = 10, width = 18)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
-    
-    print("Got here")
+
     barplot(as.matrix(final),
             ylab="Percentage of Speedup vs. -O2",
             beside=T,
-            ylim=c(1, 4),
+            ylim=c(1, 3),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -96,23 +122,22 @@ rodinia_results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    print("past it")
-    legend("topright", c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(5, 3, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     dev.off()
 }
 
 results_summary <- function(){
     app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn", "SubSeqMax", "Bitonic", "Quicksort", "VecAdd")
     for(j in 1:length(app)){
-        
+
         if (app[j] == "MatMulGPU" | app[j] == "MatMulShared" | app[j] == "MatMulUn" | app[j] == "MatMulSharedUn"){
             size <- 8192
-        }        
+        }
         if (app[j] == "SubSeqMax"){
-            size <- 1073741824 
-        }        
+            size <- 1073741824
+        }
         if (app[j] == "Bitonic"){
-            size <- 4194304 
+            size <- 4194304
         }
         if (app[j] == "Quicksort"){
             size <- 65536
@@ -120,39 +145,39 @@ results_summary <- function(){
         if (app[j] == "VecAdd"){
             size <- 4194304
         }
-        
+
         gtx9   <- scan(paste("./GTX-980/", app[j], "/size_", size, "_time_3600/run_0/benchmark.txt",sep=""))
         gtx7   <- scan(paste("./GTX-750/", app[j], "/size_", size, "_time_3600/run_0/benchmark.txt",sep=""))
         k40   <- scan(paste("./Tesla-K40/", app[j], "/size_", size, "_time_3600/run_0/benchmark.txt",sep=""))
         o2gtx9 <- scan(paste("./GTX-980/", app[j], "/size_", size, "_baseline/opt_2.txt",sep=""))
         o2gtx7 <- scan(paste("./GTX-750/", app[j], "/size_", size, "_baseline/opt_2.txt",sep=""))
-        o2k40 <- scan(paste("./Tesla-K40/", app[j], "/size_", size, "_baseline/opt_2.txt",sep=""))            
-        
+        o2k40 <- scan(paste("./Tesla-K40/", app[j], "/size_", size, "_baseline/opt_2.txt",sep=""))
+
         print("MMG")
         print("gtx9")
         print(calc_speedup(o2gtx9, gtx9))
         print("gtx7")
         print(calc_speedup(o2gtx7, gtx7))
-        print("K40") 
+        print("K40")
         print(calc_speedup(o2k40, k40))
-        
+
         if(app[j] == "MatMulGPU"){
             matmulgpu <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
-        
+
         if(app[j] == "MatMulUn"){
             matmulun <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
         if(app[j] == "MatMulShared"){
             matmulshared <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        }            
+        }
         if(app[j] == "MatMulSharedUn"){
             matmulsharedun <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
         if (app[j] == "SubSeqMax"){
             subseqmax <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
-        
+
         if (app[j] == "Bitonic"){
             Bitonic <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
@@ -161,16 +186,16 @@ results_summary <- function(){
         }
         if (app[j] == "VecAdd"){
             VecAdd <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        }         
+        }
     }
-    
+
     final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax, VAdd=VecAdd, Bitonic=Bitonic, QuickS=QuickSort)
-    
+
     setEPS()
     postscript(paste("../images/Summary.eps",sep=""),
                height = 10, width = 18)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
-    
+
     barplot(as.matrix(final),
             ylab="Percentage of Speedup vs. -O2",
             beside=T,
@@ -183,15 +208,15 @@ results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend("topright", c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(2, 6, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     dev.off()
 }
 
 setwd(paste(dirpath, sep=""))
 
-results_summary()
 rodinia_results_summary()
-    
+results_summary()
+
 gpu <- c("Tesla-K40", "GTX-750", "GTX-980")
 
 for(i in 1:length(gpu)){
@@ -236,7 +261,7 @@ for(i in 1:length(gpu)){
 
                 graphics()
             }
-        }            
+        }
         if (app[j] == "Bitonic" ){
             sizes <- c(262144, 524288, 1048576, 2097152, 4194304)
             for(k in 1:length(sizes)){
@@ -292,18 +317,28 @@ for(i in 1:length(gpu)){
             graphics()
         }
 
-        if (app[j] == "backprop" | app[j] ==  "gaussian" | app[j] ==  "hotspot" | 
-            app[j] ==  "kmeans" | app[j] ==  "lud" | app[j] ==  "nn" | 
-            app[j] ==  "bfs" | app[j] ==  "b+tree" | app[j] ==  "heartwall" | 
+        if (app[j] == "backprop" | app[j] ==  "gaussian" | app[j] ==  "hotspot" |
+            app[j] ==  "kmeans" | app[j] ==  "lud" | app[j] ==  "nn" |
+            app[j] ==  "bfs" | app[j] ==  "b+tree" | app[j] ==  "heartwall" |
             app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocyte"){
             sizes <- c(0)
             opt0 <- scan(paste("./size_default_baseline/opt_0.txt",sep=""))
             opt1 <- scan(paste("./size_default_baseline/opt_1.txt",sep=""))
             opt2 <- scan(paste("./size_default_baseline/opt_2.txt",sep=""))
             opt3 <- scan(paste("./size_default_baseline/opt_3.txt",sep=""))
-            benchmark <- scan(paste("./size_default_time_3600/run_0/benchmark.txt",sep=""))
-            logAll <- read.table(paste("./size_default_time_3600/run_0/logall.txt",sep=""))
-            logBest <- read.table(paste("./size_default_time_3600/run_0/logbest.txt",sep=""))
+            
+            target <- paste("./size_default_time_3600",sep="")
+
+            if(file.exists(target)) {
+                benchmark <- scan(paste("./size_default_time_3600/run_0/benchmark.txt",sep=""))
+                logAll <- read.table(paste("./size_default_time_3600/run_0/logall.txt",sep=""))
+                logBest <- read.table(paste("./size_default_time_3600/run_0/logbest.txt",sep=""))
+            }
+            else {
+                benchmark <- scan(paste("./size_default_time_7200/run_0/benchmark.txt",sep=""))
+                logAll <- read.table(paste("./size_default_time_7200/run_0/logall.txt",sep=""))
+                logBest <- read.table(paste("./size_default_time_7200/run_0/logbest.txt",sep=""))
+            }
             graphics()
         }
 
