@@ -114,12 +114,7 @@ class NvccFlagsTuner(MeasurementInterface):
             else:
                 results.append(run_result['time'])
 
-        # Calculate Average:
         final_result = (sum(results) / len(results))
-
-        # We now return the average of runs,
-        # the idea is giving more 'context'
-        # to the tuner.
         return Result(time=final_result)
 
     def save_final_config(self, configuration):
@@ -150,7 +145,9 @@ if __name__ == '__main__':
                    "nvcc:--use_fast_math" ]
     # { name : [ args ] }
     NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
-                                                          "sm_30", "sm_35", "sm_50", "sm_52" ],
+                                                          "sm_30", "sm_35",
+                                                          "sm_50", "sm_52" ],
+                    "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                     "nvcc:--ftz="                     : [ "true", "false" ],
                     "nvcc:--prec-div="                : [ "true", "false" ],
                     "nvcc:--prec-sqrt="               : [ "true", "false" ] }
