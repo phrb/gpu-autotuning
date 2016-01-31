@@ -42,7 +42,7 @@ calc_speedup <- function(old, new){
 
 rodinia_results_summary <- function(){
     app <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree",
-             "heartwall", "lavaMD", "myocyte")
+             "lavaMD")
     for(j in 1:length(app)){
 
         target <- paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
@@ -101,8 +101,7 @@ rodinia_results_summary <- function(){
     }
 
     final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud,
-                        BFS=bfs, BPT=b_tree, HTW=heartwall, LMD=lavaMD,
-                        MYO=myocyte)
+                        BFS=bfs, BPT=b_tree, LMD=lavaMD)
     print(as.matrix(final))
 
     setEPS()
