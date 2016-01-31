@@ -169,13 +169,13 @@ benchmark   = 8
 #
 # Rodinia: K-Means
 #
-#program     = "../rodinia_3.0/cuda/kmeans"
-#logdir      = "logs/kmeans"
-#arguments   = " "
-#steps       = ["default"]
-#
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-#
+program     = "../rodinia_3.0/cuda/kmeans"
+logdir      = "logs/kmeans"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
 # Rodinia: Lava Molecular Dynamics
 #
@@ -210,13 +210,13 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # Rodinia: KNN
 #
-program     = "../rodinia_3.0/cuda/nn"
-logdir      = "logs/nn"
-arguments   = " "
-steps       = ["default"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+#program     = "../rodinia_3.0/cuda/nn"
+#logdir      = "logs/nn"
+#arguments   = " "
+#steps       = ["default"]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#
 #
 # TODO: Write code for the other experiments.
 #
