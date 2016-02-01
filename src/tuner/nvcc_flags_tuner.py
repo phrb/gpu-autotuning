@@ -7,6 +7,7 @@ from opentuner import Result
 
 import argparse
 import logging
+import subprocess
 
 log = logging.getLogger('nvccflags')
 
@@ -80,8 +81,9 @@ class NvccFlagsTuner(MeasurementInterface):
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
 
-        compile_result = self.call_program(self.parse_config(cfg))
-        assert compile_result['returncode'] == 0
+        compile_result = subprocess.call(self.parse_config(cfg), shell = True)
+        if compile_result != 0:
+            return Result(time=FAIL_PENALTY)
 
         # Give a better value to the Tuner (average)
         results = []
