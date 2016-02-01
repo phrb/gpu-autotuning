@@ -41,8 +41,8 @@ calc_speedup <- function(old, new){
 }
 
 rodinia_results_summary <- function(){
-    app <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree",
-             "lavaMD")
+    app <- c("backprop", "gaussian", "hotspot", "lud", "bfs",
+             "b+tree", "lavaMD", "heartwall", "myocyte", "kmeans" )
     for(j in 1:length(app)){
 
         target <- paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
@@ -87,30 +87,32 @@ rodinia_results_summary <- function(){
             hotspot <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         } else if(app[j] == "lud"){
             lud <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        } else if (app[j] == "bfs"){
+        } else if(app[j] == "bfs"){
             bfs <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        } else if (app[j] == "b+tree"){
+        } else if(app[j] == "b+tree"){
             b_tree <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        } else if (app[j] == "heartwall"){
+        } else if(app[j] == "heartwall"){
             heartwall <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        } else if (app[j] == "lavaMD"){
+        } else if(app[j] == "lavaMD"){
             lavaMD <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
-        } else if (app[j] == "myocyte"){
+        } else if(app[j] == "myocyte"){
             myocyte <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if(app[j] == "kmeans") {
+            kmeans <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
     }
 
-    final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud,
-                        BFS=bfs, BPT=b_tree, LMD=lavaMD)
+    final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud, BFS=bfs,
+                        BPT=b_tree, LMD=lavaMD, MYO=myocyte, HWL=heartwall, KMN=kmeans)
     print(as.matrix(final))
 
     setEPS()
     postscript(paste("../images/RodiniaSummary.eps",sep=""),
-               height = 10, width = 18)
+               height = 10, width = 21)
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
 
     barplot(as.matrix(final),
-            ylab="Percentage of Speedup vs. -O2",
+            ylab="Speedup vs. -O2",
             beside=T,
             ylim=c(1, 3),
             xpd=F,
@@ -325,7 +327,7 @@ for(i in 1:length(gpu)){
             opt1 <- scan(paste("./size_default_baseline/opt_1.txt",sep=""))
             opt2 <- scan(paste("./size_default_baseline/opt_2.txt",sep=""))
             opt3 <- scan(paste("./size_default_baseline/opt_3.txt",sep=""))
-            
+
             target <- paste("./size_default_time_3600",sep="")
 
             if(file.exists(target)) {
