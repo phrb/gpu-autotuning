@@ -214,21 +214,20 @@ void run(int argc, char** argv)
 
     cudaMemcpy(result, gpuResult[final_ret], sizeof(int)*cols, cudaMemcpyDeviceToHost);
 
-/*
-#ifdef BENCH_PRINT
-    for (int i = 0; i < cols; i++)
-            printf("%d ",data[i]) ;
-    printf("\n") ;
-    for (int i = 0; i < cols; i++)
-            printf("%d ",result[i]) ;
-    printf("\n") ;
-#endif
-*/
+
+	int* Pt = (int*) malloc(cols * sizeof(int));
+	FILE *fpo = fopen("result.out","r");
+
+	for (int i = 0; i < cols; i++){
+		fscanf(fpo, "%d ", &Pt[i]);
+//	printf("%d == %d\n", Pt[i], result[i]);	
+	assert(fabs( Pt[i] - result[i]) == 0);
+	}
 
     cudaFree(gpuWall);
     cudaFree(gpuResult[0]);
     cudaFree(gpuResult[1]);
-
+    free(Pt);
     delete [] data;
     delete [] wall;
     delete [] result;
