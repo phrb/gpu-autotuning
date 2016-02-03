@@ -2,7 +2,7 @@ include ../../common/make.config
 
 # C compiler
 CC = gcc-4.8
-CC_FLAGS = -g  -O2
+CC_FLAGS = -g 
 
 # CUDA compiler
 NVCC = $(CUDA_DIR)/bin/nvcc -ccbin gcc-4.8
