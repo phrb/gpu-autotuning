@@ -1,1 +1,0 @@
-{"ptxas:--fmad=": "false", "nvcc:--prec-sqrt=": "true", "ptxas:--def-load-cache=": "ca", "nvcc:--gpu-architecture=": "sm_52", "nvcc:--prec-div=": "true", "ptxas:--allow-expensive-optimizations=": "true", "nvcc:--no-align-double": "off", "nvlink:--preserve-relocs": "off", "nvcc:--ftz=": "false", "nvcc:--use_fast_math": "off", "ptxas:--opt-level=": "1", "ptxas:--maxrregcount=": 44}
