@@ -3,6 +3,7 @@
 import os
 import time
 import argparse
+import subprocess
 
 argparser = argparse.ArgumentParser()
 
@@ -23,7 +24,7 @@ argparser.add_argument( "-t", "--tune-only",
                         help    = "Runs tunning only.")
 
 def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
-    os.system("mkdir -p " + logdir)
+    subprocess.call("mkdir -p " + logdir, shell = True)
     cmd = "./scripts/run_experiments.py"
     cmd += " -f="        + program
     cmd += " -fargs="    + "\"" + " ".join(arguments) + "\""
@@ -34,24 +35,25 @@ def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
     cmd += " -r="        + str(runs)
     cmd += " -br="       + str(benchmark)
     cmd += " -cp="       + "\"" + cuda_path + "\""
-    os.system(cmd)
+    subprocess.call(cmd, shell = True)
 
 def baseline(program, arguments, logdir, runs, cuda_path):
     options = "-Xptxas --opt-level="
     values  = ["0", "1", "2", "3"]
 
-    os.system("mkdir -p " + logdir + "_baseline" )
+    subprocess.call("mkdir -p " + logdir + "_baseline", shell = True)
     for value in values:
         # Compiling:
         print "nvcc -w -ccbin g++-4.8 " + cuda_path + program + " -o tmp.bin " + options + value
-        os.system("nvcc -w -ccbin g++-4.8 " + cuda_path + program + " -o tmp.bin " + options + value)
+        subprocess.call("nvcc -w -ccbin g++-4.8 " + cuda_path + program +
+                        " -o tmp.bin " + options + value, shell = True)
         for i in range(runs):
             cmd   = "./tmp.bin " + " ".join(arguments) + " "
             logfile  = logdir + "_baseline/opt_" + value + ".txt"
 
             print cmd
             start   = time.time()
-            os.system(cmd)
+            subprocess.call(cmd, shell = True)
             end     = time.time()
 
             with open(logfile, "a+") as file:
@@ -59,7 +61,7 @@ def baseline(program, arguments, logdir, runs, cuda_path):
 
 def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args):
     print "[INFO] Starting " + program + " Experiments."
-    os.system("mkdir -p " + logdir )
+    subprocess.call("mkdir -p " + logdir, shell = True)
     for i in steps:
         print "[INFO] Size: " + str(i)
         if args.baseline == False:
@@ -76,7 +78,7 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-run_time    = 7200
+run_time    = 600
 runs        = 1
 benchmark   = 10
 
@@ -118,76 +120,76 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # SubSeqMax Experiments:
 #
-program     = "../bioinformatic/SubSeqMax.cu"
-logdir      = "logs/SubSeqMax"
-arguments   = "0"
-steps       = [2**30]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+#program     = "../bioinformatic/SubSeqMax.cu"
+#logdir      = "logs/SubSeqMax"
+#arguments   = "0"
+#steps       = [2**30]
 #
-# Bitonic Sort Experiments:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-program     = "../sorting/bitonic_sort.cu"
-logdir      = "logs/Bitonic"
-arguments   = "0"
-steps       = [2**22]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+##
+## Bitonic Sort Experiments:
+##
+#program     = "../sorting/bitonic_sort.cu"
+#logdir      = "logs/Bitonic"
+#arguments   = "0"
+#steps       = [2**22]
 #
-# Quicksort Experiments:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-program     = "../sorting/quicksort.cu"
-logdir      = "logs/Quicksort"
-arguments   = "0"
-steps       = [2**16]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-
+##
+## Quicksort Experiments:
+##
+#program     = "../sorting/quicksort.cu"
+#logdir      = "logs/Quicksort"
+#arguments   = "0"
+#steps       = [2**16]
 #
-# Vector Addition Experiments:
-#
-program     = "../vectorAdd/vectorAdd.cu"
-logdir      = "logs/VecAdd"
-arguments   = " "
-steps       = [2**22]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-# RODINIA:
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
 #
-# Rodinia: Particle Filter:
+##
+## Vector Addition Experiments:
+##
+#program     = "../vectorAdd/vectorAdd.cu"
+#logdir      = "logs/VecAdd"
+#arguments   = " "
+#steps       = [2**22]
 #
-program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
-logdir      = "logs/ParticleFilterNaive"
-arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [50000]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
-
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-# Rodinia: Particle Filter:
+## RODINIA:
+##
+##
+## Rodinia: Particle Filter:
+##
+#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
+#logdir      = "logs/ParticleFilterNaive"
+#arguments   = "-x 128 -y 128 -z 10 -np "
+#steps       = [50000]
 #
-program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
-logdir      = "logs/ParticleFilterFloat"
-arguments   = "-x 128 -y 128 -z 10 -np "
-steps       = [50000]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
-# Rodinia: Pathfinder:
 #
-program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
-logdir      = "logs/Pathfinder"
-arguments   = " "
-steps       = [10000000]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
+##
+## Rodinia: Particle Filter:
+##
+#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
+#logdir      = "logs/ParticleFilterFloat"
+#arguments   = "-x 128 -y 128 -z 10 -np "
+#steps       = [50000]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#
+##
+## Rodinia: Pathfinder:
+##
+#program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
+#logdir      = "logs/Pathfinder"
+#arguments   = " "
+#steps       = [10000000]
+#
+#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+#
 # TODO: Write code for the other experiments.
 #

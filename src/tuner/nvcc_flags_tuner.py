@@ -80,8 +80,9 @@ class NvccFlagsTuner(MeasurementInterface):
 
     def run(self, desired_result, input, limit):
         cfg = desired_result.configuration.data
+        cmd = self.parse_config(cfg)
 
-        compile_result = subprocess.call(self.parse_config(cfg), shell = True)
+        compile_result = subprocess.call(cmd, shell = True)
         if compile_result != 0:
             return Result(time=FAIL_PENALTY)
 
@@ -91,16 +92,19 @@ class NvccFlagsTuner(MeasurementInterface):
         global CONFIGS_TESTED
         CONFIGS_TESTED += 1
         for i in range(evaluations):
-            run_result = self.call_program("./tmp.bin " + " ".join(FARGS))
+            start      = time.time()
+            run_result = subprocess.call("./tmp.bin " + " ".join(FARGS),
+                                         shell = True)
+            end        = time.time()
 
-            if run_result['returncode'] != 0:
+            if run_result != 0:
                 with open(LOG_DIR + "failed_configurations.txt", "a+") as file:
-                    file.write("failed_example_cmd: " + self.parse_config(cfg) + "\n")
+                    file.write("failed_example_cmd: " + cmd + "\n")
                 global CONFIGS_FAILED
                 CONFIGS_FAILED += 1
                 return Result(time=FAIL_PENALTY)
             else:
-                results.append(run_result['time'])
+                results.append(end - start)
 
         # Calculate Average:
         final_result = (sum(results) / len(results))
