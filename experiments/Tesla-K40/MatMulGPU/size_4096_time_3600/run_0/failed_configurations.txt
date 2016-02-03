@@ -1,1 +1,0 @@
-failed_example_cmd: nvcc -w -I /usr/local/cuda/include -L /usr/local/cuda/lib64 ../matMul/matMul_gpu.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=true   --prec-div=true   --gpu-architecture=sm_32   --ftz=true  -Xptxas  --fmad=false  -Xptxas  --def-load-cache=cv  -Xptxas  --maxrregcount=21  -Xptxas  --opt-level=2  -Xptxas  --allow-expensive-optimizations=false 
