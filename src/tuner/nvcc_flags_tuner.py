@@ -5,6 +5,7 @@ from opentuner import IntegerParameter
 from opentuner import MeasurementInterface
 from opentuner import Result
 
+import time
 import argparse
 import logging
 import subprocess
