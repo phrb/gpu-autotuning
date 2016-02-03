@@ -1,0 +1,1 @@
+nvcc -w -ccbin g++-4.8  -I/usr/local/cuda/include ../sorting/quicksort.cu -o ./tmp.bin   --prec-sqrt=true   --relocatable-device-code=false   --gpu-architecture=sm_30   --prec-div=false   --ftz=false  -Xptxas  --fmad=true  -Xptxas  --def-load-cache=cv  -Xptxas  --allow-expensive-optimizations=true  -Xptxas  --opt-level=1  -Xptxas  --maxrregcount=43  -Xnvlink  --preserve-relocs 

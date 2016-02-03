@@ -6,6 +6,7 @@
 #include "needle.h"
 #include <cuda.h>
 #include <sys/time.h>
+#include <assert.h>
 
 // includes, kernels
 #include "needle_kernel.cu"
@@ -171,13 +172,15 @@ void runTest( int argc, char** argv)
 #define TRACEBACK
 #ifdef TRACEBACK
 	
-	FILE *fpo = fopen("result.txt","w");
-	fprintf(fpo, "print traceback value GPU:\n");
+
+	int* Pt = (int*) malloc(size * sizeof(int));
+
+	FILE *fpo = fopen("result.txt","r");
     
 	for (int i = max_rows - 2,  j = max_rows - 2; i>=0, j>=0;){
 		int nw, n, w, traceback;
 		if ( i == max_rows - 2 && j == max_rows - 2 )
-			fprintf(fpo, "%d ", output_itemsets[ i * max_cols + j]); //print the first element
+			//fprintf(fpo, "%d ", output_itemsets[ i * max_cols + j]); //print the first element
 		if ( i == 0 && j == 0 )
            break;
 		if ( i > 0 && j > 0 ){
@@ -210,7 +213,8 @@ void runTest( int argc, char** argv)
 		if(traceback == new_n)
             traceback = n;
 			
-		fprintf(fpo, "%d ", traceback);
+		fscanf(fpo, "%d ", &Pt[i]);
+		assert(fabs( Pt[i] - traceback) == 0);
 
 		if(traceback == nw )
 		{i--; j--; continue;}
