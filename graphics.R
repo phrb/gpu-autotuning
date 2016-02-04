@@ -102,8 +102,38 @@ rodinia_results_summary <- function(){
         }
     }
 
-    final <- data.frame(BCK=backprop, GAU=gaussian, HOT=hotspot, LUD=lud, BFS=bfs,
-                        BPT=b_tree, LMD=lavaMD, MYO=myocyte, HWL=heartwall, KMN=kmeans)
+    final <- data.frame(BCK_r=backprop,
+                        HOT=hotspot,
+                        LUD=lud,
+                        BFS=bfs,
+                        BPT=b_tree,
+                        LMD=lavaMD,
+                        MYO=myocyte,
+                        KMN_r=kmeans)
+    print(as.matrix(final))
+
+    setEPS()
+    postscript(paste("../images/RodiniaSummary_small.eps",sep=""),
+               height = 10, width = 21)
+    par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
+
+    barplot(as.matrix(final),
+            ylab="Speedup vs. -O2",
+            beside=T,
+            ylim=c(0.98, 1.08),
+            xpd=F,
+            col=gray.colors(3, start=0, end=1),
+            cex.names = 3,
+            space=c(0,0.3),
+            cex.axis = 3,
+            cex.lab = 3
+    )
+    legend(1.08, 1.08, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    abline(h = 1.0, untf = FALSE)
+    dev.off()
+
+    final <- data.frame(GAU=gaussian,
+                        HWL=heartwall)
     print(as.matrix(final))
 
     setEPS()
@@ -114,16 +144,16 @@ rodinia_results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(1, 3),
+            ylim=c(0.5, 3),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
             space=c(0,0.3),
-            #names <- c("backprop", "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall", "lavaMD", "myocyte"),
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(5, 3, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(2.5, 3, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    abline(h = 1.0, untf = FALSE)
     dev.off()
 }
 
@@ -190,7 +220,8 @@ results_summary <- function(){
         }
     }
 
-    final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax, VAdd=VecAdd, Bitonic=Bitonic, QuickS=QuickSort)
+    #final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax, VAdd=VecAdd, Bitonic=Bitonic, QuickS=QuickSort)
+    final <- data.frame(SSM=subseqmax, VAD=VecAdd, BTN=Bitonic, QKS=QuickSort)
 
     setEPS()
     postscript(paste("../images/Summary.eps",sep=""),
@@ -198,18 +229,19 @@ results_summary <- function(){
     par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
 
     barplot(as.matrix(final),
-            ylab="Percentage of Speedup vs. -O2",
+            ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(1, 8),
+            ylim=c(0.98, 1.03),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
             space=c(0,0.3),
-            names=c("#1", "#2", "#3", "#4", "SSM", "VAdd", "Bit", "QSort"),
+            #names=c("#1", "#2", "#3", "#4", "SSM", "VAdd", "Bit", "QSort"),
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(2, 6, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(3.5, 1.03, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    abline(h = 1.0, untf = FALSE)
     dev.off()
 }
 
