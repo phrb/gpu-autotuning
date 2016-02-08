@@ -142,8 +142,7 @@ if __name__ == '__main__':
                    "nvcc:--use_fast_math" ]
     # { name : [ args ] }
     NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
-                                                          "sm_30", "sm_35",
-                                                          "sm_50", "sm_52" ],
+                                                          "sm_30", "sm_35" ],
                     "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                     "nvcc:--ftz="                     : [ "true", "false" ],
                     "nvcc:--prec-div="                : [ "true", "false" ],

@@ -80,7 +80,7 @@ args        = argparser.parse_args()
 cuda_path   = args.cuda_path
 run_time    = 7200
 runs        = 1
-benchmark   = 10
+benchmark   = 5
 
 #
 # MatMulShared Experiments:
@@ -120,76 +120,76 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 #
 # SubSeqMax Experiments:
 #
-#program     = "../bioinformatic/SubSeqMax.cu"
-#logdir      = "logs/SubSeqMax"
-#arguments   = "0"
-#steps       = [2**30]
+program     = "../bioinformatic/SubSeqMax.cu"
+logdir      = "logs/SubSeqMax"
+arguments   = "0"
+steps       = [2**30]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# Bitonic Sort Experiments:
 #
-##
-## Bitonic Sort Experiments:
-##
-#program     = "../sorting/bitonic_sort.cu"
-#logdir      = "logs/Bitonic"
-#arguments   = "0"
-#steps       = [2**22]
+program     = "../sorting/bitonic_sort.cu"
+logdir      = "logs/Bitonic"
+arguments   = "0"
+steps       = [2**22]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# Quicksort Experiments:
 #
-##
-## Quicksort Experiments:
-##
-#program     = "../sorting/quicksort.cu"
-#logdir      = "logs/Quicksort"
-#arguments   = "0"
-#steps       = [2**16]
+program     = "../sorting/quicksort.cu"
+logdir      = "logs/Quicksort"
+arguments   = "0"
+steps       = [2**16]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# Vector Addition Experiments:
 #
-#
-##
-## Vector Addition Experiments:
-##
-#program     = "../vectorAdd/vectorAdd.cu"
-#logdir      = "logs/VecAdd"
-#arguments   = " "
-#steps       = [2**22]
-#
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-#
-## RODINIA:
-##
-##
-## Rodinia: Particle Filter:
-##
-#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
-#logdir      = "logs/ParticleFilterNaive"
-#arguments   = "-x 128 -y 128 -z 10 -np "
-#steps       = [50000]
-#
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+program     = "../vectorAdd/vectorAdd.cu"
+logdir      = "logs/VecAdd"
+arguments   = " "
+steps       = [2**22]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+# RODINIA:
 #
 #
-##
-## Rodinia: Particle Filter:
-##
-#program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
-#logdir      = "logs/ParticleFilterFloat"
-#arguments   = "-x 128 -y 128 -z 10 -np "
-#steps       = [50000]
+# Rodinia: Particle Filter:
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_naive_seq.cu"
+logdir      = "logs/ParticleFilterNaive"
+arguments   = "-x 128 -y 128 -z 10 -np "
+steps       = [50000]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
+
+
+# Rodinia: Particle Filter:
 #
-##
-## Rodinia: Pathfinder:
-##
-#program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
-#logdir      = "logs/Pathfinder"
-#arguments   = " "
-#steps       = [10000000]
+program     = "../rodinia_3.0/cuda/particlefilter/ex_particle_CUDA_float_seq.cu"
+logdir      = "logs/ParticleFilterFloat"
+arguments   = "-x 128 -y 128 -z 10 -np "
+steps       = [50000]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# Rodinia: Pathfinder:
 #
+program     = "../rodinia_3.0/cuda/pathfinder/pathfinder.cu"
+logdir      = "logs/Pathfinder"
+arguments   = " "
+steps       = [10000000]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 # TODO: Write code for the other experiments.
 #
