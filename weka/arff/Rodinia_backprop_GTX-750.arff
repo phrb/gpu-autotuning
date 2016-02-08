@@ -15,7 +15,7 @@
 @ATTRIBUTE maxrregcount NUMERIC
 
 @DATA
-on,off,off,false,true,false,true,true,true,sm_20,cg,3,32
+on,on,off,false,true,true,false,true,true,sm_50,cs,2,48
 % 
 % 
 % 

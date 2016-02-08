@@ -15,15 +15,15 @@
 @ATTRIBUTE maxrregcount NUMERIC
 
 @DATA
-off,off,on,false,false,false,true,false,false,sm_21,cs,1,45
-on,on,off,false,true,false,false,true,true,sm_35,ca,0,16
-on,off,off,true,true,true,false,false,false,sm_21,cg,3,41
-off,on,on,true,false,true,true,false,true,sm_35,cg,2,59
-off,on,off,false,true,false,false,true,true,sm_32,cs,2,16
-off,off,on,true,true,false,true,true,true,sm_21,cs,0,23
-off,off,on,false,true,true,true,true,false,sm_32,cv,2,62
-on,off,on,false,true,false,true,true,false,sm_35,ca,3,61
-on,on,on,false,true,false,false,false,false,sm_35,ca,2,63
+off,off,off,false,false,true,false,true,true,sm_21,cg,0,62
+off,off,off,false,true,true,true,false,false,sm_20,cv,2,37
+off,off,off,false,false,true,true,true,true,sm_20,ca,2,31
+off,on,on,false,true,true,true,true,false,sm_20,ca,2,16
+off,off,off,true,false,false,false,false,false,sm_50,cs,0,38
+off,on,on,false,false,false,true,true,false,sm_20,cv,0,43
+on,off,on,true,false,false,false,true,false,sm_52,ca,1,46
+off,off,off,false,true,true,false,true,false,sm_35,cg,3,19
+off,on,on,false,true,false,false,true,true,sm_20,cg,3,18
 % 
 % 
 % 

@@ -144,7 +144,7 @@ rodinia_results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.5, 3),
+            ylim=c(0.5, 8.5),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -152,7 +152,7 @@ rodinia_results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(2.5, 3, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(2, 6, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }
@@ -220,8 +220,28 @@ results_summary <- function(){
         }
     }
 
-    #final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared, SSM=subseqmax, VAdd=VecAdd, Bitonic=Bitonic, QuickS=QuickSort)
+    mat_final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared)
     final <- data.frame(SSM=subseqmax, VAD=VecAdd, BTN=Bitonic, QKS=QuickSort)
+
+    setEPS()
+    postscript(paste("../images/MatrixSummary.eps",sep=""),
+               height = 10, width = 18)
+    par(mar=c(4, 9, 1, 1) + 0.1, mgp=c(7, 1.5, 0), las=1)
+
+    barplot(as.matrix(mat_final),
+            ylab="Speedup vs. -O2",
+            beside=T,
+            ylim=c(0.95, 4.5),
+            xpd=F,
+            col=gray.colors(3, start=0, end=1),
+            cex.names = 3,
+            space=c(0,0.3),
+            cex.axis = 3,
+            cex.lab = 3
+    )
+    legend(3.5, 3.5, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    abline(h = 1.0, untf = FALSE)
+    dev.off()
 
     setEPS()
     postscript(paste("../images/Summary.eps",sep=""),
@@ -231,16 +251,15 @@ results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.98, 1.03),
+            ylim=c(0.98, 1.05),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
             space=c(0,0.3),
-            #names=c("#1", "#2", "#3", "#4", "SSM", "VAdd", "Bit", "QSort"),
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(3.5, 1.03, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(3.5, 1.05, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }

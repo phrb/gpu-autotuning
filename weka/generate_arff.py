@@ -61,14 +61,14 @@ def build_for_GPU(gpu_list):
 
     FLAG_DATA[u'data'] = []
     for gpu_name in gpu_list:
-        build_arff("../experiments/" + gpu_name + "/MatMulGPU/size_8192_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/MatMulShared/size_8192_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/MatMulSharedUn/size_8192_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/MatMulUn/size_8192_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/SubSeqMax/size_1073741824_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/Bitonic/size_4194304_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/Quicksort/size_65536_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/VecAdd/size_4194304_time_3600/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/MatMulGPU/size_8192_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/MatMulShared/size_8192_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/MatMulSharedUn/size_8192_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/MatMulUn/size_8192_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/SubSeqMax/size_1073741824_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/Bitonic/size_4194304_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/Quicksort/size_65536_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/VecAdd/size_4194304_time_7200/run_0/final_config.json")
 
     file = open("arff/" + "_".join(gpu_list) + ".arff", "w")
     file.write(arff.dumps(FLAG_DATA))
@@ -79,15 +79,15 @@ def build_rodinia_for_GPU(gpu_list):
 
     FLAG_DATA[u'data'] = []
     for gpu_name in gpu_list:
-        build_arff("../experiments/" + gpu_name + "/b+tree/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/backprop/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/bfs/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/gaussian/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/heartwall/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/hotspot/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/lavaMD/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/lud/size_default_time_3600/run_0/final_config.json")
-        build_arff("../experiments/" + gpu_name + "/myocyte/size_default_time_3600/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/b+tree/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/backprop/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/bfs/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/gaussian/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/heartwall/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/hotspot/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/lavaMD/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/lud/size_default_time_7200/run_0/final_config.json")
+        build_arff("../experiments/" + gpu_name + "/myocyte/size_default_time_7200/run_0/final_config.json")
 
     file = open("arff/Rodinia_" + "_".join(gpu_list) + ".arff", "w")
     file.write(arff.dumps(FLAG_DATA))
@@ -120,15 +120,15 @@ build_rodinia_for_GPU(["GTX-750"])
 build_rodinia_for_GPU(["GTX-980", "GTX-750", "Tesla-K40"])
 
 experiments = [
-    "b+tree/size_default_time_3600/run_0",
-    "backprop/size_default_time_3600/run_0",
-    "bfs/size_default_time_3600/run_0",
-    "gaussian/size_default_time_3600/run_0",
-    "heartwall/size_default_time_3600/run_0",
-    "hotspot/size_default_time_3600/run_0",
-    "lavaMD/size_default_time_3600/run_0",
-    "lud/size_default_time_3600/run_0",
-    "myocyte/size_default_time_3600/run_0",
+    "b+tree/size_default_time_7200/run_0",
+    "backprop/size_default_time_7200/run_0",
+    "bfs/size_default_time_7200/run_0",
+    "gaussian/size_default_time_7200/run_0",
+    "heartwall/size_default_time_7200/run_0",
+    "hotspot/size_default_time_7200/run_0",
+    "lavaMD/size_default_time_7200/run_0",
+    "lud/size_default_time_7200/run_0",
+    "myocyte/size_default_time_7200/run_0",
 ]
 
 gpus = ["GTX-980", "GTX-750", "Tesla-K40"]
@@ -141,43 +141,3 @@ build_rodinia_for([experiments[1]], ["GTX-980", "Tesla-K40"])
 build_rodinia_for([experiments[1]], ["Tesla-K40"])
 build_rodinia_for([experiments[1]], ["GTX-750"])
 build_rodinia_for([experiments[1]], ["GTX-980"])
-
-##
-##init_fail_flags()
-##
-##parse_fail_flags("../experiments/Tesla-K20/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/Tesla-K40/MatMulGPU/size_1024_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/GTX-680/MatMulGPU/size_512_time_3600/run_0/failed_configurations.txt")
-##
-##parse_fail_flags("../experiments/GTX-680/MatMulShared/size_512_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/Tesla-K20/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/Tesla-K40/MatMulShared/size_1024_time_3600/run_0/failed_configurations.txt")
-##
-##parse_fail_flags("../experiments/GTX-680/MatMulUn/size_128_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/Tesla-K20/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
-##parse_fail_flags("../experiments/Tesla-K40/MatMulUn/size_1024_time_3600/run_0/failed_configurations.txt")
-##
-##parse_fail_flags("../experiments/Tesla-K40/MatMulSharedUn/size_256_time_3600/run_0/failed_configurations.txt")
-##
-##fig = plt.figure(1, figsize=(10, 7))
-##
-##ax = fig.add_subplot(111)
-##ax.bar(range(len(FFLAGS.keys())), [value / float(TOTAL_FAILED) for value in FFLAGS.values()], 1, color='black')
-##
-###
-### Plot config:
-###
-##
-##ax.set_xticks(np.arange(0.5, len(FFLAGS.keys()), 1))
-##ax.set_xticklabels(FFLAGS.keys(), rotation = 90)
-##
-##ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
-##                      alpha=0.5)
-##
-###ax.set_title("")
-##ax.set_ylabel("Percentage of Flags in Failed Configurations")
-##
-##plt.autoscale()
-##fig.tight_layout()
-##
-##fig.savefig('fail_flags.eps', format = 'eps', dpi = 1000)
