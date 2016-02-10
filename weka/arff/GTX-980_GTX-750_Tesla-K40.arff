@@ -9,7 +9,7 @@
 @ATTRIBUTE prec-sqrt {true, false}
 @ATTRIBUTE fmad {true, false}
 @ATTRIBUTE allow-expensive-optimizations {true, false}
-@ATTRIBUTE gpu-architecture {sm_20, sm_21, sm_30, sm_32, sm_35}
+@ATTRIBUTE gpu-architecture {sm_20, sm_21, sm_30, sm_35}
 @ATTRIBUTE def-load-cache {ca, cg, cv, cs}
 @ATTRIBUTE opt-level {0, 1, 2, 3}
 @ATTRIBUTE maxrregcount NUMERIC

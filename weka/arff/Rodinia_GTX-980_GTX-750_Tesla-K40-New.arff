@@ -1,0 +1,43 @@
+@relation 'Flag Data'
+
+@attribute no-align-double {on,off}
+@attribute use_fast_math {on,off}
+@attribute preserve-relocs {on,off}
+@attribute ftz {true,false}
+@attribute prec-div {true,false}
+@attribute prec-sqrt {true,false}
+@attribute fmad {true,false}
+@attribute allow-expensive-optimizations {true,false}
+@attribute gpu-architecture {sm_20,sm_21,sm_30,sm_35,sm_50,sm_52}
+@attribute def-load-cache {ca,cg,cv,cs}
+@attribute opt-level {0,1,2,3}
+@attribute maxrregcount numeric
+
+@data
+on,off,off,false,true,false,false,true,sm_52,cv,2,33
+on,off,off,false,false,false,true,true,sm_50,ca,1,24
+on,off,off,true,true,true,false,false,sm_52,cg,3,28
+on,on,on,false,true,false,true,false,sm_52,ca,1,34
+on,on,on,false,false,false,true,true,sm_50,ca,3,51
+off,off,off,false,false,true,false,true,sm_52,cv,3,40
+off,off,off,true,true,false,false,false,sm_52,cg,0,63
+off,off,off,false,false,true,false,false,sm_52,cs,1,57
+off,on,off,true,false,false,true,true,sm_52,ca,2,63
+on,on,off,false,true,false,true,true,sm_50,cv,1,63
+on,on,off,true,true,false,true,true,sm_50,cs,2,48
+on,on,off,true,false,true,false,true,sm_35,ca,0,41
+on,off,off,true,false,true,false,true,sm_35,ca,2,58
+on,on,off,false,false,false,false,false,sm_52,cs,1,54
+on,on,on,true,false,false,true,false,sm_52,cv,3,39
+off,off,on,false,false,true,false,true,sm_52,ca,2,25
+on,on,off,false,false,false,false,true,sm_50,cv,3,23
+on,on,on,false,false,false,false,true,sm_50,cv,3,63
+off,off,off,false,true,false,true,true,sm_21,cg,0,62
+off,off,off,true,true,true,false,false,sm_20,cv,2,37
+off,off,off,false,true,true,true,true,sm_20,ca,2,31
+off,on,on,true,true,true,true,false,sm_20,ca,2,16
+off,off,off,false,false,false,false,false,sm_50,cs,0,38
+off,on,on,false,false,true,true,false,sm_20,cv,0,43
+on,off,on,false,false,false,true,false,sm_52,ca,1,46
+off,off,off,true,true,false,true,false,sm_35,cg,3,19
+off,on,on,true,false,false,true,true,sm_20,cg,3,18
