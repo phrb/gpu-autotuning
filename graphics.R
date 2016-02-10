@@ -42,7 +42,8 @@ calc_speedup <- function(old, new){
 
 rodinia_results_summary <- function(){
     app <- c("backprop", "gaussian", "hotspot", "lud", "bfs",
-             "b+tree", "lavaMD", "heartwall", "myocyte", "kmeans" )
+             "b+tree", "lavaMD", "heartwall", "myocyte", "kmeans",
+             "needle", "Pathfinder")
     for(j in 1:length(app)){
 
         target <- paste("./GTX-980/", app[j], "/size_default_time_3600/run_0/benchmark.txt",sep="")
@@ -70,14 +71,15 @@ rodinia_results_summary <- function(){
 
         if(file.exists(target)) {
             k40 <- scan(target)
-        }
-        else {
+        } else if(file.exists(paste("./Tesla-K40/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))) {
             k40 <- scan(paste("./Tesla-K40/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))
         }
 
         o2gtx9 <- scan(paste("./GTX-980/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
         o2gtx7 <- scan(paste("./GTX-750/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
-        o2k40  <- scan(paste("./Tesla-K40/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
+        if(app[j] != "needle") {
+            o2k40  <- scan(paste("./Tesla-K40/", app[j], "/size_default_baseline/opt_2.txt",sep=""))
+        }
 
         if(app[j] == "backprop"){
             backprop <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
@@ -99,17 +101,23 @@ rodinia_results_summary <- function(){
             myocyte <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         } else if(app[j] == "kmeans") {
             kmeans <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
+        } else if(app[j] == "needle") {
+            needle <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), 1)
+        } else if(app[j] == "Pathfinder") {
+            pathfinder <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
     }
 
-    final <- data.frame(BCK_r=backprop,
+    final <- data.frame(BCK=backprop,
                         HOT=hotspot,
                         LUD=lud,
                         BFS=bfs,
                         BPT=b_tree,
                         LMD=lavaMD,
                         MYO=myocyte,
-                        KMN_r=kmeans)
+                        KMN=kmeans,
+                        NDL=needle,
+                        PTF=pathfinder)
     print(as.matrix(final))
 
     setEPS()
@@ -120,7 +128,7 @@ rodinia_results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.98, 1.08),
+            ylim=c(0.95, 1.11),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -128,7 +136,7 @@ rodinia_results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(1.08, 1.08, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(1.11, 1.11, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 
@@ -144,7 +152,7 @@ rodinia_results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.5, 8.5),
+            ylim=c(0, 8.5),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -220,8 +228,15 @@ results_summary <- function(){
         }
     }
 
-    mat_final <- data.frame(MMU=matmulun, MMG=matmulgpu, MMSU=matmulsharedun, MMS=matmulshared)
-    final <- data.frame(SSM=subseqmax, VAD=VecAdd, BTN=Bitonic, QKS=QuickSort)
+    mat_final <- data.frame(MMU=matmulun,
+                            MMG=matmulgpu,
+                            MSU=matmulsharedun,
+                            MMS=matmulshared)
+
+    final <- data.frame(SSM=subseqmax,
+                        VAD=VecAdd,
+                        BTN=Bitonic,
+                        QKS=QuickSort)
 
     setEPS()
     postscript(paste("../images/MatrixSummary.eps",sep=""),
@@ -231,7 +246,7 @@ results_summary <- function(){
     barplot(as.matrix(mat_final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.95, 4.5),
+            ylim=c(0, 4.5),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -251,7 +266,7 @@ results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.98, 1.05),
+            ylim=c(0.98, 1.027),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -259,7 +274,7 @@ results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(3.5, 1.05, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(4, 1.027, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }
@@ -279,7 +294,7 @@ for(i in 1:length(gpu)){
     app <- c("MatMulGPU", "MatMulShared", "MatMulSharedUn", "MatMulUn",
              "SubSeqMax", "Bitonic", "Quicksort", "VecAdd","backprop",
              "gaussian", "hotspot", "lud", "bfs", "b+tree", "heartwall",
-             "lavaMD", "myocyte")
+             "lavaMD", "myocyte", "Pathfinder")
 
     for(j in 1:length(app)){
         print(getwd())
@@ -372,7 +387,8 @@ for(i in 1:length(gpu)){
         if (app[j] == "backprop" | app[j] ==  "gaussian" | app[j] ==  "hotspot" |
             app[j] ==  "kmeans" | app[j] ==  "lud" | app[j] ==  "nn" |
             app[j] ==  "bfs" | app[j] ==  "b+tree" | app[j] ==  "heartwall" |
-            app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocyte"){
+            app[j] ==  "hybridsort" | app[j] ==  "lavaMD" | app[j] ==  "myocyte" |
+            app[j] == "Pathfinder"){
             sizes <- c(0)
             opt0 <- scan(paste("./size_default_baseline/opt_0.txt",sep=""))
             opt1 <- scan(paste("./size_default_baseline/opt_1.txt",sep=""))
