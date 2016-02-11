@@ -71,7 +71,7 @@ rodinia_results_summary <- function(){
 
         if(file.exists(target)) {
             k40 <- scan(target)
-        } else if(file.exists(paste("./Tesla-K40/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))) {
+        } else {
             k40 <- scan(paste("./Tesla-K40/", app[j], "/size_default_time_7200/run_0/benchmark.txt",sep=""))
         }
 
@@ -102,7 +102,7 @@ rodinia_results_summary <- function(){
         } else if(app[j] == "kmeans") {
             kmeans <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         } else if(app[j] == "needle") {
-            needle <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), 1)
+            needle <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         } else if(app[j] == "Pathfinder") {
             pathfinder <- c(calc_speedup(o2gtx9, gtx9), calc_speedup(o2gtx7, gtx7), calc_speedup(o2k40, k40))
         }
