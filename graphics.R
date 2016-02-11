@@ -116,7 +116,6 @@ rodinia_results_summary <- function(){
                         LMD=lavaMD,
                         MYO=myocyte,
                         KMN=kmeans,
-                        NDL=needle,
                         PTF=pathfinder)
     print(as.matrix(final))
 
@@ -141,7 +140,8 @@ rodinia_results_summary <- function(){
     dev.off()
 
     final <- data.frame(GAU=gaussian,
-                        HWL=heartwall)
+                        HWL=heartwall,
+                        NDL=needle)
     print(as.matrix(final))
 
     setEPS()
@@ -152,7 +152,7 @@ rodinia_results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0, 8.5),
+            ylim=c(0, 2.5),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -160,7 +160,7 @@ rodinia_results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(2, 6, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(6, 2.5, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }
@@ -233,7 +233,7 @@ results_summary <- function(){
                             MSU=matmulsharedun,
                             MMS=matmulshared)
 
-    final <- data.frame(SSM=subseqmax,
+    final <- data.frame(MSA=subseqmax,
                         VAD=VecAdd,
                         BTN=Bitonic,
                         QKS=QuickSort)
@@ -266,7 +266,7 @@ results_summary <- function(){
     barplot(as.matrix(final),
             ylab="Speedup vs. -O2",
             beside=T,
-            ylim=c(0.98, 1.027),
+            ylim=c(0.98, 1.030),
             xpd=F,
             col=gray.colors(3, start=0, end=1),
             cex.names = 3,
@@ -274,7 +274,7 @@ results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(4, 1.027, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(4, 1.030, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }
