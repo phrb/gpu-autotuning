@@ -16,6 +16,7 @@
 #include <avimod.h>
 #include <cuda.h>
 #include <assert.h>
+#include <cuda_profiler_api.h>
 
 //======================================================================================================================================================
 //	STRUCTURES, GLOBAL STRUCTURE VARIABLES
@@ -31,6 +32,16 @@ __constant__ params_common d_common;
 
 params_unique unique[ALL_POINTS];								// cannot determine size dynamically so choose more than usually needed
 __constant__ params_unique d_unique[ALL_POINTS];
+
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+{
+   if (code != cudaSuccess) 
+   {
+      fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+      if (abort) exit(code);
+   }
+}
 
 //======================================================================================================================================================
 // KERNEL CODE
@@ -260,6 +271,7 @@ void assert_data(int frameNo,
 	fclose(fidB);
 	fclose(fid2A);
 	fclose(fid2B);
+	printf("Entering assertions\n");
 	
 	for(j=0; j<frames_processed;j++)
 	  {
@@ -332,7 +344,7 @@ int main(int argc, char *argv []){
 	common.frame_mem = sizeof(fp) * common.frame_elem;
 
 	// pointers
-	cudaMalloc((void **)&common_change.d_frame, common.frame_mem);
+	gpuErrchk( cudaMalloc((void **)&common_change.d_frame, common.frame_mem) );
 
 	//======================================================================================================================================================
 	// 	CHECK INPUT ARGUMENTS
@@ -386,8 +398,8 @@ int main(int argc, char *argv []){
 	common.endoRow[17] = 287;
 	common.endoRow[18] = 311;
 	common.endoRow[19] = 339;
-	cudaMalloc((void **)&common.d_endoRow, common.endo_mem);
-	cudaMemcpy(common.d_endoRow, common.endoRow, common.endo_mem, cudaMemcpyHostToDevice);
+	gpuErrchk( cudaMalloc((void **)&common.d_endoRow, common.endo_mem) );
+	gpuErrchk( cudaMemcpy(common.d_endoRow, common.endoRow, common.endo_mem, cudaMemcpyHostToDevice) );
 
 	common.endoCol = (int *)malloc(common.endo_mem);
 	common.endoCol[ 0] = 408;
@@ -410,14 +422,14 @@ int main(int argc, char *argv []){
 	common.endoCol[17] = 383;
 	common.endoCol[18] = 401;
 	common.endoCol[19] = 411;
-	cudaMalloc((void **)&common.d_endoCol, common.endo_mem);
-	cudaMemcpy(common.d_endoCol, common.endoCol, common.endo_mem, cudaMemcpyHostToDevice);
+	gpuErrchk( cudaMalloc((void **)&common.d_endoCol, common.endo_mem) );
+	gpuErrchk( cudaMemcpy(common.d_endoCol, common.endoCol, common.endo_mem, cudaMemcpyHostToDevice) );
 
 	common.tEndoRowLoc = (int *)malloc(common.endo_mem * common.no_frames);
-	cudaMalloc((void **)&common.d_tEndoRowLoc, common.endo_mem * common.no_frames);
+	gpuErrchk( cudaMalloc((void **)&common.d_tEndoRowLoc, common.endo_mem * common.no_frames) );
 
 	common.tEndoColLoc = (int *)malloc(common.endo_mem * common.no_frames);
-	cudaMalloc((void **)&common.d_tEndoColLoc, common.endo_mem * common.no_frames);
+	gpuErrchk( cudaMalloc((void **)&common.d_tEndoColLoc, common.endo_mem * common.no_frames) );
 
 	//====================================================================================================
 	//	EPI POINTS
@@ -458,8 +470,8 @@ int main(int argc, char *argv []){
 	common.epiRow[28] = 305;
 	common.epiRow[29] = 331;
 	common.epiRow[30] = 360;
-	cudaMalloc((void **)&common.d_epiRow, common.epi_mem);
-	cudaMemcpy(common.d_epiRow, common.epiRow, common.epi_mem, cudaMemcpyHostToDevice);
+	gpuErrchk( cudaMalloc((void **)&common.d_epiRow, common.epi_mem) );
+	gpuErrchk( cudaMemcpy(common.d_epiRow, common.epiRow, common.epi_mem, cudaMemcpyHostToDevice) );
 
 	common.epiCol = (int *)malloc(common.epi_mem);
 	common.epiCol[ 0] = 457;
@@ -493,14 +505,14 @@ int main(int argc, char *argv []){
 	common.epiCol[28] = 434;
 	common.epiCol[29] = 448;
 	common.epiCol[30] = 455;
-	cudaMalloc((void **)&common.d_epiCol, common.epi_mem);
-	cudaMemcpy(common.d_epiCol, common.epiCol, common.epi_mem, cudaMemcpyHostToDevice);
+	gpuErrchk( cudaMalloc((void **)&common.d_epiCol, common.epi_mem) );
+	gpuErrchk( cudaMemcpy(common.d_epiCol, common.epiCol, common.epi_mem, cudaMemcpyHostToDevice) );
 
 	common.tEpiRowLoc = (int *)malloc(common.epi_mem * common.no_frames);
-	cudaMalloc((void **)&common.d_tEpiRowLoc, common.epi_mem * common.no_frames);
+	gpuErrchk( cudaMalloc((void **)&common.d_tEpiRowLoc, common.epi_mem * common.no_frames) );
 
 	common.tEpiColLoc = (int *)malloc(common.epi_mem * common.no_frames);
-	cudaMalloc((void **)&common.d_tEpiColLoc, common.epi_mem * common.no_frames);
+	gpuErrchk( cudaMalloc((void **)&common.d_tEpiColLoc, common.epi_mem * common.no_frames) );
 
 	//====================================================================================================
 	//	ALL POINTS
@@ -523,8 +535,8 @@ int main(int argc, char *argv []){
 	//======================================================================================================================================================
 
 	// common
-	cudaMalloc((void **)&common.d_endoT, common.in_mem * common.endoPoints);
-	cudaMalloc((void **)&common.d_epiT, common.in_mem * common.epiPoints);
+	gpuErrchk( cudaMalloc((void **)&common.d_endoT, common.in_mem * common.endoPoints) );
+	gpuErrchk( cudaMalloc((void **)&common.d_epiT, common.in_mem * common.epiPoints) );
 
 	//======================================================================================================================================================
 	//	SPECIFIC TO ENDO OR EPI TO BE SET HERE
@@ -568,7 +580,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2, common.in2_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2, common.in2_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -585,7 +597,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_conv, common.conv_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_conv, common.conv_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -607,7 +619,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_pad_cumv, common.in2_pad_cumv_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_pad_cumv, common.in2_pad_cumv_mem) );
 	}
 
 	//====================================================================================================
@@ -626,7 +638,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_pad_cumv_sel, common.in2_pad_cumv_sel_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_pad_cumv_sel, common.in2_pad_cumv_sel_mem) );
 	}
 
 	//====================================================================================================
@@ -645,7 +657,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_sub_cumh, common.in2_sub_cumh_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_sub_cumh, common.in2_sub_cumh_mem) );
 	}
 
 	//====================================================================================================
@@ -664,7 +676,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_sub_cumh_sel, common.in2_sub_cumh_sel_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_sub_cumh_sel, common.in2_sub_cumh_sel_mem) );
 	}
 
 	//====================================================================================================
@@ -683,7 +695,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_sub2, common.in2_sub2_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_sub2, common.in2_sub2_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -702,7 +714,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_sqr, common.in2_sqr_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_sqr, common.in2_sqr_mem) );
 	}
 
 	//====================================================================================================
@@ -717,7 +729,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in2_sqr_sub2, common.in2_sqr_sub2_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in2_sqr_sub2, common.in2_sqr_sub2_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -732,7 +744,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_in_sqr, common.in_sqr_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_in_sqr, common.in_sqr_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -747,7 +759,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_tMask, common.tMask_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_tMask, common.tMask_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -780,7 +792,7 @@ int main(int argc, char *argv []){
 
 	// pointers
 	for(i=0; i<common.allPoints; i++){
-		cudaMalloc((void **)&unique[i].d_mask_conv, common.mask_conv_mem);
+		gpuErrchk( cudaMalloc((void **)&unique[i].d_mask_conv, common.mask_conv_mem) );
 	}
 
 	//======================================================================================================================================================
@@ -801,8 +813,8 @@ int main(int argc, char *argv []){
 	//	COPY ARGUMENTS
 	//====================================================================================================
 
-	cudaMemcpyToSymbol(d_common, &common, sizeof(params_common));
-	cudaMemcpyToSymbol(d_unique, &unique, sizeof(params_unique)*ALL_POINTS);
+	gpuErrchk( cudaMemcpyToSymbol(d_common, &common, sizeof(params_common)) );
+	gpuErrchk( cudaMemcpyToSymbol(d_unique, &unique, sizeof(params_unique)*ALL_POINTS) );
 
 	//====================================================================================================
 	//	PRINT FRAME PROGRESS START
@@ -825,11 +837,13 @@ int main(int argc, char *argv []){
 										1);							// converted
 
 		// copy frame to GPU memory
-		cudaMemcpy(common_change.d_frame, frame, common.frame_mem, cudaMemcpyHostToDevice);
-		cudaMemcpyToSymbol(d_common_change, &common_change, sizeof(params_common_change));
+		gpuErrchk( cudaMemcpy(common_change.d_frame, frame, common.frame_mem, cudaMemcpyHostToDevice) );
+		gpuErrchk( cudaMemcpyToSymbol(d_common_change, &common_change, sizeof(params_common_change)) );
 
 		// launch GPU kernel
 		kernel<<<blocks, threads>>>();
+		gpuErrchk( cudaPeekAtLastError( ) );
+		gpuErrchk( cudaDeviceSynchronize( ) );
 
 		// free frame after each loop iteration, since AVI library allocates memory for every frame fetched
 		free(frame);
@@ -851,11 +865,11 @@ int main(int argc, char *argv []){
 	//	OUTPUT
 	//====================================================================================================
 
-	cudaMemcpy(common.tEndoRowLoc, common.d_tEndoRowLoc, common.endo_mem * common.no_frames, cudaMemcpyDeviceToHost);
-	cudaMemcpy(common.tEndoColLoc, common.d_tEndoColLoc, common.endo_mem * common.no_frames, cudaMemcpyDeviceToHost);
+	gpuErrchk( cudaMemcpy(common.tEndoRowLoc, common.d_tEndoRowLoc, common.endo_mem * common.no_frames, cudaMemcpyDeviceToHost) );
+	gpuErrchk( cudaMemcpy(common.tEndoColLoc, common.d_tEndoColLoc, common.endo_mem * common.no_frames, cudaMemcpyDeviceToHost) );
 
-	cudaMemcpy(common.tEpiRowLoc, common.d_tEpiRowLoc, common.epi_mem * common.no_frames, cudaMemcpyDeviceToHost);
-	cudaMemcpy(common.tEpiColLoc, common.d_tEpiColLoc, common.epi_mem * common.no_frames, cudaMemcpyDeviceToHost);
+	gpuErrchk( cudaMemcpy(common.tEpiRowLoc, common.d_tEpiRowLoc, common.epi_mem * common.no_frames, cudaMemcpyDeviceToHost) );
+	gpuErrchk( cudaMemcpy(common.tEpiColLoc, common.d_tEpiColLoc, common.epi_mem * common.no_frames, cudaMemcpyDeviceToHost) );
 
 
 
@@ -898,7 +912,7 @@ assert_data(common.no_frames,
 	//====================================================================================================
 
 	// frame
-	cudaFree(common_change.d_frame);
+	gpuErrchk( cudaFree(common_change.d_frame) );
 
 	// endo points
 	free(common.endoRow);
@@ -906,12 +920,12 @@ assert_data(common.no_frames,
 	free(common.tEndoRowLoc);
 	free(common.tEndoColLoc);
 
-	cudaFree(common.d_endoRow);
-	cudaFree(common.d_endoCol);
-	cudaFree(common.d_tEndoRowLoc);
-	cudaFree(common.d_tEndoColLoc);
+	gpuErrchk( cudaFree(common.d_endoRow) );
+	gpuErrchk( cudaFree(common.d_endoCol) );
+	gpuErrchk( cudaFree(common.d_tEndoRowLoc) );
+	gpuErrchk( cudaFree(common.d_tEndoColLoc) );
 
-	cudaFree(common.d_endoT);
+	gpuErrchk( cudaFree(common.d_endoT) );
 
 	// epi points
 	free(common.epiRow);
@@ -919,34 +933,35 @@ assert_data(common.no_frames,
 	free(common.tEpiRowLoc);
 	free(common.tEpiColLoc);
 
-	cudaFree(common.d_epiRow);
-	cudaFree(common.d_epiCol);
-	cudaFree(common.d_tEpiRowLoc);
-	cudaFree(common.d_tEpiColLoc);
+	gpuErrchk( cudaFree(common.d_epiRow) );
+	gpuErrchk( cudaFree(common.d_epiCol) );
+	gpuErrchk( cudaFree(common.d_tEpiRowLoc) );
+	gpuErrchk( cudaFree(common.d_tEpiColLoc) );
 
-	cudaFree(common.d_epiT);
+	gpuErrchk( cudaFree(common.d_epiT) );
 
 	//====================================================================================================
 	//	POINTERS
 	//====================================================================================================
 
 	for(i=0; i<common.allPoints; i++){
-		cudaFree(unique[i].d_in2);
+		gpuErrchk( cudaFree(unique[i].d_in2) );
 
-		cudaFree(unique[i].d_conv);
-		cudaFree(unique[i].d_in2_pad_cumv);
-		cudaFree(unique[i].d_in2_pad_cumv_sel);
-		cudaFree(unique[i].d_in2_sub_cumh);
-		cudaFree(unique[i].d_in2_sub_cumh_sel);
-		cudaFree(unique[i].d_in2_sub2);
-		cudaFree(unique[i].d_in2_sqr);
-		cudaFree(unique[i].d_in2_sqr_sub2);
-		cudaFree(unique[i].d_in_sqr);
+		gpuErrchk( cudaFree(unique[i].d_conv) );
+		gpuErrchk( cudaFree(unique[i].d_in2_pad_cumv) );
+		gpuErrchk( cudaFree(unique[i].d_in2_pad_cumv_sel) );
+		gpuErrchk( cudaFree(unique[i].d_in2_sub_cumh) );
+		gpuErrchk( cudaFree(unique[i].d_in2_sub_cumh_sel) );
+		gpuErrchk( cudaFree(unique[i].d_in2_sub2) );
+		gpuErrchk( cudaFree(unique[i].d_in2_sqr) );
+		gpuErrchk( cudaFree(unique[i].d_in2_sqr_sub2) );
+		gpuErrchk( cudaFree(unique[i].d_in_sqr) );
 
-		cudaFree(unique[i].d_tMask);
-		cudaFree(unique[i].d_mask_conv);
+		gpuErrchk( cudaFree(unique[i].d_tMask) );
+		gpuErrchk( cudaFree(unique[i].d_mask_conv) );
 	}
 
+	gpuErrchk( cudaProfilerStop() );
 }
 
 //===============================================================================================================================================================================================================

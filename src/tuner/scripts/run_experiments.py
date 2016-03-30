@@ -88,7 +88,9 @@ if __name__ == '__main__':
             cmd += " --technique=" + args.technique
         if args.seed != "":
             cmd += " --seed-configuration=" + args.seed
-
+	
+	print cmd
+	sys.exit()
         subprocess.call(cmd, shell = True)
 
         #
