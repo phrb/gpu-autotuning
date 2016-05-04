@@ -276,13 +276,13 @@ void assert_data(int frameNo,
 	for(j=0; j<frames_processed;j++)
 	  {
         for(i=0; i<endoPoints; i++){
-	      assert(fabs(Tempinput_a[j+i*frameNo] - input_a[j+i*frameNo]) - 0.001);
-	      assert(fabs(Tempinput_b[j+i*frameNo] - input_b[j+i*frameNo]) - 0.001);
+	      assert(fabs(Tempinput_a[j+i*frameNo] - input_a[j+i*frameNo]) < 0.001);
+	      assert(fabs(Tempinput_b[j+i*frameNo] - input_b[j+i*frameNo]) < 0.001);
 	    }
         
         for(i=0; i<epiPoints; i++){
-	      assert(fabs(Tempinput_2a[j+i*frameNo] - input_2a[j+i*frameNo]) - 0.001);
-	      assert(fabs(Tempinput_2b[j+i*frameNo] - input_2b[j+i*frameNo]) - 0.001);
+	      assert(fabs(Tempinput_2a[j+i*frameNo] - input_2a[j+i*frameNo]) < 0.001);
+	      assert(fabs(Tempinput_2b[j+i*frameNo] - input_2b[j+i*frameNo]) < 0.001);
 	    }
 
     }

@@ -201,8 +201,8 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
   cudaMemcpy(input_weights_one_dim, input_hidden_cuda, (in + 1) * (hid + 1) * sizeof(float), cudaMemcpyDeviceToHost);
 
   
-//  printf("%f weight, %f net, %d in %d hid\n", *input_weights_one_dim, *net->input_units, in, hid);
-  assert((*input_weights_one_dim == 0.486904) < 0.00001);
+  printf("%f weight, %f net, %d in %d hid\n", *input_weights_one_dim, *net->input_units, in, hid);
+  assert(fabs(*input_weights_one_dim - 0.486904) < 0.001);
     
   cudaFree(input_cuda);
   cudaFree(output_hidden_cuda);
