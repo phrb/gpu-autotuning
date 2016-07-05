@@ -138,26 +138,15 @@ void write_data(int frameNo,
       fprintf(fid, "endoPoints: %d\n", endoPoints);
       fprintf(fid, "epiPoints: %d", epiPoints);
       */
-	for(j=0; j<frames_processed;j++)
-	  {
-	    for(i=0; i<endoPoints; i++){
-	      fprintf(fidA, "%d ", input_a[j+i*frameNo]);
+	for(i=0; i<frames_processed*endoPoints;i++)
+        {
+	      fprintf(fidA, "%d ", input_a[i]);	   
+	      fprintf(fidB, "%d ", input_b[i]);
 	    }
 
-	    for(i=0; i<endoPoints; i++){
-	      // if(input_b[j*size+i] > 2000) input_b[j*size+i]=0;
-	      fprintf(fidB, "%d ", input_b[j+i*frameNo]);
-	    }
-
-	    for(i=0; i<epiPoints; i++){
-	      //if(input_2a[j*size_2+i] > 2000) input_2a[j*size_2+i]=0;
-	      fprintf(fid2A, "%d ", input_2a[j+i*frameNo]);
-	    }
-
-	    for(i=0; i<epiPoints; i++){
-	      //if(input_2b[j*size_2+i] > 2000) input_2b[j*size_2+i]=0;
-	      fprintf(fid2B, "%d ", input_2b[j+i*frameNo]);
-	    }
+	    for(i=0; i<frames_processed*epiPoints; i++){	      
+	      fprintf(fid2A, "%d ", input_2a[i]);
+	      fprintf(fid2B, "%d ", input_2b[i]);
 	  }
 	// 	================================================================================80
 	//		CLOSE FILE
@@ -249,20 +238,16 @@ void assert_data(int frameNo,
 
     int* Tempinput_2b = (int*) malloc(epiPoints * frames_processed *  sizeof(int));
     
-	for(j=0; j<frames_processed;j++)
-	  {
-	    for(i=0; i<endoPoints; i++){
-	      fscanf(fidA, "%d", &Tempinput_a[j+i*frameNo]);
-	      fscanf(fidB, "%d", &Tempinput_b[j+i*frameNo]);
-	    }
+	for(i=0; i<frames_processed*endoPoints;i++) {
+          fscanf(fidA, "%d", &Tempinput_a[i]);
+          fscanf(fidB, "%d", &Tempinput_b[i]);
+	}
 	    
-	    for(i=0; i<epiPoints; i++){
-	      fscanf(fidA, "%d", &Tempinput_2a[j+i*frameNo]);
-	      fscanf(fidB, "%d", &Tempinput_2b[j+i*frameNo]);
-	    }
+    for(i=0; i<frames_processed*epiPoints; i++){
+	      fscanf(fid2A, "%d", &Tempinput_2a[i]);
+	      fscanf(fid2B, "%d", &Tempinput_2b[i]);
+    }
 
-
-	  }
 	// 	================================================================================80
 	//		CLOSE FILE
   //	================================================================================80
@@ -272,20 +257,18 @@ void assert_data(int frameNo,
 	fclose(fid2A);
 	fclose(fid2B);
 	printf("Entering assertions\n");
-	
-	for(j=0; j<frames_processed;j++)
-	  {
-        for(i=0; i<endoPoints; i++){
-	      assert(fabs(Tempinput_a[j+i*frameNo] - input_a[j+i*frameNo]) < 0.001);
-	      assert(fabs(Tempinput_b[j+i*frameNo] - input_b[j+i*frameNo]) < 0.001);
+	//printf("%d x %d = %d MULT\n",frames_processed,endoPoints, frames_processed*endoPoints);
+	for(i=0; i<frames_processed*endoPoints;i++) {
+	      //printf("%d)  %d == %d In_A\n",i, Tempinput_a[i],  input_a[i]);
+	      //printf("%d)  %d == %d In_B\n",i, Tempinput_b[i],  input_b[i]);
+          assert(fabs(Tempinput_a[i] - input_a[i]) < 0.001);
+	      assert(fabs(Tempinput_b[i] - input_b[i]) < 0.001);
 	    }
         
-        for(i=0; i<epiPoints; i++){
-	      assert(fabs(Tempinput_2a[j+i*frameNo] - input_2a[j+i*frameNo]) < 0.001);
-	      assert(fabs(Tempinput_2b[j+i*frameNo] - input_2b[j+i*frameNo]) < 0.001);
+        for(i=0; i<frames_processed*epiPoints; i++){
+	      assert(fabs(Tempinput_2a[i] - input_2a[i]) < 0.001);
+	      assert(fabs(Tempinput_2b[i] - input_2b[i]) < 0.001);
 	    }
-
-    }
     
     free(Tempinput_a);
     free(Tempinput_b);

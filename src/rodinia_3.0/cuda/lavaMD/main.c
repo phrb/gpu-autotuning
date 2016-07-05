@@ -334,7 +334,7 @@ main(	int argc,
     strcat(fileNameY, bufferWidthY);
     strcat(fileNameY, ".txt");
 
-    char fileNameZ[20] = "./resultV_";
+    char fileNameZ[20] = "./resultZ_";
     char bufferWidthZ[5] = " ";
     sprintf(bufferWidthZ, "%d", dim_cpu.boxes1d_arg);
     strcat(fileNameZ, bufferWidthZ);
@@ -368,6 +368,18 @@ main(	int argc,
 	fclose(fptrX);
 	fclose(fptrY);
 	fclose(fptrZ);
+
+    for(i=0; i<dim_cpu.space_elem; i=i+1){
+        //printf("V: %f = %f \n ", Tempfv_cpu_V[i], fv_cpu[i].v);
+        //printf("X: %f = %f \n ", Tempfv_cpu_X[i], fv_cpu[i].x);
+        //printf("Y: %f = %f \n ", Tempfv_cpu_Y[i], fv_cpu[i].y);
+        //printf("Z: %f = %f \n ", Tempfv_cpu_Z[i], fv_cpu[i].z);
+        assert(abs(Tempfv_cpu_V[i] - fv_cpu[i].v) < 0.0001);
+        assert(abs(Tempfv_cpu_X[i] - fv_cpu[i].x) < 0.0001);
+        assert(abs(Tempfv_cpu_Y[i] - fv_cpu[i].y) < 0.0001);
+        assert(abs(Tempfv_cpu_Z[i] - fv_cpu[i].z) < 0.0001);
+    }
+        
 	
     free(Tempfv_cpu_V);
     free(Tempfv_cpu_X);

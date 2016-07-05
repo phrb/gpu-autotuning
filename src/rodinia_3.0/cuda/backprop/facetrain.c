@@ -45,7 +45,7 @@ char *argv[];
   }
   
 
-  seed = 7;   
+  seed = 5;   
   bpnn_initialize(seed);
   backprop_face();
 

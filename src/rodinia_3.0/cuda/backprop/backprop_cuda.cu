@@ -119,7 +119,7 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
   cudaMemcpy(input_hidden_cuda, input_weights_one_dim, (in + 1) * (hid + 1) * sizeof(float), cudaMemcpyHostToDevice);
 
   
-  
+ 
   bpnn_layerforward_CUDA<<< grid, threads >>>(input_cuda,
 	                                          output_hidden_cuda,
 											  input_hidden_cuda,
@@ -138,22 +138,22 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
   cudaMemcpy(partial_sum, hidden_partial_sum, num_blocks * WIDTH * sizeof(float), cudaMemcpyDeviceToHost);
 
 
-//printf("%f sum", *partial_sum);
+printf("%f sum \n", *partial_sum);
 
-	if(in == 524288){
-		assert((*partial_sum -4.180565) < 0.0001);
-	} else if(in == 262144){
-                assert((*partial_sum - 5.157075) < 0.0001);
+	    if(in == 524288){
+		    assert(fabs(*partial_sum - 3.409925) < 0.0001);
+	    } else if(in == 262144){
+            assert(fabs(*partial_sum - 4.047061) < 0.0001);
         } else if(in == 131072){
-                assert((*partial_sum - 4.709704) < 0.0001);
+            assert(fabs(*partial_sum - 4.467562) < 0.0001);
         } else if(in == 65536){
-                assert((*partial_sum - 4.986990) < 0.0001);
+            assert(fabs(*partial_sum - 4.502162) < 0.0001);
         } else if(in == 32768){
-                assert((*partial_sum - 5.288210) < 0.0001);
+            assert(fabs(*partial_sum - 3.491378) < 0.0001);
         } else if(in == 16384){
-                assert((*partial_sum - 4.965582) < 0.0001);
+            assert((*partial_sum - 3.285924) < 0.0001);
         } else if(in == 8192){
-                assert((*partial_sum - 4.953535) < 0.0001);
+            assert((*partial_sum - 4.194775) < 0.0001);
 	}    
 
 
@@ -199,10 +199,6 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
 
   cudaMemcpy(net->input_units, input_cuda, (in + 1) * sizeof(float), cudaMemcpyDeviceToHost);
   cudaMemcpy(input_weights_one_dim, input_hidden_cuda, (in + 1) * (hid + 1) * sizeof(float), cudaMemcpyDeviceToHost);
-
-  
-  printf("%f weight, %f net, %d in %d hid\n", *input_weights_one_dim, *net->input_units, in, hid);
-  assert(fabs(*input_weights_one_dim - 0.486904) < 0.001);
     
   cudaFree(input_cuda);
   cudaFree(output_hidden_cuda);
@@ -211,6 +207,7 @@ void bpnn_train_cuda(BPNN *net, float *eo, float *eh)
   cudaFree(input_prev_weights_cuda);
   cudaFree(hidden_delta_cuda);
   
+
   free(partial_sum);
   free(input_weights_one_dim);
   free(input_weights_prev_one_dim);
