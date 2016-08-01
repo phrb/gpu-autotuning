@@ -160,7 +160,7 @@ rodinia_results_summary <- function(){
             cex.axis = 3,
             cex.lab = 3
     )
-    legend(6, 2.5, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
+    legend(6.7, 2.5, c("GTX-980", "GTX-750", "Tesla-K40"), fill=gray.colors(3, start=0, end=1), cex=4)
     abline(h = 1.0, untf = FALSE)
     dev.off()
 }
