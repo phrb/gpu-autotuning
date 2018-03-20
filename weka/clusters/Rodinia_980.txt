@@ -1,0 +1,68 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 2 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     Flag Data
+Instances:    12
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 4
+Within cluster sum of squared errors: 48.39524435678281
+
+Initial starting points (random):
+
+Cluster 0: off,on,on,true,true,false,true,true,true,sm_30,cs,3,50
+Cluster 1: on,on,on,false,false,true,false,true,false,sm_52,ca,1,34
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                             Cluster#
+Attribute                        Full Data          0          1
+                                    (12.0)      (6.0)      (6.0)
+================================================================
+no-align-double,off,off,on
+use_fast_math,off,on,off
+preserve-relocs,off,on,off
+relocatable-device-code,false,false,false
+ftz,false,false,false
+prec-div,false,false,true
+prec-sqrt,false,false,false
+fmad,true,true,false
+allow-expensive-optimizations,true,true,false
+gpu-architecture,sm_52,sm_52,sm_52
+def-load-cache,ca,cs,ca
+opt-level,3,3,1
+maxrregcount,43.5833,47.3333,39.8333
+
+
+
+
+Time taken to build model (full training data) : 0 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0       6 ( 50%)
+1       6 ( 50%)

@@ -1,0 +1,64 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 2 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     Flag Data
+Instances:    12
+Attributes:   13
+              no-align-double
+              use_fast_math
+              preserve-relocs
+              relocatable-device-code
+              ftz
+              prec-div
+              prec-sqrt
+              fmad
+              allow-expensive-optimizations
+              gpu-architecture
+              def-load-cache
+              opt-level
+              maxrregcount
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 3
+Within cluster sum of squared errors: 48.669580970384374
+
+Initial starting points (random):
+
+Cluster 0: on,off,on,false,true,true,false,true,false,sm_21,ca,0,42
+Cluster 1: off,on,on,false,true,true,true,true,false,sm_20,ca,2,16
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+no-align-double,off,on,off
+use_fast_math,off,off,on
+preserve-relocs,on,on,on
+relocatable-device-code,false,false,false
+ftz,false,false,true
+prec-div,true,false,true
+prec-sqrt,false,false,true
+fmad,true,true,true
+allow-expensive-optimizations,false,false,false
+gpu-architecture,sm_20,sm_21,sm_20
+def-load-cache,cg,cg,ca
+opt-level,0,0,2
+maxrregcount,36.4167,45.5,27.3333
+
+
+
+
+Time taken to build model (full training data) : 0 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0       6 ( 50%)
+1       6 ( 50%)
