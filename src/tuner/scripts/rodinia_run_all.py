@@ -25,7 +25,7 @@ argparser.add_argument( "-t", "--tune-only",
 
 def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
     os.system("mkdir -p " + logdir)
-    cmd = "./scripts/rodinia_run_experiments.py"
+    cmd = "./rodinia_run_experiments.py"
     cmd += " -f="        + program
     cmd += " -fargs="    + "\"" + " ".join(arguments) + "\""
     cmd += " -ld="       + logdir
@@ -39,18 +39,18 @@ def tune(program, arguments, logdir, run_time, runs, benchmark, cuda_path):
 
 def baseline(program, arguments, logdir, runs, cuda_path):
     options = "-Xptxas --opt-level="
-    values  = ["0", "1", "2", "3"]
+    values  = ["2", "3"]
 
     os.system("mkdir -p " + logdir + "_baseline" )
     for value in values:
         # Compiling:
-        os.environ["NVCC_FLAGS"] = ""
+        os.environ["NVCC_FLAGS"] = "--gpu-architecture=sm_50 "
         old_path = os.getcwd()
         os.chdir(program)
         subprocess.call("make clean", shell = True)
         subprocess.call("rm -f *.o *~ *.linkinfo", shell = True)
 
-        os.environ["NVCC_FLAGS"] = "-w " + cuda_path + " " + options + value + " "
+        os.environ["NVCC_FLAGS"] = "--gpu-architecture=sm_50 " + options + value + " "
         compile_result = subprocess.call("make",
                                          shell = True)
         os.chdir(old_path)
@@ -87,12 +87,12 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-run_time    = 120
+run_time    = 20
 runs        = 1
-benchmark   = 8
+benchmark   = 10
 
 #
-# Rodinia: Back Propagation 
+# Rodinia: Back Propagation
 #
 #program     = "../rodinia_3.0/cuda/backprop"
 #logdir      = "logs/backprop"
@@ -121,27 +121,26 @@ benchmark   = 8
 #
 #run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
+
 #
-##
-## Rodinia: Gaussian Elimination
-##
-#program     = "../rodinia_3.0/cuda/gaussian"
-#logdir      = "logs/gaussian"
-#arguments   = " "
-#steps       = ["default"]
+# Rodinia: Gaussian Elimination
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# program     = "../../rodinia_3.0/cuda/gaussian"
+# logdir      = "logs/gaussian"
+# arguments   = " "
+# steps       = ["default"]
 #
+# run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
-##
-## Rodinia: Heartwall
-##
-#program     = "../rodinia_3.0/cuda/heartwall"
-#logdir      = "logs/heartwall"
-#arguments   = " "
-#steps       = ["default"]
+# Rodinia: Heartwall
 #
-#run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# program     = "../../rodinia_3.0/cuda/heartwall"
+# logdir      = "logs/heartwall"
+# arguments   = " "
+# steps       = ["default"]
+#
+# run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
 #
 ##
@@ -211,7 +210,7 @@ benchmark   = 8
 
 # Rodinia: Needle
 #
-program     = "../rodinia_3.0/cuda/nw"
+program     = "../../rodinia_3.0/cuda/nw"
 logdir      = "logs/needle"
 arguments   = " "
 steps       = ["default"]
@@ -221,12 +220,12 @@ run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, arg
 
 # Rodinia: Pathfinder
 #
-program     = "../rodinia_3.0/cuda/pathfinder"
-logdir      = "logs/pathfinder"
-arguments   = " "
-steps       = ["default"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# program     = "../rodinia_3.0/cuda/pathfinder"
+# logdir      = "logs/pathfinder"
+# arguments   = " "
+# steps       = ["default"]
+#
+# run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 # TODO: Write code for the other experiments.
 #

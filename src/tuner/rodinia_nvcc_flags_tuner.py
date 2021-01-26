@@ -96,7 +96,7 @@ class NvccFlagsTuner(MeasurementInterface):
 
         # Give a better value to the Tuner (average)
         results = []
-        evaluations = 3
+        evaluations = 10
         global CONFIGS_TESTED
         CONFIGS_TESTED += 1
         for i in range(evaluations):
@@ -144,9 +144,11 @@ if __name__ == '__main__':
     NVCC_FLAGS = [ "nvcc:--no-align-double",
                    "nvcc:--use_fast_math" ]
     # { name : [ args ] }
-    NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_20", "sm_21",
-                                                          "sm_30", "sm_35",
-                                                          "sm_50", "sm_52" ],
+    # NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_60", "sm_61",
+    #                                                       "sm_62", "sm_70",
+    #                                                       "sm_72", "sm_75",
+    #                                                       "sm_80", "sm_86"],
+    NVCC_PARAMS = { "nvcc:--gpu-architecture="        : [ "sm_50"],
                     "nvcc:--relocatable-device-code=" : [ "true", "false" ],
                     "nvcc:--ftz="                     : [ "true", "false" ],
                     "nvcc:--prec-div="                : [ "true", "false" ],
@@ -178,7 +180,7 @@ if __name__ == '__main__':
 
     LOG_DIR  = args.logdir
     LOG_FILE = args.logcmd
-    NVCC_CMD = "" + args.cuda_path
+    NVCC_CMD = ""
     CUDA_PATH = args.cuda_path
 
     FILENAME = args.filename

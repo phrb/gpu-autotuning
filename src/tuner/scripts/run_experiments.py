@@ -69,7 +69,7 @@ if __name__ == '__main__':
     args =  argparser.parse_args()
 
     for i in range(args.runs):
-        cmd    = "python2 nvcc_flags_tuner.py --no-dups"
+        cmd    = "python2 ../nvcc_flags_tuner.py --no-dups"
         run_id = "/run_" + str(i)
         log_path = args.logdir + run_id
         subprocess.call("mkdir " + "'" + log_path + "'", shell = True)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             cmd += " --technique=" + args.technique
         if args.seed != "":
             cmd += " --seed-configuration=" + args.seed
-	
+
 	print cmd
 	sys.exit()
         subprocess.call(cmd, shell = True)
@@ -119,4 +119,3 @@ if __name__ == '__main__':
         print "[INFO] Benchmark Done."
 
         subprocess.call("rm -r opentuner.log opentuner.db", shell = True)
-

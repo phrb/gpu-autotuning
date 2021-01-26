@@ -69,12 +69,13 @@ if __name__ == '__main__':
     args =  argparser.parse_args()
 
     for i in range(args.runs):
-        cmd      = "python2 rodinia_nvcc_flags_tuner.py --no-dups"
+        cmd      = "python2 ../rodinia_nvcc_flags_tuner.py --no-dups"
         run_id   = "/run_" + str(i)
         log_path = args.logdir + run_id
         subprocess.call("mkdir " + "'" + log_path + "'", shell = True)
 
-        cmd += " --stop-after="         + args.time
+        #cmd += " --stop-after="         + args.time
+        cmd += " --test-limit="         + args.time
         cmd += " --file="               + args.filename
         cmd += " --file-args="          + "\"" + " ".join(args.fargs) + "\""
         cmd += " --log-dir="            + args.logdir + run_id + "/"
@@ -130,4 +131,3 @@ if __name__ == '__main__':
         print "[INFO] Benchmark Done."
 
         subprocess.call("rm -r opentuner.log opentuner.db", shell = True)
-
