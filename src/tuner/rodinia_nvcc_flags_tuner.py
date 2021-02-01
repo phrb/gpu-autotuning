@@ -11,6 +11,8 @@ import logging
 import time
 import os
 
+import pandas
+
 log = logging.getLogger('nvccflags')
 
 argparser = argparse.ArgumentParser(parents=opentuner.argparsers())
@@ -97,8 +99,12 @@ class NvccFlagsTuner(MeasurementInterface):
         # Give a better value to the Tuner (average)
         results = []
         evaluations = 10
+
         global CONFIGS_TESTED
+        global results_df
+
         CONFIGS_TESTED += 1
+
         for i in range(evaluations):
             old_path = os.getcwd()
             os.chdir(FILENAME)
@@ -110,10 +116,20 @@ class NvccFlagsTuner(MeasurementInterface):
                     file.write("failed_example_cmd: " + self.parse_config(cfg) + "\n")
                 global CONFIGS_FAILED
                 CONFIGS_FAILED += 1
+
+                results_df = results_df.append(pandas.DataFrame({ "response" : [FAIL_PENALTY],
+                                                                  "run_id" : [CONFIGS_TESTED] }),
+                                               ignore_index = True)
+
                 return Result(time=FAIL_PENALTY)
             else:
+                results_df = results_df.append(pandas.DataFrame({ "response" : [run_result['time']],
+                                                                  "run_id" : [CONFIGS_TESTED] }),
+                                               ignore_index = True)
+
                 results.append(run_result['time'])
 
+        results_df.to_csv(args.logdir + "measurements.csv", index = False)
         final_result = (sum(results) / len(results))
         return Result(time=final_result)
 
@@ -132,6 +148,9 @@ class NvccFlagsTuner(MeasurementInterface):
             file.write("tested_configurations             : " + str(CONFIGS_TESTED) + "\n")
             file.write("failed_configurations             : " + str(CONFIGS_FAILED) + "\n")
             file.write("ratio (% of failed configurations): " + str(CONFIGS_FAILED / float(CONFIGS_TESTED)) + "\n")
+
+        global results_df
+        results_df.to_csv(args.logdir + "measurements.csv", index = False)
 
 if __name__ == '__main__':
     FARGS = ""
@@ -174,6 +193,9 @@ if __name__ == '__main__':
     FAIL_PENALTY   = 9999
     CONFIGS_FAILED = 0
     CONFIGS_TESTED = 0
+
+    results_df = pandas.DataFrame({"response" : [],
+                                   "run_id"   : [] })
 
     opentuner.init_logging()
     args     = argparser.parse_args()

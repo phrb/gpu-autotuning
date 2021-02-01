@@ -87,7 +87,7 @@ def run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path,
 #
 args        = argparser.parse_args()
 cuda_path   = args.cuda_path
-run_time    = 20
+run_time    = 200
 runs        = 1
 benchmark   = 10
 
@@ -125,24 +125,33 @@ benchmark   = 10
 #
 # Rodinia: Gaussian Elimination
 #
-# program     = "../../rodinia_3.0/cuda/gaussian"
-# logdir      = "logs/gaussian"
-# arguments   = " "
-# steps       = ["default"]
+program     = "../../rodinia_3.0/cuda/gaussian"
+logdir      = "logs/gaussian"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 #
-# run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+# Rodinia: Needle
+#
+program     = "../../rodinia_3.0/cuda/nw"
+logdir      = "logs/needle"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 
 #
 # Rodinia: Heartwall
 #
-# program     = "../../rodinia_3.0/cuda/heartwall"
-# logdir      = "logs/heartwall"
-# arguments   = " "
-# steps       = ["default"]
-#
-# run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-#
-#
+program     = "../../rodinia_3.0/cuda/heartwall"
+logdir      = "logs/heartwall"
+arguments   = " "
+steps       = ["default"]
+
+run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
+
 ##
 ## Rodinia: Hotspots
 ##
@@ -207,16 +216,6 @@ benchmark   = 10
 #run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
 #
 #
-
-# Rodinia: Needle
-#
-program     = "../../rodinia_3.0/cuda/nw"
-logdir      = "logs/needle"
-arguments   = " "
-steps       = ["default"]
-
-run(program, steps, arguments, logdir, run_time, runs, benchmark, cuda_path, args)
-
 
 # Rodinia: Pathfinder
 #
